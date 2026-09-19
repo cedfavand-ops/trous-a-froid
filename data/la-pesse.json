@@ -1,0 +1,28 @@
+{
+  "generated_at": null,
+  "run_time": null,
+  "location": {
+    "name": "La Pesse - Le Cernétrou",
+    "lat": 46.272,
+    "lon": 5.834,
+    "elevation_m": 1175
+  },
+  "window": {
+    "start": null,
+    "end": null
+  },
+  "correction": {
+    "current_offset_c": null,
+    "offset_profile": {},
+    "alpha": 0.25,
+    "last_night_error_c": null,
+    "last_night_samples": 0,
+    "clear_cloud_threshold_pct": 20,
+    "cloud_zero_threshold_pct": 45,
+    "calm_wind_threshold_kmh": 10,
+    "wind_zero_threshold_kmh": 22,
+    "high_cloud_attenuation": 0.1,
+    "sunset_lead_minutes": 15
+  },
+  "hours": []
+}

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trous à froid — Prévisions 24h</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+  :root{
+    --bg:#0f172a; --card:#1e293b; --card2:#26334a; --text:#e2e8f0; --muted:#94a3b8;
+    --accent:#38bdf8; --cold:#60a5fa; --line:#334155;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    background:linear-gradient(180deg,var(--bg),#0b1220); color:var(--text); padding:16px;
+  }
+  header{max-width:1100px;margin:0 auto 14px;}
+  h1{font-size:1.4rem;margin:0 0 4px;}
+  .sub{color:var(--muted);font-size:.9rem;}
+  .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;font-size:.82rem;color:var(--muted);}
+  .meta span{background:var(--card);padding:4px 10px;border-radius:20px;}
+  .wrap{max-width:1100px;margin:0 auto;}
+
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+  .tab{
+    background:var(--card); color:var(--muted); border:1px solid var(--line);
+    padding:8px 16px; border-radius:10px; cursor:pointer; font-size:.88rem;
+    transition:all .15s;
+  }
+  .tab:hover{color:var(--text);}
+  .tab.active{background:var(--accent); color:#0b1220; border-color:var(--accent); font-weight:600;}
+
+  .table-scroll{overflow-x:auto;background:var(--card);border-radius:14px;padding:8px;}
+  table{border-collapse:collapse;width:100%;min-width:900px;}
+  th,td{padding:8px 6px;text-align:center;font-size:.82rem;white-space:nowrap;}
+  thead th{color:var(--muted);font-weight:500;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--card);}
+  tbody tr:hover{background:var(--card2);}
+  tbody tr.night{background:rgba(56,189,248,0.04);}
+  .picto{width:34px;height:34px;display:block;margin:0 auto;}
+  .clouds{font-size:.65rem;color:var(--muted);margin-top:2px;white-space:nowrap;}
+  .clouds b{color:#93c5fd;font-weight:600;}
+  .clouds .m{color:#a5b4fc;}
+  .clouds .h{color:#c4b5fd;}
+  .temp{font-weight:700;font-size:1rem;}
+  .temp.corrected{color:var(--cold);}
+  .temp.corrected::after{content:" *";color:var(--accent);}
+  .raw-strike{font-size:.7rem;color:var(--muted);text-decoration:line-through;display:block;}
+  .gust{color:#f472b6;font-size:.72rem;display:block;margin-top:1px;}
+  .wind-dir{display:inline-block;font-size:1.5rem;line-height:1;transition:transform .2s;}
+  .legend{font-size:.75rem;color:var(--muted);margin-top:10px;line-height:1.5;}
+  .chart-card{background:var(--card);border-radius:14px;padding:16px;margin-top:20px;}
+  .chart-card h2{font-size:1rem;margin:0 0 10px;color:var(--muted);font-weight:600;}
+  canvas{max-height:340px;}
+  footer{max-width:1100px;margin:20px auto 0;color:var(--muted);font-size:.75rem;text-align:center;}
+  a{color:var(--accent);}
+  .err{background:#7f1d1d;color:#fecaca;padding:10px 14px;border-radius:10px;margin-bottom:14px;}
+</style>
+</head>
+<body>
+<header>
+  <h1>❄️ Trous à froid — Prévisions 24h</h1>
+  <div class="sub">Modèle ICON-CH1 (MétéoSuisse via Open-Meteo) · Fenêtre 18h → 17h lendemain · Températures nocturnes corrigées pour le trou à froid</div>
+  <div class="meta" id="meta"></div>
+</header>
+
+<div class="wrap">
+  <div class="tabs" id="tabs"></div>
+  <div id="error"></div>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>Heure</th>
+          <th>Ciel</th>
+          <th>Température</th>
+          <th>Vent</th>
+          <th>Direction</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+  <div class="legend" id="legend"></div>
+
+  <div class="chart-card">
+    <h2>Évolution de la température (corrigée)</h2>
+    <canvas id="chart"></canvas>
+  </div>
+</div>
+
+<footer id="footer"></footer>
+
+<script>
+// Ajouter une station ici suffit à la faire apparaître comme onglet -
+// le fichier data/<slug>.json correspondant doit être généré par le workflow.
+const STATIONS = [
+  { slug: "greolieres",    name: "Gréolières-les-Neiges",     datacake: "https://app.datacake.de/pd/8edbfefb-584e-4866-a684-0b84928b85c9" },
+  { slug: "chaud-clapier", name: "Doline de Chaud Clapier",   datacake: "https://app.datacake.de/pd/d4b23fdc-eca0-4658-9d0b-66829a0b9890" },
+  { slug: "la-pesse",      name: "La Pesse - Le Cernétrou",   datacake: "https://app.datacake.de/pd/96a819b1-c90c-4353-8a65-ba13f4fd0276" },
+  { slug: "tignes",        name: "Tignes - Pramécou",         datacake: "https://app.datacake.de/pd/39371b61-daed-40b2-b329-d1e9db559c49" },
+  { slug: "beuil",         name: "Beuil - Cumba Clava",       datacake: "https://app.datacake.de/pd/6152f64c-a2bc-4678-b6d0-77836ae26eb8" },
+];
+
+const PICTO_MAP = {
+  "clair": "icons/clair.png", "peu-nuageux": "icons/peu-nuageux.png", "tres-nuageux": "icons/tres-nuageux.png",
+  "couvert": "icons/couvert.png", "voile": "icons/voile.png", "pluie-faible": "icons/pluie-faible.png",
+  "pluie-forte": "icons/pluie-forte.png", "neige": "icons/neige.png", "brouillard": "icons/brouillard.png"
+};
+const PICTO_LABEL = {
+  "clair":"Ciel clair","peu-nuageux":"Peu nuageux","tres-nuageux":"Très nuageux","couvert":"Couvert",
+  "voile":"Ciel voilé","pluie-faible":"Pluie faible","pluie-forte":"Pluie forte","neige":"Neige","brouillard":"Brouillard"
+};
+
+let currentSlug = STATIONS[0].slug;
+
+function windColor(speed){
+  if(speed < 10) return '#60a5fa';
+  if(speed < 20) return '#34d399';
+  if(speed < 35) return '#fbbf24';
+  return '#f87171';
+}
+function fmtHour(iso){
+  const d = new Date(iso);
+  return d.toLocaleString('fr-FR', {weekday:'short', hour:'2-digit', minute:'2-digit'});
+}
+
+function renderTabs(){
+  const tabs = document.getElementById('tabs');
+  tabs.innerHTML = '';
+  STATIONS.forEach(st => {
+    const btn = document.createElement('button');
+    btn.className = 'tab' + (st.slug === currentSlug ? ' active' : '');
+    btn.textContent = st.name;
+    btn.onclick = () => { currentSlug = st.slug; renderTabs(); load(); };
+    tabs.appendChild(btn);
+  });
+}
+
+async function load(){
+  document.getElementById('error').innerHTML = '';
+  try{
+    const res = await fetch(`data/${currentSlug}.json?_=` + Date.now());
+    if(!res.ok) throw new Error(`data/${currentSlug}.json introuvable`);
+    const data = await res.json();
+    render(data);
+  }catch(e){
+    document.getElementById('error').innerHTML =
+      '<div class="err">Impossible de charger les prévisions (' + e.message + '). '
+      + 'Le fichier sera créé au premier passage du workflow GitHub Actions.</div>';
+    document.getElementById('rows').innerHTML = '';
+  }
+}
+
+function render(data){
+  const meta = document.getElementById('meta');
+  const genDate = data.generated_at ? new Date(data.generated_at).toLocaleString('fr-FR') : '—';
+  const runDate = data.run_time ? new Date(data.run_time).toLocaleString('fr-FR') : '?';
+  meta.innerHTML = `
+    <span>${data.location.name}${data.location.elevation_m ? ' · ' + data.location.elevation_m + ' m' : ''}</span>
+    <span>Généré le ${genDate}</span>
+    <span>Run modèle : ${runDate}</span>
+    <span>Correction actuelle : ${data.correction.current_offset_c !== null ? data.correction.current_offset_c.toFixed(1) + ' °C' : 'inactive (conditions non réunies)'}</span>
+  `;
+
+  const tbody = document.getElementById('rows');
+  tbody.innerHTML = '';
+  (data.hours || []).forEach(h => {
+    const hourNum = new Date(h.time).getHours();
+    const isNight = hourNum >= 19 || hourNum < 8;
+    const tr = document.createElement('tr');
+    if(isNight) tr.classList.add('night');
+    const pictoSrc = PICTO_MAP[h.picto] || '';
+    const pictoLabel = PICTO_LABEL[h.picto] || h.picto;
+    tr.innerHTML = `
+      <td>${fmtHour(h.time)}</td>
+      <td>
+        <img class="picto" src="${pictoSrc}" alt="${pictoLabel}" title="${pictoLabel}" onerror="this.style.display='none'">
+        <div class="clouds" title="Nébulosité basse / moyenne / haute">
+          <b>${h.cloud_cover_low ?? '–'}</b>/<span class="m">${h.cloud_cover_mid ?? '–'}</span>/<span class="h">${h.cloud_cover_high ?? '–'}</span>%
+        </div>
+      </td>
+      <td>
+        <span class="temp ${h.corrected ? 'corrected' : ''}">${h.temp_corrected.toFixed(1)}°</span>
+        ${h.corrected ? `<span class="raw-strike">modèle brut ${h.temp_raw.toFixed(1)}°</span>` : ''}
+      </td>
+      <td>
+        ${Math.round(h.wind_speed)} km/h
+        ${h.wind_gusts ? `<span class="gust">raf. ${Math.round(h.wind_gusts)}</span>` : ''}
+      </td>
+      <td><span class="wind-dir" style="transform:rotate(${h.wind_dir}deg);color:${windColor(h.wind_speed)}">↓</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('legend').innerHTML =
+    '* Température corrigée à la baisse par rapport au modèle brut, sur la base des écarts observés '
+    + 'à la station Datacake les heures dégagées et calmes précédentes (trou à froid).';
+
+  const st = STATIONS.find(s => s.slug === currentSlug);
+  document.getElementById('footer').innerHTML = `
+    Station de référence : <a href="${st.datacake}" target="_blank" rel="noopener">Datacake — ${st.name}</a>
+    &nbsp;·&nbsp; Coordonnées ${data.location.lat}, ${data.location.lon}
+    &nbsp;·&nbsp; Données générées automatiquement chaque heure.
+  `;
+
+  drawChart(data.hours || []);
+}
+
+function drawChart(hours){
+  const ctx = document.getElementById('chart');
+  const labels = hours.map(h => fmtHour(h.time));
+  const corrected = hours.map(h => h.temp_corrected);
+  const raw = hours.map(h => h.temp_raw);
+  if(window._chart) window._chart.destroy();
+  window._chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Température corrigée', data: corrected, borderColor: '#38bdf8',
+          backgroundColor: 'rgba(56,189,248,0.15)', fill: true, tension: 0.3, pointRadius: 2 },
+        { label: 'Modèle brut (ICON-CH1)', data: raw, borderColor: '#94a3b8',
+          borderDash: [4,4], pointRadius: 0, tension: 0.3 }
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { labels: { color: '#e2e8f0' } } },
+      scales: {
+        x: { ticks: { color: '#94a3b8', maxRotation: 60, minRotation: 60 }, grid: { color: '#334155' } },
+        y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
+      }
+    }
+  });
+}
+
+renderTabs();
+load();
+</script>
+</body>
+</html>
