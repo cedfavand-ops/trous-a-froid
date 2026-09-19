@@ -1,0 +1,55 @@
+name: Mise à jour des prévisions (toutes stations)
+
+on:
+  schedule:
+    - cron: "5 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Générer les prévisions de toutes les stations
+        env:
+          DATACAKE_TOKEN_GREOLIERES: ${{ secrets.DATACAKE_TOKEN_GREOLIERES }}
+          DATACAKE_DEVICE_ID_GREOLIERES: ${{ secrets.DATACAKE_DEVICE_ID_GREOLIERES }}
+          DATACAKE_TEMP_FIELD_GREOLIERES: ${{ secrets.DATACAKE_TEMP_FIELD_GREOLIERES }}
+
+          DATACAKE_TOKEN_CHAUD_CLAPIER: ${{ secrets.DATACAKE_TOKEN_CHAUD_CLAPIER }}
+          DATACAKE_DEVICE_ID_CHAUD_CLAPIER: ${{ secrets.DATACAKE_DEVICE_ID_CHAUD_CLAPIER }}
+          DATACAKE_TEMP_FIELD_CHAUD_CLAPIER: ${{ secrets.DATACAKE_TEMP_FIELD_CHAUD_CLAPIER }}
+
+          DATACAKE_TOKEN_LA_PESSE: ${{ secrets.DATACAKE_TOKEN_LA_PESSE }}
+          DATACAKE_DEVICE_ID_LA_PESSE: ${{ secrets.DATACAKE_DEVICE_ID_LA_PESSE }}
+          DATACAKE_TEMP_FIELD_LA_PESSE: ${{ secrets.DATACAKE_TEMP_FIELD_LA_PESSE }}
+
+          DATACAKE_TOKEN_TIGNES: ${{ secrets.DATACAKE_TOKEN_TIGNES }}
+          DATACAKE_DEVICE_ID_TIGNES: ${{ secrets.DATACAKE_DEVICE_ID_TIGNES }}
+          DATACAKE_TEMP_FIELD_TIGNES: ${{ secrets.DATACAKE_TEMP_FIELD_TIGNES }}
+
+          DATACAKE_TOKEN_BEUIL: ${{ secrets.DATACAKE_TOKEN_BEUIL }}
+          DATACAKE_DEVICE_ID_BEUIL: ${{ secrets.DATACAKE_DEVICE_ID_BEUIL }}
+          DATACAKE_TEMP_FIELD_BEUIL: ${{ secrets.DATACAKE_TEMP_FIELD_BEUIL }}
+
+          # Ajouter ici les secrets des prochaines stations au même format :
+          # DATACAKE_TOKEN_<SUFFIX>, DATACAKE_DEVICE_ID_<SUFFIX>,
+          # DATACAKE_TEMP_FIELD_<SUFFIX> - et les ajouter aussi dans STATIONS
+          # (scripts/update_forecast.py) et STATIONS (index.html).
+        run: python scripts/update_forecast.py
+
+      - name: Commit et push si changement
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git diff --cached --quiet || git commit -m "Mise à jour prévisions [skip ci]"
+          git push
