@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trous à froid — Prévisions 24h</title>
+<title>Trous à froid — Prévisions</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <style>
   :root{
@@ -54,13 +54,18 @@
   canvas{max-height:340px;}
   footer{max-width:1100px;margin:20px auto 0;color:var(--muted);font-size:.75rem;text-align:center;}
   a{color:var(--accent);}
+  .day-sep td{
+    background:var(--card2); color:var(--accent); font-weight:700; text-align:left;
+    padding:10px 12px; text-transform:capitalize; border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line); position:sticky; top:0; z-index:1;
+  }
   .err{background:#7f1d1d;color:#fecaca;padding:10px 14px;border-radius:10px;margin-bottom:14px;}
 </style>
 </head>
 <body>
 <header>
-  <h1>❄️ Trous à froid — Prévisions 24h</h1>
-  <div class="sub">Modèle ICON-CH1 (MétéoSuisse via Open-Meteo) · Fenêtre 18h → 17h lendemain · Températures nocturnes corrigées pour le trou à froid</div>
+  <h1>❄️ Trous à froid — Prévisions</h1>
+  <div class="sub">ICON-CH1 puis ICON-CH2 (MétéoSuisse via Open-Meteo) · 4 prochaines nuits · Températures nocturnes corrigées pour le trou à froid</div>
   <div class="meta" id="meta"></div>
 </header>
 
@@ -165,8 +170,19 @@ function render(data){
 
   const tbody = document.getElementById('rows');
   tbody.innerHTML = '';
+  let lastDateKey = null;
   (data.hours || []).forEach(h => {
-    const hourNum = new Date(h.time).getHours();
+    const d = new Date(h.time);
+    const dateKey = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+    if (dateKey !== lastDateKey) {
+      lastDateKey = dateKey;
+      const sep = document.createElement('tr');
+      sep.className = 'day-sep';
+      const label = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+      sep.innerHTML = `<td colspan="5">${label}</td>`;
+      tbody.appendChild(sep);
+    }
+    const hourNum = d.getHours();
     const isNight = hourNum >= 19 || hourNum < 8;
     const tr = document.createElement('tr');
     if(isNight) tr.classList.add('night');
