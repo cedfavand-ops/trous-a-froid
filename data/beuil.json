@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-19T12:19:05.004081+02:00",
+  "generated_at": "2026-09-19T12:27:45.309296+02:00",
   "run_time": "2026-09-17T00:00:00+02:00",
   "location": {
     "name": "Beuil - Cumba Clava",
@@ -193,9 +193,9 @@
     {
       "time": "2026-09-20T04:00:00+02:00",
       "temp_raw": 10.4,
-      "temp_corrected": 0.6,
+      "temp_corrected": 1.1,
       "corrected": true,
-      "correction_offset_c": -9.78,
+      "correction_offset_c": -9.26,
       "clarity": 1.0,
       "wind_speed": 5.4,
       "wind_gusts": 8.6,
@@ -209,9 +209,9 @@
     {
       "time": "2026-09-20T05:00:00+02:00",
       "temp_raw": 10.4,
-      "temp_corrected": 8.4,
+      "temp_corrected": 8.5,
       "corrected": true,
-      "correction_offset_c": -1.97,
+      "correction_offset_c": -1.89,
       "clarity": 0.2,
       "wind_speed": 4.1,
       "wind_gusts": 8.6,
@@ -225,9 +225,9 @@
     {
       "time": "2026-09-20T06:00:00+02:00",
       "temp_raw": 10.3,
-      "temp_corrected": 0.4,
+      "temp_corrected": 0.7,
       "corrected": true,
-      "correction_offset_c": -9.9,
+      "correction_offset_c": -9.59,
       "clarity": 1.0,
       "wind_speed": 2.8,
       "wind_gusts": 6.1,
@@ -241,9 +241,9 @@
     {
       "time": "2026-09-20T07:00:00+02:00",
       "temp_raw": 10.2,
-      "temp_corrected": 0.3,
+      "temp_corrected": 0.5,
       "corrected": true,
-      "correction_offset_c": -9.93,
+      "correction_offset_c": -9.65,
       "clarity": 1.0,
       "wind_speed": 1.8,
       "wind_gusts": 4.0,
