@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-19T19:01:58.808009+02:00",
+  "generated_at": "2026-09-19T21:16:07.793488+02:00",
   "run_time": "2026-09-17T00:00:00+02:00",
   "location": {
     "name": "Doline de Chaud Clapier",
@@ -12,7 +12,7 @@
     "end": "2026-09-23T17:00:00+02:00"
   },
   "correction": {
-    "current_offset_c": -0.39,
+    "current_offset_c": -6.3,
     "offset_profile": {
       "0": -0.39,
       "1": -2.58,
