@@ -40,10 +40,16 @@ jobs:
           DATACAKE_DEVICE_ID_BEUIL: ${{ secrets.DATACAKE_DEVICE_ID_BEUIL }}
           DATACAKE_TEMP_FIELD_BEUIL: ${{ secrets.DATACAKE_TEMP_FIELD_BEUIL }}
 
-          # Ajouter ici les secrets des prochaines stations au même format :
-          # DATACAKE_TOKEN_<SUFFIX>, DATACAKE_DEVICE_ID_<SUFFIX>,
-          # DATACAKE_TEMP_FIELD_<SUFFIX> - et les ajouter aussi dans STATIONS
-          # (scripts/update_forecast.py) et STATIONS (index.html).
+          # Un seul secret partagé pour toutes les stations Infoclimat (clé
+          # liée à un compte, pas à une station en particulier).
+          INFOCLIMAT_API_KEY: ${{ secrets.INFOCLIMAT_API_KEY }}
+
+          # Ajouter ici les secrets Datacake des prochaines stations Datacake au
+          # même format : DATACAKE_TOKEN_<SUFFIX>, DATACAKE_DEVICE_ID_<SUFFIX>,
+          # DATACAKE_TEMP_FIELD_<SUFFIX> - à ajouter aussi dans STATIONS
+          # (scripts/update_forecast.py) et STATIONS (index.html). Les nouvelles
+          # stations Infoclimat n'ont besoin d'aucun secret supplémentaire,
+          # juste d'une entrée dans STATIONS avec leur "infoclimat_id".
         run: python scripts/update_forecast.py
 
       - name: Commit et push si changement
