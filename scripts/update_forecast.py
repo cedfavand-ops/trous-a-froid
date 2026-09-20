@@ -1,30 +1,32 @@
 #!/usr/bin/env python3
 """
 Génère data/<slug>.json pour chaque station de la liste STATIONS, à partir
-du modèle ICON-CH1 (Open-Meteo / MétéoSuisse), avec correction nocturne du
-"trou à froid" apprise automatiquement à partir des observations Datacake
-de chaque station.
+du modèle ICON-CH1 (précis, ~33h) complété par ICON-CH2 (jusqu'à 120h) via
+Open-Meteo / MétéoSuisse, avec correction nocturne du "trou à froid" apprise
+automatiquement à partir des observations de chaque station.
 
-Toute la logique (nébulosité effective, profil de correction non-linéaire
-par case horaire, apprentissage par moyenne mobile, lissage entre cases
-voisines) est identique à ce qui existait sur les dépôts séparés
-Gréolières / Chaud Clapier - seule la boucle sur plusieurs stations est
-nouvelle.
+Deux sources d'observation possibles par station (champ "source") :
+  - "datacake"   : secrets DATACAKE_TOKEN_<SUFFIX>, DATACAKE_DEVICE_ID_<SUFFIX>,
+                   DATACAKE_TEMP_FIELD_<SUFFIX> (un compte Datacake par station,
+                   éventuellement différents comptes).
+  - "infoclimat" : un seul secret partagé INFOCLIMAT_API_KEY pour toutes les
+                   stations Infoclimat, chacune identifiée par son propre
+                   "infoclimat_id" (ex: "STATIC0213", "000UF").
 
-Pour ajouter une station : ajouter une entrée à STATIONS ci-dessous, puis
-créer les 3 secrets GitHub Actions correspondants
-(DATACAKE_TOKEN_<SUFFIX>, DATACAKE_DEVICE_ID_<SUFFIX>,
-DATACAKE_TEMP_FIELD_<SUFFIX>).
-
-Sans les secrets d'une station, celle-ci fonctionne quand même : elle
-applique le dernier profil de correction connu (ou le profil par défaut)
-mais n'apprend pas.
+Toute la logique de correction (nébulosité effective, profil non-linéaire par
+case horaire, apprentissage par moyenne mobile, lissage entre cases voisines)
+est indépendante de la source d'observation - fetch_datacake_series et
+fetch_infoclimat_series ont le même contrat de retour :
+  - liste de (datetime, température) en cas de succès (peut être vide)
+  - None en cas d'échec de la requête elle-même (jamais traité comme "nuit
+    sans données exploitables", pour permettre un nouvel essai au prochain
+    passage plutôt que d'abandonner définitivement).
 """
 import json
 import math
 import os
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date as date_cls
 from zoneinfo import ZoneInfo
 
 import urllib.request
@@ -34,8 +36,6 @@ import urllib.error
 TZ = ZoneInfo("Europe/Paris")
 
 # --- Registre des stations --------------------------------------------------
-# env_suffix -> lit les secrets DATACAKE_TOKEN_<suffix>, DATACAKE_DEVICE_ID_<suffix>,
-# DATACAKE_TEMP_FIELD_<suffix> (déclarés dans .github/workflows/update.yml).
 STATIONS = [
     {
         "slug": "greolieres",
@@ -43,6 +43,7 @@ STATIONS = [
         "lat": 43.8318,
         "lon": 6.9617,
         "elevation_m": 1388,
+        "source": "datacake",
         "datacake_url": "https://app.datacake.de/pd/8edbfefb-584e-4866-a684-0b84928b85c9",
         "env_suffix": "GREOLIERES",
     },
@@ -52,6 +53,7 @@ STATIONS = [
         "lat": 44.915705,
         "lon": 5.335803,
         "elevation_m": 1378,
+        "source": "datacake",
         "datacake_url": "https://app.datacake.de/pd/d4b23fdc-eca0-4658-9d0b-66829a0b9890",
         "env_suffix": "CHAUD_CLAPIER",
     },
@@ -61,6 +63,7 @@ STATIONS = [
         "lat": 46.272,
         "lon": 5.834,
         "elevation_m": 1175,
+        "source": "datacake",
         "datacake_url": "https://app.datacake.de/pd/96a819b1-c90c-4353-8a65-ba13f4fd0276",
         "env_suffix": "LA_PESSE",
     },
@@ -70,6 +73,7 @@ STATIONS = [
         "lat": 45.439,
         "lon": 6.872,
         "elevation_m": 2684,
+        "source": "datacake",
         "datacake_url": "https://app.datacake.de/pd/39371b61-daed-40b2-b329-d1e9db559c49",
         "env_suffix": "TIGNES",
     },
@@ -79,27 +83,80 @@ STATIONS = [
         "lat": 44.090,
         "lon": 6.957,
         "elevation_m": 1545,
+        "source": "datacake",
         "datacake_url": "https://app.datacake.de/pd/6152f64c-a2bc-4678-b6d0-77836ae26eb8",
         "env_suffix": "BEUIL",
+    },
+    {
+        "slug": "darbounouse",
+        "name": "La Chapelle-en-Vercors - Combe de Darbounouse",
+        "lat": 44.97,
+        "lon": 5.48,
+        "elevation_m": 1282,
+        "source": "infoclimat",
+        "infoclimat_id": "STATIC0213",
+        "infoclimat_url": "https://www.infoclimat.fr/observations-meteo/temps-reel/la-chapelle-en-vercors-combe-de-darbounouse/STATIC0213.html",
+    },
+    {
+        "slug": "oscence",
+        "name": "La Chapelle-en-Vercors - Combe-de-l'Oscence",
+        "lat": 44.97,
+        "lon": 5.38,
+        "elevation_m": 975,
+        "source": "infoclimat",
+        "infoclimat_id": "000UF",
+        "infoclimat_url": "https://www.infoclimat.fr/observations-meteo/temps-reel/la-chapelle-en-vercors-combe-de-l-oscence/000UF.html",
+    },
+    {
+        "slug": "moulin-de-courbet",
+        "name": "Lachapelle-Graillouse - Moulin de Courbet",
+        "lat": 44.79,
+        "lon": 4.00,
+        "elevation_m": 1134,
+        "source": "infoclimat",
+        "infoclimat_id": "STATIC0407",
+        "infoclimat_url": "https://www.infoclimat.fr/observations-meteo/temps-reel/lachapelle-graillouse-moulin-de-courbet/STATIC0407.html",
+    },
+    {
+        "slug": "saint-christol",
+        "name": "Saint-Christol",
+        "lat": 44.03,
+        "lon": 5.49,
+        "elevation_m": 824,
+        "source": "infoclimat",
+        "infoclimat_id": "STATIC0257",
+        "infoclimat_url": "https://www.infoclimat.fr/observations-meteo/temps-reel/saint-christol/STATIC0257.html",
+    },
+    {
+        "slug": "solaison",
+        "name": "Brizon - Doline de Solaison",
+        "lat": 46.03,
+        "lon": 6.42,
+        "elevation_m": 1479,
+        "source": "infoclimat",
+        "infoclimat_id": "STATIC0305",
+        "infoclimat_url": "https://www.infoclimat.fr/observations-meteo/temps-reel/brizon-doline-de-solaison/STATIC0305.html",
     },
 ]
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(ROOT, "data")
 
-CLEAR_CLOUD_THRESHOLD = 20      # nébulosité EFFECTIVE (%) en-dessous de laquelle le ciel est pleinement dégagé
-CLOUD_ZERO_THRESHOLD = 45       # nébulosité EFFECTIVE (%) au-delà de laquelle la correction est nulle
-CALM_WIND_THRESHOLD = 10        # vent moyen (km/h) en-dessous duquel il est pleinement calme
-WIND_ZERO_THRESHOLD = 22        # vent moyen (km/h) au-delà duquel la correction est nulle
-HIGH_CLOUD_ATTENUATION = 0.1    # poids résiduel des nuages hauts dans la nébulosité effective
-SUNSET_LEAD_MINUTES = 15        # la fenêtre de correction démarre ~15 min avant le coucher du soleil
-DEFAULT_ALPHA = 0.25            # poids donné à la dernière nuit dans la moyenne mobile (par case horaire)
-MAX_HISTORY = 90                # nombre de nuits conservées dans l'historique
-MAX_BUCKET_HOURS = 20           # nombre max de cases horaires suivies après le début de fenêtre (nuits d'hiver longues en altitude)
-LEARN_CLARITY_MIN = 0.6         # clarté minimale d'une heure pour qu'elle compte dans l'apprentissage
-FORECAST_NIGHTS = 4              # nombre de nuits couvertes (1 = juste la prochaine, via ICON-CH1 seul)
-CH1_FORECAST_DAYS = 2            # marge suffisante pour couvrir l'horizon réel d'ICON-CH1 (~33h)
-CH2_FORECAST_DAYS = 5            # jusqu'à 120h, pour couvrir les nuits 2 à 4
+CLEAR_CLOUD_THRESHOLD = 20
+CLOUD_ZERO_THRESHOLD = 45
+CALM_WIND_THRESHOLD = 10
+WIND_ZERO_THRESHOLD = 22
+HIGH_CLOUD_ATTENUATION = 0.1
+SUNSET_LEAD_MINUTES = 15
+DEFAULT_ALPHA = 0.25
+MAX_HISTORY = 90
+MAX_BUCKET_HOURS = 20
+LEARN_CLARITY_MIN = 0.6
+FORECAST_NIGHTS = 4
+CH1_FORECAST_DAYS = 2
+CH2_FORECAST_DAYS = 5
+
+INFOCLIMAT_API_KEY = os.environ.get("INFOCLIMAT_API_KEY", "").strip()
 
 
 def http_get_json(url, headers=None):
@@ -122,10 +179,6 @@ def fetch_openmeteo(lat, lon, elevation_m=None, past_days=2, forecast_days=3, mo
         "timezone": "Europe/Berlin",
         "wind_speed_unit": "kmh",
         "forecast_days": forecast_days,
-        # past_days étend aussi le tableau "daily" (lever/coucher du soleil) en
-        # arrière, contrairement à past_hours qui ne joue que sur "hourly" -
-        # indispensable pour retrouver le coucher de soleil d'hier soir et
-        # calculer rétrospectivement la fenêtre de correction de la nuit passée.
         "past_days": past_days,
     }
     if elevation_m is not None:
@@ -135,10 +188,6 @@ def fetch_openmeteo(lat, lon, elevation_m=None, past_days=2, forecast_days=3, mo
 
 
 def merge_ch1_ch2(om1, om2):
-    """Fusionne deux réponses Open-Meteo (ICON-CH1 courte échéance très
-    précis, ICON-CH2 plus loin mais jusqu'à 120h) en une seule série horaire
-    et un seul calendrier lever/coucher de soleil. ICON-CH1 est prioritaire
-    partout où il a une valeur ; ICON-CH2 comble le reste (au-delà de ~33h)."""
     h1, h2 = om1["hourly"], om2["hourly"]
     idx1 = {t: i for i, t in enumerate(h1["time"])}
     idx2 = {t: i for i, t in enumerate(h2["time"])}
@@ -161,8 +210,6 @@ def merge_ch1_ch2(om1, om2):
             vals.append(v)
         merged_hourly[name] = vals
 
-    # Calendrier lever/coucher de soleil : union des deux (identique en
-    # théorie, c'est un calcul astronomique, mais CH2 couvre plus de jours)
     merged_daily = {"time": [], "sunrise": [], "sunset": []}
     seen_dates = {}
     for om in (om1, om2):
@@ -175,7 +222,6 @@ def merge_ch1_ch2(om1, om2):
         merged_daily["sunset"].append(seen_dates[d][1])
 
     return {"hourly": merged_hourly, "daily": merged_daily}
-
 
 
 def parse_iso_local(s):
@@ -269,9 +315,7 @@ def save_bias_state(path, state):
 
 def fetch_datacake_series(token, device_id, temp_field, start_dt, end_dt):
     """Retourne une liste de (datetime, temperature), [] si succès sans
-    donnée, ou None si la requête elle-même a échoué (à ne JAMAIS traiter
-    comme "nuit sans données exploitables", pour permettre un nouvel essai
-    au prochain passage plutôt que d'abandonner définitivement)."""
+    donnée, ou None si la requête elle-même a échoué."""
     if not (token and device_id):
         return None
     params = {
@@ -300,8 +344,7 @@ def fetch_datacake_series(token, device_id, temp_field, start_dt, end_dt):
         return None
     if not data:
         print(
-            "[warn] Datacake a répondu mais sans aucune donnée sur cette période "
-            "(vérifier DATACAKE_DEVICE_ID, ou absence de mesures récentes).",
+            "[warn] Datacake a répondu mais sans aucune donnée sur cette période.",
             file=sys.stderr,
         )
         return []
@@ -324,6 +367,91 @@ def fetch_datacake_series(token, device_id, temp_field, start_dt, end_dt):
     return out
 
 
+def fetch_infoclimat_series(api_key, station_id, start_dt, end_dt):
+    """Retourne une liste de (datetime, temperature), [] si succès sans
+    donnée, ou None si la requête elle-même a échoué.
+
+    Format d'appel d'après le code source du wrapper officiel InfoClimatAPI
+    (pip install info-climat-api) :
+      GET https://www.infoclimat.fr/opendata/?method=get&format=json
+          &start=YYYY-MM-DD&end=YYYY-MM-DD&token=<clé>&stations[]=<id>
+    La forme exacte de la réponse JSON n'a pas pu être vérifiée en amont
+    (l'API n'était pas testable depuis l'environnement de préparation) -
+    ce parseur essaie plusieurs formes plausibles et journalise un extrait
+    de la réponse si aucune ne correspond, pour un diagnostic immédiat.
+    """
+    if not (api_key and station_id):
+        return None
+    params = {
+        "method": "get",
+        "format": "json",
+        "start": start_dt.astimezone(TZ).date().isoformat(),
+        "end": end_dt.astimezone(TZ).date().isoformat(),
+        "token": api_key,
+    }
+    url = "https://www.infoclimat.fr/opendata/?" + urllib.parse.urlencode(params) + f"&stations[]={station_id}"
+    try:
+        data = http_get_json(url)
+    except urllib.error.HTTPError as e:
+        try:
+            body = e.read().decode("utf-8", errors="replace")[:500]
+        except Exception:
+            body = "(impossible de lire le corps de la réponse)"
+        print(
+            f"[warn] Infoclimat indisponible: HTTP {e.code} {e.reason} — "
+            f"station={station_id} — réponse: {body}",
+            file=sys.stderr,
+        )
+        return None
+    except (urllib.error.URLError, ValueError) as e:
+        print(f"[warn] Infoclimat indisponible: {e} (station={station_id})", file=sys.stderr)
+        return None
+
+    out = []
+    try:
+        # Forme plausible 1 (la plus probable d'après la doc GraphQL Infoclimat) :
+        # {"stations": {"<id>": {"hourly"|"data": [ {"timestamp"|"dh_utc"|"date": ..., "temperature"|"temp": ...}, ... ]}}}
+        candidates = None
+        if isinstance(data, dict) and "stations" in data:
+            st = data["stations"].get(station_id) or next(iter(data["stations"].values()), None)
+            if isinstance(st, dict):
+                candidates = st.get("hourly") or st.get("data") or st.get("observations")
+        elif isinstance(data, dict) and station_id in data:
+            st = data[station_id]
+            candidates = st.get("hourly") or st.get("data") if isinstance(st, dict) else st
+        elif isinstance(data, list):
+            candidates = data
+
+        if isinstance(candidates, list):
+            for row in candidates:
+                if not isinstance(row, dict):
+                    continue
+                t_raw = row.get("dh_utc") or row.get("timestamp") or row.get("date") or row.get("time")
+                v = row.get("temperature") or row.get("temp") or row.get("temperature_sol")
+                if t_raw is None or v is None:
+                    continue
+                t_str = str(t_raw).replace("Z", "+00:00").replace(" ", "T")
+                try:
+                    t = datetime.fromisoformat(t_str)
+                except ValueError:
+                    continue
+                if t.tzinfo is None:
+                    t = t.replace(tzinfo=ZoneInfo("UTC"))
+                out.append((t.astimezone(TZ), float(v)))
+    except Exception as e:
+        print(f"[warn] Infoclimat: erreur en analysant la réponse ({e}) — station={station_id}", file=sys.stderr)
+
+    if not out:
+        preview = json.dumps(data, ensure_ascii=False)[:800]
+        print(
+            f"[warn] Infoclimat: aucune donnée exploitable extraite pour {station_id}. "
+            f"Aperçu brut de la réponse pour diagnostic : {preview}",
+            file=sys.stderr,
+        )
+        return []
+    return out
+
+
 def nearest_value(series, target_dt, max_gap_minutes=40):
     best, best_gap = None, None
     for t, v in series:
@@ -336,12 +464,6 @@ def nearest_value(series, target_dt, max_gap_minutes=40):
 
 
 def compute_window(now, nights=1):
-    """Fenêtre d'affichage : démarre à 18h du jour même, se termine `nights`
-    nuits plus tard à 17h (nights=1 = comportement historique : juste la
-    nuit prochaine). Le basculement au cycle suivant se décide toujours sur
-    la fin de la toute PREMIÈRE nuit (17h le lendemain), pas sur la fin de
-    la fenêtre complète - sinon avec nights>1 on ne basculerait plus tous
-    les jours."""
     window_start = now.replace(hour=18, minute=0, second=0, microsecond=0)
     first_night_end = window_start + timedelta(hours=23)
     if now > first_night_end:
@@ -361,20 +483,52 @@ def corr_window_for_evening(evening_date, sunset_by_date, sunrise_by_date):
     return start, end
 
 
+def fetch_station_obs(station, start_dt, end_dt):
+    """Point d'entrée unique vers la bonne source d'observation selon
+    station["source"]. Retourne toujours le même contrat que
+    fetch_datacake_series (liste, [] ou None)."""
+    if station["source"] == "datacake":
+        token = os.environ.get(f"DATACAKE_TOKEN_{station['env_suffix']}", "").strip()
+        device_id = os.environ.get(f"DATACAKE_DEVICE_ID_{station['env_suffix']}", "").strip()
+        temp_field = os.environ.get(f"DATACAKE_TEMP_FIELD_{station['env_suffix']}", "TEMPERATURE").strip()
+        return fetch_datacake_series(token, device_id, temp_field, start_dt, end_dt)
+    elif station["source"] == "infoclimat":
+        return fetch_infoclimat_series(INFOCLIMAT_API_KEY, station["infoclimat_id"], start_dt, end_dt)
+    else:
+        print(f"[error] [{station['slug']}] source inconnue: {station['source']}", file=sys.stderr)
+        return None
+
+
+def station_has_credentials(station):
+    if station["source"] == "datacake":
+        return bool(
+            os.environ.get(f"DATACAKE_TOKEN_{station['env_suffix']}", "").strip()
+            and os.environ.get(f"DATACAKE_DEVICE_ID_{station['env_suffix']}", "").strip()
+        )
+    elif station["source"] == "infoclimat":
+        return bool(INFOCLIMAT_API_KEY and station.get("infoclimat_id"))
+    return False
+
+
 def process_station(station, now):
     slug = station["slug"]
-    token = os.environ.get(f"DATACAKE_TOKEN_{station['env_suffix']}", "").strip()
-    device_id = os.environ.get(f"DATACAKE_DEVICE_ID_{station['env_suffix']}", "").strip()
-    temp_field = os.environ.get(f"DATACAKE_TEMP_FIELD_{station['env_suffix']}", "TEMPERATURE").strip()
 
-    if not token or not device_id:
-        print(
-            f"[warn] [{slug}] DATACAKE_TOKEN_{station['env_suffix']} et/ou "
-            f"DATACAKE_DEVICE_ID_{station['env_suffix']} absents ou vides : "
-            "correction appliquée avec le profil déjà appris, mais aucun "
-            "apprentissage n'aura lieu ce passage-ci.",
-            file=sys.stderr,
-        )
+    if not station_has_credentials(station):
+        if station["source"] == "datacake":
+            print(
+                f"[warn] [{slug}] DATACAKE_TOKEN_{station['env_suffix']} et/ou "
+                f"DATACAKE_DEVICE_ID_{station['env_suffix']} absents ou vides : "
+                "correction appliquée avec le profil déjà appris, mais aucun "
+                "apprentissage n'aura lieu ce passage-ci.",
+                file=sys.stderr,
+            )
+        else:
+            print(
+                f"[warn] [{slug}] INFOCLIMAT_API_KEY absent ou vide : correction "
+                "appliquée avec le profil déjà appris, mais aucun apprentissage "
+                "n'aura lieu ce passage-ci.",
+                file=sys.stderr,
+            )
 
     forecast_path = os.path.join(DATA_DIR, f"{slug}.json")
     bias_path = os.path.join(DATA_DIR, f"{slug}_bias_state.json")
@@ -417,9 +571,6 @@ def process_station(station, now):
 
     window_start, window_end = compute_window(now, nights=FORECAST_NIGHTS)
 
-    # Une fenêtre de correction par nuit couverte (mêmes cases horaires
-    # apprises, réutilisées identiquement nuit après nuit puisqu'elles ne
-    # dépendent que du temps écoulé depuis le coucher du soleil, pas de la date).
     night_windows = []
     for n in range(FORECAST_NIGHTS):
         evening_date = window_start.date() + timedelta(days=n)
@@ -490,17 +641,15 @@ def process_station(station, now):
         })
         t += timedelta(hours=1)
 
-    # --- Apprentissage : nuit la plus récente entièrement écoulée ---
     candidate_evening = window_start.date() - timedelta(days=1)
     cand_start, cand_end = corr_window_for_evening(candidate_evening, sunset_by_date, sunrise_by_date)
     night_ready = cand_end is not None and now >= cand_end
     night_key = candidate_evening.isoformat()
 
-    if night_ready and bias.get("last_processed_night") != night_key and token and device_id:
-        obs_series = fetch_datacake_series(token, device_id, temp_field,
-                                            cand_start - timedelta(minutes=30), cand_end + timedelta(minutes=30))
+    if night_ready and bias.get("last_processed_night") != night_key and station_has_credentials(station):
+        obs_series = fetch_station_obs(station, cand_start - timedelta(minutes=30), cand_end + timedelta(minutes=30))
         if obs_series is None:
-            print(f"[warn] [{slug}] Nuit {night_key} non traitée (échec Datacake) — nouvel essai au prochain passage.",
+            print(f"[warn] [{slug}] Nuit {night_key} non traitée (échec récupération obs) — nouvel essai au prochain passage.",
                   file=sys.stderr)
             learned = None
         else:
