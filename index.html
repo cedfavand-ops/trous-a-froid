@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trous à froid — Prévisions</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   :root{
     --bg:#0f172a; --card:#1e293b; --card2:#26334a; --text:#e2e8f0; --muted:#94a3b8;
@@ -69,6 +71,25 @@
   .minmax-day .tn{color:var(--cold);font-weight:700;font-size:1.05rem;}
   .minmax-day .tx{color:var(--warm);font-weight:700;font-size:1.05rem;}
   .minmax-day .sep{color:var(--muted);margin:0 4px;}
+
+  #map-view{display:none;}
+  #map-view.active{display:block;}
+  #leaflet-map{
+    height:520px; border-radius:14px; overflow:hidden; background:var(--card);
+  }
+  .map-tooltip{
+    background:var(--card) !important; color:var(--text) !important; border:1px solid var(--line) !important;
+    border-radius:8px !important; padding:4px 8px !important; font-size:.8rem !important;
+    box-shadow:none !important;
+  }
+  .map-tooltip::before{border-top-color:var(--card) !important;}
+  .leaflet-popup-content-wrapper{
+    background:var(--card) !important; color:var(--text) !important; border-radius:10px !important;
+  }
+  .leaflet-popup-content{font-size:.82rem; line-height:1.5;}
+  .leaflet-popup-tip{background:var(--card) !important;}
+  .popup-tn{color:var(--cold); font-weight:700;}
+  .popup-tx{color:var(--warm); font-weight:700;}
 </style>
 </head>
 <body>
@@ -81,26 +102,34 @@
 <div class="wrap">
   <div class="tabs" id="tabs"></div>
   <div id="error"></div>
-  <div class="minmax" id="minmax"></div>
-  <div class="table-scroll">
-    <table>
-      <thead>
-        <tr>
-          <th>Heure</th>
-          <th>Ciel</th>
-          <th>Température</th>
-          <th>Vent</th>
-          <th>Direction</th>
-        </tr>
-      </thead>
-      <tbody id="rows"></tbody>
-    </table>
-  </div>
-  <div class="legend" id="legend"></div>
 
-  <div class="chart-card">
-    <h2>Évolution de la température (corrigée)</h2>
-    <canvas id="chart"></canvas>
+  <div id="station-view">
+    <div class="minmax" id="minmax"></div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Heure</th>
+            <th>Ciel</th>
+            <th>Température</th>
+            <th>Vent</th>
+            <th>Direction</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="legend" id="legend"></div>
+
+    <div class="chart-card">
+      <h2>Évolution de la température (corrigée)</h2>
+      <canvas id="chart"></canvas>
+    </div>
+  </div>
+
+  <div id="map-view">
+    <div id="leaflet-map"></div>
+    <div class="legend">Cliquer sur une station pour le détail jour par jour. Étiquette permanente : Tn / Tx de demain.</div>
   </div>
 </div>
 
@@ -127,7 +156,7 @@ const PICTO_LABEL = {
   "voile":"Ciel voilé","pluie-faible":"Pluie faible","pluie-forte":"Pluie forte","neige":"Neige","brouillard":"Brouillard"
 };
 
-let currentSlug = STATIONS[0].slug;
+let currentSlug = STATIONS[0].slug; // ou 'MAP' pour la vue carte
 
 function windColor(speed){
   if(speed < 10) return '#60a5fa';
@@ -140,6 +169,24 @@ function fmtHour(iso){
   return d.toLocaleString('fr-FR', {weekday:'short', hour:'2-digit', minute:'2-digit'});
 }
 
+// Regroupe une série horaire en Tn/Tx par jour calendaire (heure locale) -
+// utilisé à la fois par les cartes Tn/Tx de la page station et par les
+// info-bulles de la carte géographique.
+function groupMinMaxByDay(hours){
+  const byDay = {};
+  const order = [];
+  (hours || []).forEach(h => {
+    const d = new Date(h.time);
+    const key = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+    if (!(key in byDay)) { byDay[key] = { d, min: h.temp_corrected, max: h.temp_corrected }; order.push(key); }
+    else {
+      byDay[key].min = Math.min(byDay[key].min, h.temp_corrected);
+      byDay[key].max = Math.max(byDay[key].max, h.temp_corrected);
+    }
+  });
+  return order.map(key => byDay[key]);
+}
+
 function renderTabs(){
   const tabs = document.getElementById('tabs');
   tabs.innerHTML = '';
@@ -147,9 +194,25 @@ function renderTabs(){
     const btn = document.createElement('button');
     btn.className = 'tab' + (st.slug === currentSlug ? ' active' : '');
     btn.textContent = st.name;
-    btn.onclick = () => { currentSlug = st.slug; renderTabs(); load(); };
+    btn.onclick = () => { currentSlug = st.slug; renderTabs(); showStationView(); load(); };
     tabs.appendChild(btn);
   });
+  const mapBtn = document.createElement('button');
+  mapBtn.className = 'tab' + (currentSlug === 'MAP' ? ' active' : '');
+  mapBtn.textContent = '🗺️ Carte';
+  mapBtn.onclick = () => { currentSlug = 'MAP'; renderTabs(); showMapView(); loadMap(); };
+  tabs.appendChild(mapBtn);
+}
+
+function showStationView(){
+  document.getElementById('station-view').style.display = 'block';
+  document.getElementById('map-view').classList.remove('active');
+}
+function showMapView(){
+  document.getElementById('station-view').style.display = 'none';
+  document.getElementById('map-view').classList.add('active');
+  // Leaflet a besoin d'un recalcul de taille une fois le conteneur visible
+  if (window._leafletMap) setTimeout(() => window._leafletMap.invalidateSize(), 50);
 }
 
 async function load(){
@@ -168,21 +231,73 @@ async function load(){
   }
 }
 
-function renderMinMax(hours){
-  const byDay = {};
-  const order = [];
-  (hours || []).forEach(h => {
-    const d = new Date(h.time);
-    const key = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
-    if (!(key in byDay)) { byDay[key] = { d, min: h.temp_corrected, max: h.temp_corrected }; order.push(key); }
-    else {
-      byDay[key].min = Math.min(byDay[key].min, h.temp_corrected);
-      byDay[key].max = Math.max(byDay[key].max, h.temp_corrected);
-    }
+async function loadMap(){
+  document.getElementById('error').innerHTML = '';
+  if (!window._leafletMap) {
+    window._leafletMap = L.map('leaflet-map');
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 17
+    }).addTo(window._leafletMap);
+    window._leafletMarkers = [];
+  }
+  window._leafletMarkers.forEach(m => window._leafletMap.removeLayer(m));
+  window._leafletMarkers = [];
+
+  const results = await Promise.allSettled(
+    STATIONS.map(st => fetch(`data/${st.slug}.json?_=` + Date.now()).then(r => {
+      if (!r.ok) throw new Error('introuvable');
+      return r.json();
+    }))
+  );
+
+  const bounds = [];
+  let anyOk = false;
+  results.forEach((res, i) => {
+    const st = STATIONS[i];
+    if (res.status !== 'fulfilled') return;
+    const data = res.value;
+    const lat = data.location && data.location.lat, lon = data.location && data.location.lon;
+    if (lat == null || lon == null) return;
+    anyOk = true;
+    bounds.push([lat, lon]);
+
+    // Même règle que le tableau : le 1er groupe (aujourd'hui, dès 18h
+    // seulement) est partiel, on ne l'affiche pas comme un vrai Tn/Tx du jour.
+    const days = groupMinMaxByDay(data.hours || []).slice(1);
+    const tomorrow = days[0];
+    const tooltipLabel = tomorrow
+      ? `<b>${st.name}</b><br><span class="popup-tn">${Math.round(tomorrow.min)}°</span> / <span class="popup-tx">${Math.round(tomorrow.max)}°</span>`
+      : `<b>${st.name}</b><br>—`;
+
+    let popupHtml = `<b>${st.name}</b>${data.location.elevation_m ? ' · ' + data.location.elevation_m + ' m' : ''}<br><br>`;
+    days.forEach(d => {
+      const lbl = d.d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' });
+      popupHtml += `${lbl} : <span class="popup-tn">${d.min.toFixed(1)}°</span> / <span class="popup-tx">${d.max.toFixed(1)}°</span><br>`;
+    });
+
+    const marker = L.marker([lat, lon]).addTo(window._leafletMap);
+    marker.bindPopup(popupHtml);
+    marker.bindTooltip(tooltipLabel, { permanent: true, direction: 'top', className: 'map-tooltip', offset: [0, -8] });
+    window._leafletMarkers.push(marker);
   });
+
+  if (bounds.length) {
+    window._leafletMap.fitBounds(bounds, { padding: [50, 50] });
+  } else if (!anyOk) {
+    document.getElementById('error').innerHTML =
+      '<div class="err">Impossible de charger les prévisions des stations pour la carte.</div>';
+  }
+  setTimeout(() => window._leafletMap.invalidateSize(), 50);
+}
+
+function renderMinMax(hours){
+  // Le premier groupe (aujourd'hui) est toujours partiel : la fenêtre ne
+  // démarre qu'à 18h, donc son "Tn" ne serait que le minimum de ce soir,
+  // pas un vrai minimum journalier - on ne l'affiche pas.
+  const days = groupMinMaxByDay(hours).slice(1);
   const box = document.getElementById('minmax');
-  box.innerHTML = order.map(key => {
-    const { d, min, max } = byDay[key];
+  box.innerHTML = days.map(({ d, min, max }) => {
     const label = d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' });
     return `<div class="minmax-day">
       <div class="day-label">${label}</div>
