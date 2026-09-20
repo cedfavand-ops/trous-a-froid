@@ -8,7 +8,7 @@
 <style>
   :root{
     --bg:#0f172a; --card:#1e293b; --card2:#26334a; --text:#e2e8f0; --muted:#94a3b8;
-    --accent:#38bdf8; --cold:#60a5fa; --line:#334155;
+    --accent:#38bdf8; --cold:#60a5fa; --warm:#f87171; --line:#334155;
   }
   *{box-sizing:border-box;}
   body{
@@ -60,6 +60,15 @@
     border-bottom:1px solid var(--line); position:sticky; top:0; z-index:1;
   }
   .err{background:#7f1d1d;color:#fecaca;padding:10px 14px;border-radius:10px;margin-bottom:14px;}
+  .minmax{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .minmax-day{
+    background:var(--card); border-radius:12px; padding:10px 16px; text-align:center;
+    min-width:100px; flex:1;
+  }
+  .minmax-day .day-label{font-size:.75rem;color:var(--muted);text-transform:capitalize;margin-bottom:6px;}
+  .minmax-day .tn{color:var(--cold);font-weight:700;font-size:1.05rem;}
+  .minmax-day .tx{color:var(--warm);font-weight:700;font-size:1.05rem;}
+  .minmax-day .sep{color:var(--muted);margin:0 4px;}
 </style>
 </head>
 <body>
@@ -72,6 +81,7 @@
 <div class="wrap">
   <div class="tabs" id="tabs"></div>
   <div id="error"></div>
+  <div class="minmax" id="minmax"></div>
   <div class="table-scroll">
     <table>
       <thead>
@@ -154,7 +164,31 @@ async function load(){
       '<div class="err">Impossible de charger les prévisions (' + e.message + '). '
       + 'Le fichier sera créé au premier passage du workflow GitHub Actions.</div>';
     document.getElementById('rows').innerHTML = '';
+    document.getElementById('minmax').innerHTML = '';
   }
+}
+
+function renderMinMax(hours){
+  const byDay = {};
+  const order = [];
+  (hours || []).forEach(h => {
+    const d = new Date(h.time);
+    const key = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+    if (!(key in byDay)) { byDay[key] = { d, min: h.temp_corrected, max: h.temp_corrected }; order.push(key); }
+    else {
+      byDay[key].min = Math.min(byDay[key].min, h.temp_corrected);
+      byDay[key].max = Math.max(byDay[key].max, h.temp_corrected);
+    }
+  });
+  const box = document.getElementById('minmax');
+  box.innerHTML = order.map(key => {
+    const { d, min, max } = byDay[key];
+    const label = d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' });
+    return `<div class="minmax-day">
+      <div class="day-label">${label}</div>
+      <span class="tn">${min.toFixed(1)}°</span><span class="sep">/</span><span class="tx">${max.toFixed(1)}°</span>
+    </div>`;
+  }).join('');
 }
 
 function render(data){
@@ -222,6 +256,7 @@ function render(data){
   `;
 
   drawChart(data.hours || []);
+  renderMinMax(data.hours || []);
 }
 
 function drawChart(hours){
