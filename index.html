@@ -18,6 +18,7 @@
     background:linear-gradient(180deg,var(--bg),#0b1220); color:var(--text); padding:16px;
   }
   header{max-width:1100px;margin:0 auto 14px;}
+  .logo{height:60px;margin-bottom:10px;display:block;}
   h1{font-size:1.4rem;margin:0 0 4px;}
   .sub{color:var(--muted);font-size:.9rem;}
   .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;font-size:.82rem;color:var(--muted);}
@@ -39,6 +40,11 @@
   thead th{color:var(--muted);font-weight:500;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--card);}
   tbody tr:hover{background:var(--card2);}
   tbody tr.night{background:rgba(56,189,248,0.04);}
+  .day-sep td{
+    background:var(--card2); color:var(--accent); font-weight:700; text-align:left;
+    padding:10px 12px; text-transform:capitalize; border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line); position:sticky; top:0; z-index:1;
+  }
   .picto{width:34px;height:34px;display:block;margin:0 auto;}
   .clouds{font-size:.65rem;color:var(--muted);margin-top:2px;white-space:nowrap;}
   .clouds b{color:#93c5fd;font-weight:600;}
@@ -56,12 +62,6 @@
   canvas{max-height:340px;}
   footer{max-width:1100px;margin:20px auto 0;color:var(--muted);font-size:.75rem;text-align:center;}
   a{color:var(--accent);}
-  .day-sep td{
-    background:var(--card2); color:var(--accent); font-weight:700; text-align:left;
-    padding:10px 12px; text-transform:capitalize; border-top:1px solid var(--line);
-    border-bottom:1px solid var(--line); position:sticky; top:0; z-index:1;
-  }
-  .err{background:#7f1d1d;color:#fecaca;padding:10px 14px;border-radius:10px;margin-bottom:14px;}
   .minmax{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
   .minmax-day{
     background:var(--card); border-radius:12px; padding:10px 16px; text-align:center;
@@ -74,27 +74,24 @@
 
   #map-view{display:none;}
   #map-view.active{display:block;}
-  #leaflet-map{
-    height:520px; border-radius:14px; overflow:hidden; background:var(--card);
-  }
+  #leaflet-map{height:520px; border-radius:14px; overflow:hidden; background:var(--card);}
   .map-tooltip{
     background:var(--card) !important; color:var(--text) !important; border:1px solid var(--line) !important;
     border-radius:8px !important; padding:4px 8px !important; font-size:.8rem !important;
     box-shadow:none !important;
   }
   .map-tooltip::before{border-top-color:var(--card) !important;}
-  .leaflet-popup-content-wrapper{
-    background:var(--card) !important; color:var(--text) !important; border-radius:10px !important;
-  }
+  .leaflet-popup-content-wrapper{background:var(--card) !important; color:var(--text) !important; border-radius:10px !important;}
   .leaflet-popup-content{font-size:.82rem; line-height:1.5;}
   .leaflet-popup-tip{background:var(--card) !important;}
   .popup-tn{color:var(--cold); font-weight:700;}
   .popup-tx{color:var(--warm); font-weight:700;}
+  .err{background:#7f1d1d;color:#fecaca;padding:10px 14px;border-radius:10px;margin-bottom:14px;}
 </style>
 </head>
 <body>
 <header>
-  <img src="icons/logo.png" alt="Étude des trous à froid en France" style="height:60px; margin-bottom:10px; display:block;">
+  <img class="logo" src="icons/logo.png" alt="Étude des trous à froid en France">
   <h1>❄️ Trous à froid — Prévisions</h1>
   <div class="sub">ICON-CH1 puis ICON-CH2 (MétéoSuisse via Open-Meteo) · 4 prochaines nuits · Températures nocturnes corrigées pour le trou à froid</div>
   <div class="meta" id="meta"></div>
@@ -140,11 +137,16 @@
 // Ajouter une station ici suffit à la faire apparaître comme onglet -
 // le fichier data/<slug>.json correspondant doit être généré par le workflow.
 const STATIONS = [
-  { slug: "greolieres",    name: "Gréolières-les-Neiges",     datacake: "https://app.datacake.de/pd/8edbfefb-584e-4866-a684-0b84928b85c9" },
-  { slug: "chaud-clapier", name: "Doline de Chaud Clapier",   datacake: "https://app.datacake.de/pd/d4b23fdc-eca0-4658-9d0b-66829a0b9890" },
-  { slug: "la-pesse",      name: "La Pesse - Le Cernétrou",   datacake: "https://app.datacake.de/pd/96a819b1-c90c-4353-8a65-ba13f4fd0276" },
-  { slug: "tignes",        name: "Tignes - Pramécou",         datacake: "https://app.datacake.de/pd/39371b61-daed-40b2-b329-d1e9db559c49" },
-  { slug: "beuil",         name: "Beuil - Cumba Clava",       datacake: "https://app.datacake.de/pd/6152f64c-a2bc-4678-b6d0-77836ae26eb8" },
+  { slug: "greolieres",        name: "Gréolières-les-Neiges",                    datacake: "https://app.datacake.de/pd/8edbfefb-584e-4866-a684-0b84928b85c9" },
+  { slug: "chaud-clapier",     name: "Doline de Chaud Clapier",                  datacake: "https://app.datacake.de/pd/d4b23fdc-eca0-4658-9d0b-66829a0b9890" },
+  { slug: "la-pesse",          name: "La Pesse - Le Cernétrou",                  datacake: "https://app.datacake.de/pd/96a819b1-c90c-4353-8a65-ba13f4fd0276" },
+  { slug: "tignes",            name: "Tignes - Pramécou",                        datacake: "https://app.datacake.de/pd/39371b61-daed-40b2-b329-d1e9db559c49" },
+  { slug: "beuil",             name: "Beuil - Cumba Clava",                      datacake: "https://app.datacake.de/pd/6152f64c-a2bc-4678-b6d0-77836ae26eb8" },
+  { slug: "darbounouse",       name: "Combe de Darbounouse",                     datacake: "https://www.infoclimat.fr/observations-meteo/temps-reel/la-chapelle-en-vercors-combe-de-darbounouse/STATIC0213.html" },
+  { slug: "oscence",           name: "Combe-de-l'Oscence",                       datacake: "https://www.infoclimat.fr/observations-meteo/temps-reel/la-chapelle-en-vercors-combe-de-l-oscence/000UF.html" },
+  { slug: "moulin-de-courbet", name: "Moulin de Courbet",                        datacake: "https://www.infoclimat.fr/observations-meteo/temps-reel/lachapelle-graillouse-moulin-de-courbet/STATIC0407.html" },
+  { slug: "saint-christol",    name: "Saint-Christol",                           datacake: "https://www.infoclimat.fr/observations-meteo/temps-reel/saint-christol/STATIC0257.html" },
+  { slug: "solaison",          name: "Doline de Solaison",                       datacake: "https://www.infoclimat.fr/observations-meteo/temps-reel/brizon-doline-de-solaison/STATIC0305.html" },
 ];
 
 const PICTO_MAP = {
@@ -170,9 +172,7 @@ function fmtHour(iso){
   return d.toLocaleString('fr-FR', {weekday:'short', hour:'2-digit', minute:'2-digit'});
 }
 
-// Regroupe une série horaire en Tn/Tx par jour calendaire (heure locale) -
-// utilisé à la fois par les cartes Tn/Tx de la page station et par les
-// info-bulles de la carte géographique.
+// Regroupe une série horaire en Tn/Tx par jour calendaire (heure locale).
 function groupMinMaxByDay(hours){
   const byDay = {};
   const order = [];
@@ -212,7 +212,6 @@ function showStationView(){
 function showMapView(){
   document.getElementById('station-view').style.display = 'none';
   document.getElementById('map-view').classList.add('active');
-  // Leaflet a besoin d'un recalcul de taille une fois le conteneur visible
   if (window._leafletMap) setTimeout(() => window._leafletMap.invalidateSize(), 50);
 }
 
@@ -263,8 +262,6 @@ async function loadMap(){
     anyOk = true;
     bounds.push([lat, lon]);
 
-    // Même règle que le tableau : le 1er groupe (aujourd'hui, dès 18h
-    // seulement) est partiel, on ne l'affiche pas comme un vrai Tn/Tx du jour.
     const days = groupMinMaxByDay(data.hours || []).slice(1);
     const tomorrow = days[0];
     const tooltipLabel = tomorrow
@@ -362,11 +359,11 @@ function render(data){
 
   document.getElementById('legend').innerHTML =
     '* Température corrigée à la baisse par rapport au modèle brut, sur la base des écarts observés '
-    + 'à la station Datacake les heures dégagées et calmes précédentes (trou à froid).';
+    + 'à la station les heures dégagées et calmes précédentes (trou à froid).';
 
   const st = STATIONS.find(s => s.slug === currentSlug);
   document.getElementById('footer').innerHTML = `
-    Station de référence : <a href="${st.datacake}" target="_blank" rel="noopener">Datacake — ${st.name}</a>
+    Station de référence : <a href="${st.datacake}" target="_blank" rel="noopener">${st.name}</a>
     &nbsp;·&nbsp; Coordonnées ${data.location.lat}, ${data.location.lon}
     &nbsp;·&nbsp; Données générées automatiquement chaque heure.
   `;
@@ -388,7 +385,7 @@ function drawChart(hours){
       datasets: [
         { label: 'Température corrigée', data: corrected, borderColor: '#38bdf8',
           backgroundColor: 'rgba(56,189,248,0.15)', fill: true, tension: 0.3, pointRadius: 2 },
-        { label: 'Modèle brut (ICON-CH1)', data: raw, borderColor: '#94a3b8',
+        { label: 'Modèle brut (ICON-CH1/CH2)', data: raw, borderColor: '#94a3b8',
           borderDash: [4,4], pointRadius: 0, tension: 0.3 }
       ]
     },
