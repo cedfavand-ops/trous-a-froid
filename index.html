@@ -166,6 +166,7 @@ function render(data){
     <span>Généré le ${genDate}</span>
     <span>Run modèle : ${runDate}</span>
     <span>Correction actuelle : ${data.correction.current_offset_c !== null ? data.correction.current_offset_c.toFixed(1) + ' °C' : 'inactive (conditions non réunies)'}</span>
+    <span>Dernière nuit apprise : ${data.correction.last_night_error_c !== null && data.correction.last_night_error_c !== undefined ? data.correction.last_night_error_c.toFixed(1) + ' °C (écart obs.−modèle)' : 'n/a'}</span>
   `;
 
   const tbody = document.getElementById('rows');
