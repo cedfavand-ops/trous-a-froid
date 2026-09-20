@@ -390,8 +390,20 @@ def fetch_infoclimat_series(api_key, station_id, start_dt, end_dt):
         "token": api_key,
     }
     url = "https://www.infoclimat.fr/opendata/?" + urllib.parse.urlencode(params) + f"&stations[]={station_id}"
+    headers = {
+        # Certains serveurs (dont, semble-t-il, celui d'Infoclimat) renvoient
+        # silencieusement une page générique au lieu de l'API si la requête
+        # n'a pas d'en-tête User-Agent "de navigateur" - Python envoie sinon
+        # "Python-urllib/3.x", souvent filtré comme trafic robot.
+        "User-Agent": "Mozilla/5.0 (compatible; TrousAFroidBot/1.0; +https://github.com/)",
+        "Accept": "application/json",
+    }
+    raw_body = None
     try:
-        data = http_get_json(url)
+        req = urllib.request.Request(url, headers=headers)
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            raw_body = resp.read().decode("utf-8", errors="replace")
+        data = json.loads(raw_body)
     except urllib.error.HTTPError as e:
         try:
             body = e.read().decode("utf-8", errors="replace")[:500]
@@ -403,8 +415,16 @@ def fetch_infoclimat_series(api_key, station_id, start_dt, end_dt):
             file=sys.stderr,
         )
         return None
-    except (urllib.error.URLError, ValueError) as e:
+    except urllib.error.URLError as e:
         print(f"[warn] Infoclimat indisponible: {e} (station={station_id})", file=sys.stderr)
+        return None
+    except ValueError as e:
+        preview = (raw_body or "")[:500]
+        print(
+            f"[warn] Infoclimat: réponse non-JSON pour {station_id} ({e}). "
+            f"Aperçu brut (500 premiers caractères) : {preview!r}",
+            file=sys.stderr,
+        )
         return None
 
     out = []
