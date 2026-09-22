@@ -1,21 +1,24 @@
 {
   "offset_profile": {
-    "3": -7.24,
-    "4": -8.13,
-    "5": -8.67,
-    "6": -8.73,
-    "7": -8.45,
-    "8": -8.82,
-    "9": -9.27,
-    "10": -9.63,
-    "11": -10.11,
-    "12": -10.44,
-    "13": -10.59
+    "0": -1.7,
+    "1": -4.22,
+    "2": -6.01,
+    "3": -7.02,
+    "4": -7.77,
+    "5": -8.45,
+    "6": -8.86,
+    "7": -9.01,
+    "8": -9.33,
+    "9": -9.65,
+    "10": -10.0,
+    "11": -10.48,
+    "12": -10.75,
+    "13": -10.64
   },
   "alpha": 0.25,
-  "last_processed_night": "2026-09-20",
-  "last_night_error_c": -9.98,
-  "last_night_samples": 11,
+  "last_processed_night": "2026-09-21",
+  "last_night_error_c": -8.44,
+  "last_night_samples": 14,
   "history": [
     {
       "night": "2026-09-18",
@@ -139,6 +142,81 @@
           "bucket": 13,
           "error_c": -12.9,
           "offset_after": -10.59
+        }
+      ]
+    },
+    {
+      "night": "2026-09-21",
+      "buckets_learned": [
+        {
+          "bucket": 0,
+          "error_c": -0.8,
+          "offset_after": -1.7
+        },
+        {
+          "bucket": 1,
+          "error_c": -3.5,
+          "offset_after": -4.35
+        },
+        {
+          "bucket": 2,
+          "error_c": -5.4,
+          "offset_after": -6.15
+        },
+        {
+          "bucket": 3,
+          "error_c": -6.5,
+          "offset_after": -7.05
+        },
+        {
+          "bucket": 4,
+          "error_c": -6.7,
+          "offset_after": -7.77
+        },
+        {
+          "bucket": 5,
+          "error_c": -8.0,
+          "offset_after": -8.5
+        },
+        {
+          "bucket": 6,
+          "error_c": -9.5,
+          "offset_after": -8.92
+        },
+        {
+          "bucket": 7,
+          "error_c": -10.5,
+          "offset_after": -8.96
+        },
+        {
+          "bucket": 8,
+          "error_c": -10.9,
+          "offset_after": -9.34
+        },
+        {
+          "bucket": 9,
+          "error_c": -10.8,
+          "offset_after": -9.65
+        },
+        {
+          "bucket": 10,
+          "error_c": -11.0,
+          "offset_after": -9.97
+        },
+        {
+          "bucket": 11,
+          "error_c": -11.7,
+          "offset_after": -10.51
+        },
+        {
+          "bucket": 12,
+          "error_c": -12.0,
+          "offset_after": -10.83
+        },
+        {
+          "bucket": 13,
+          "error_c": -10.8,
+          "offset_after": -10.64
         }
       ]
     }
