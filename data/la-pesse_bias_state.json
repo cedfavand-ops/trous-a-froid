@@ -1,24 +1,24 @@
 {
   "offset_profile": {
     "0": -1.04,
-    "1": -4.86,
-    "2": -7.72,
-    "3": -7.76,
-    "4": -7.14,
-    "5": -6.95,
-    "6": -7.45,
-    "7": -9.17,
-    "8": -10.71,
-    "9": -11.31,
-    "10": -11.47,
-    "11": -11.41,
-    "12": -11.31,
-    "13": -11.18
+    "1": -4.72,
+    "2": -7.3,
+    "3": -7.75,
+    "4": -7.8,
+    "5": -8.15,
+    "6": -8.94,
+    "7": -10.21,
+    "8": -11.39,
+    "9": -12.11,
+    "10": -12.45,
+    "11": -12.58,
+    "12": -12.45,
+    "13": -12.16
   },
   "alpha": 0.25,
-  "last_processed_night": "2026-09-23",
-  "last_night_error_c": -10.94,
-  "last_night_samples": 14,
+  "last_processed_night": "2026-09-24",
+  "last_night_error_c": -13.89,
+  "last_night_samples": 10,
   "history": [
     {
       "night": "2026-09-18",
@@ -447,6 +447,61 @@
           "bucket": 13,
           "error_c": -11.4,
           "offset_after": -11.18
+        }
+      ]
+    },
+    {
+      "night": "2026-09-24",
+      "buckets_learned": [
+        {
+          "bucket": 4,
+          "error_c": -9.6,
+          "offset_after": -7.75
+        },
+        {
+          "bucket": 5,
+          "error_c": -11.5,
+          "offset_after": -8.09
+        },
+        {
+          "bucket": 6,
+          "error_c": -13.0,
+          "offset_after": -8.84
+        },
+        {
+          "bucket": 7,
+          "error_c": -13.4,
+          "offset_after": -10.23
+        },
+        {
+          "bucket": 8,
+          "error_c": -13.8,
+          "offset_after": -11.48
+        },
+        {
+          "bucket": 9,
+          "error_c": -14.7,
+          "offset_after": -12.16
+        },
+        {
+          "bucket": 10,
+          "error_c": -15.5,
+          "offset_after": -12.48
+        },
+        {
+          "bucket": 11,
+          "error_c": -16.3,
+          "offset_after": -12.63
+        },
+        {
+          "bucket": 12,
+          "error_c": -16.0,
+          "offset_after": -12.48
+        },
+        {
+          "bucket": 13,
+          "error_c": -15.1,
+          "offset_after": -12.16
         }
       ]
     }
