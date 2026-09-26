@@ -666,13 +666,6 @@ def process_station(station, now):
     night_ready = cand_end is not None and now >= cand_end
     night_key = candidate_evening.isoformat()
 
-    print(
-        f"[debug] [{slug}] night_key={night_key} cand_start={cand_start} cand_end={cand_end} "
-        f"night_ready={night_ready} now={now} last_processed_night={bias.get('last_processed_night')!r} "
-        f"has_creds={station_has_credentials(station)}",
-        file=sys.stderr,
-    )
-
     if night_ready and bias.get("last_processed_night") != night_key and station_has_credentials(station):
         obs_series = fetch_station_obs(station, cand_start - timedelta(minutes=30), cand_end + timedelta(minutes=30))
         if obs_series is None:
@@ -680,7 +673,6 @@ def process_station(station, now):
                   file=sys.stderr)
             learned = None
         else:
-            print(f"[debug] [{slug}] obs_series récupérée : {len(obs_series)} points", file=sys.stderr)
             learned = []
             t = cand_start
             while t <= cand_end:
@@ -702,7 +694,6 @@ def process_station(station, now):
                 t += timedelta(hours=1)
 
         if learned is not None:
-            print(f"[debug] [{slug}] learned={learned}", file=sys.stderr)
             bias["offset_profile"] = smooth_profile(profile)
             bias["last_processed_night"] = night_key
             bias["last_night_samples"] = len(learned)
@@ -744,7 +735,16 @@ def process_station(station, now):
 def main():
     os.makedirs(DATA_DIR, exist_ok=True)
     now = datetime.now(TZ)
-    for station in STATIONS:
+    # STATIONS_SOURCE_FILTER (variable d'env optionnelle) limite le run aux
+    # stations d'une source donnée ("datacake" ou "infoclimat") - utile pour
+    # séparer le workflow horaire (cloud, Datacake) du workflow dédié aux
+    # stations Infoclimat (runner auto-hébergé, IP fixe requise par leur API).
+    source_filter = os.environ.get("STATIONS_SOURCE_FILTER", "").strip()
+    stations_to_run = STATIONS
+    if source_filter:
+        stations_to_run = [s for s in STATIONS if s["source"] == source_filter]
+        print(f"[info] Filtré sur source='{source_filter}' : {[s['slug'] for s in stations_to_run]}")
+    for station in stations_to_run:
         try:
             process_station(station, now)
         except Exception as e:
