@@ -1,0 +1,39 @@
+name: Mise à jour des prévisions (stations Infoclimat, runner maison)
+
+# Pas de "schedule" ici volontairement : ce workflow tourne sur ta propre
+# machine (auto-hébergée), pas sur le cloud GitHub. Lance-le manuellement
+# (Actions → ce workflow → Run workflow) une fois ta machine allumée et le
+# runner démarré - l'API Infoclimat exige que la requête vienne de l'adresse
+# IP exacte enregistrée avec ta clé API, ce que seule ta connexion internet
+# personnelle peut garantir (pas les serveurs cloud partagés de GitHub).
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    # Doit correspondre au(x) label(s) donné(s) à ton runner lors de son
+    # enregistrement (voir README.md - section "Runner auto-hébergé").
+    runs-on: [self-hosted, infoclimat]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Générer les prévisions (stations Infoclimat uniquement)
+        env:
+          STATIONS_SOURCE_FILTER: infoclimat
+          INFOCLIMAT_API_KEY: ${{ secrets.INFOCLIMAT_API_KEY }}
+        run: python scripts/update_forecast.py
+
+      - name: Commit et push si changement
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git diff --cached --quiet || git commit -m "Mise à jour prévisions (Infoclimat) [skip ci]"
+          git push
