@@ -1,4 +1,4 @@
-name: Mise à jour des prévisions (toutes stations)
+name: Mise à jour des prévisions (stations Datacake, cloud)
 
 on:
   schedule:
@@ -18,8 +18,10 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Générer les prévisions de toutes les stations
+      - name: Générer les prévisions (stations Datacake uniquement)
         env:
+          STATIONS_SOURCE_FILTER: datacake
+
           DATACAKE_TOKEN_GREOLIERES: ${{ secrets.DATACAKE_TOKEN_GREOLIERES }}
           DATACAKE_DEVICE_ID_GREOLIERES: ${{ secrets.DATACAKE_DEVICE_ID_GREOLIERES }}
           DATACAKE_TEMP_FIELD_GREOLIERES: ${{ secrets.DATACAKE_TEMP_FIELD_GREOLIERES }}
@@ -40,16 +42,9 @@ jobs:
           DATACAKE_DEVICE_ID_BEUIL: ${{ secrets.DATACAKE_DEVICE_ID_BEUIL }}
           DATACAKE_TEMP_FIELD_BEUIL: ${{ secrets.DATACAKE_TEMP_FIELD_BEUIL }}
 
-          # Un seul secret partagé pour toutes les stations Infoclimat (clé
-          # liée à un compte, pas à une station en particulier).
-          INFOCLIMAT_API_KEY: ${{ secrets.INFOCLIMAT_API_KEY }}
-
-          # Ajouter ici les secrets Datacake des prochaines stations Datacake au
-          # même format : DATACAKE_TOKEN_<SUFFIX>, DATACAKE_DEVICE_ID_<SUFFIX>,
-          # DATACAKE_TEMP_FIELD_<SUFFIX> - à ajouter aussi dans STATIONS
-          # (scripts/update_forecast.py) et STATIONS (index.html). Les nouvelles
-          # stations Infoclimat n'ont besoin d'aucun secret supplémentaire,
-          # juste d'une entrée dans STATIONS avec leur "infoclimat_id".
+          # Ajouter ici les secrets des prochaines stations Datacake au même
+          # format, + une entrée dans STATIONS (scripts/update_forecast.py et
+          # index.html).
         run: python scripts/update_forecast.py
 
       - name: Commit et push si changement
@@ -57,5 +52,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/
-          git diff --cached --quiet || git commit -m "Mise à jour prévisions [skip ci]"
+          git diff --cached --quiet || git commit -m "Mise à jour prévisions (Datacake) [skip ci]"
           git push
