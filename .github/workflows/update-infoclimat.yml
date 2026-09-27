@@ -20,9 +20,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
+      # Pas de "actions/setup-python" ici : sur un runner auto-hébergé, cette
+      # étape essaie d'installer Python à la volée et nécessite des droits
+      # admin sur Windows (échoue sinon avec des erreurs d'accès au registre).
+      # On utilise directement le Python déjà installé sur la machine - voir
+      # README.md, section "Runner auto-hébergé", pour l'installer une fois.
 
       - name: Générer les prévisions (stations Infoclimat uniquement)
         env:
