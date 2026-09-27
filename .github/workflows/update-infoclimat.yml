@@ -33,10 +33,12 @@ jobs:
         run: python scripts/update_forecast.py
 
       - name: Commit et push si changement
-        shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/
-          git diff --cached --quiet || git commit -m "Mise à jour prévisions (Infoclimat) [skip ci]"
+          git diff --cached --quiet
+          if ($LASTEXITCODE -ne 0) {
+            git commit -m "Mise à jour prévisions (Infoclimat) [skip ci]"
+          }
           git push
