@@ -429,35 +429,66 @@ def fetch_infoclimat_series(api_key, station_id, start_dt, end_dt):
 
     out = []
     try:
-        # Forme plausible 1 (la plus probable d'après la doc GraphQL Infoclimat) :
-        # {"stations": {"<id>": {"hourly"|"data": [ {"timestamp"|"dh_utc"|"date": ..., "temperature"|"temp": ...}, ... ]}}}
-        candidates = None
-        if isinstance(data, dict) and "stations" in data:
-            st = data["stations"].get(station_id) or next(iter(data["stations"].values()), None)
-            if isinstance(st, dict):
-                candidates = st.get("hourly") or st.get("data") or st.get("observations")
-        elif isinstance(data, dict) and station_id in data:
-            st = data[station_id]
-            candidates = st.get("hourly") or st.get("data") if isinstance(st, dict) else st
-        elif isinstance(data, list):
-            candidates = data
+        # Forme réelle confirmée de l'API StatIC Infoclimat (opendata) :
+        # {"status": "OK", "errors": [...], "data": [...], "stations": [...],
+        #  "metadata": {...}, "hourly": {"_params": ["temperature", ...],
+        #  "<station_id>": {"YYYY-MM-DD HH:MM:SS": ["<val_param0>", "<val_param1>", ...], ...}}}
+        # Les valeurs sont positionnelles par rapport à hourly["_params"].
+        hourly = data.get("hourly") if isinstance(data, dict) else None
+        if isinstance(hourly, dict):
+            params = hourly.get("_params") or []
+            station_rows = hourly.get(station_id)
+            if isinstance(station_rows, dict) and "temperature" in params:
+                temp_idx = params.index("temperature")
+                for t_raw, values in station_rows.items():
+                    if not isinstance(values, list) or temp_idx >= len(values):
+                        continue
+                    v = values[temp_idx]
+                    if v is None or v == "":
+                        continue
+                    t_str = str(t_raw).replace("Z", "+00:00").replace(" ", "T")
+                    try:
+                        t = datetime.fromisoformat(t_str)
+                    except ValueError:
+                        continue
+                    if t.tzinfo is None:
+                        # Les horodatages Infoclimat StatIC sont en UTC.
+                        t = t.replace(tzinfo=ZoneInfo("UTC"))
+                    try:
+                        out.append((t.astimezone(TZ), float(v)))
+                    except (TypeError, ValueError):
+                        continue
 
-        if isinstance(candidates, list):
-            for row in candidates:
-                if not isinstance(row, dict):
-                    continue
-                t_raw = row.get("dh_utc") or row.get("timestamp") or row.get("date") or row.get("time")
-                v = row.get("temperature") or row.get("temp") or row.get("temperature_sol")
-                if t_raw is None or v is None:
-                    continue
-                t_str = str(t_raw).replace("Z", "+00:00").replace(" ", "T")
-                try:
-                    t = datetime.fromisoformat(t_str)
-                except ValueError:
-                    continue
-                if t.tzinfo is None:
-                    t = t.replace(tzinfo=ZoneInfo("UTC"))
-                out.append((t.astimezone(TZ), float(v)))
+        # Anciennes formes plausibles conservées en repli, au cas où l'API
+        # renverrait un jour une structure différente pour une autre station.
+        if not out:
+            candidates = None
+            if isinstance(data, dict) and isinstance(data.get("stations"), dict):
+                st = data["stations"].get(station_id) or next(iter(data["stations"].values()), None)
+                if isinstance(st, dict):
+                    candidates = st.get("hourly") or st.get("data") or st.get("observations")
+            elif isinstance(data, dict) and station_id in data:
+                st = data[station_id]
+                candidates = st.get("hourly") or st.get("data") if isinstance(st, dict) else st
+            elif isinstance(data, list):
+                candidates = data
+
+            if isinstance(candidates, list):
+                for row in candidates:
+                    if not isinstance(row, dict):
+                        continue
+                    t_raw = row.get("dh_utc") or row.get("timestamp") or row.get("date") or row.get("time")
+                    v = row.get("temperature") or row.get("temp") or row.get("temperature_sol")
+                    if t_raw is None or v is None:
+                        continue
+                    t_str = str(t_raw).replace("Z", "+00:00").replace(" ", "T")
+                    try:
+                        t = datetime.fromisoformat(t_str)
+                    except ValueError:
+                        continue
+                    if t.tzinfo is None:
+                        t = t.replace(tzinfo=ZoneInfo("UTC"))
+                    out.append((t.astimezone(TZ), float(v)))
     except Exception as e:
         print(f"[warn] Infoclimat: erreur en analysant la réponse ({e}) — station={station_id}", file=sys.stderr)
 
@@ -666,8 +697,17 @@ def process_station(station, now):
     night_ready = cand_end is not None and now >= cand_end
     night_key = candidate_evening.isoformat()
 
+    print(
+        f"[debug] [{slug}] night_key={night_key} cand_start={cand_start!r} cand_end={cand_end!r} "
+        f"night_ready={night_ready} now={now!r} last_processed_night={bias.get('last_processed_night')!r} "
+        f"has_creds={station_has_credentials(station)} source={station['source']} "
+        f"INFOCLIMAT_API_KEY_set={bool(INFOCLIMAT_API_KEY)}",
+        file=sys.stderr,
+    )
+
     if night_ready and bias.get("last_processed_night") != night_key and station_has_credentials(station):
         obs_series = fetch_station_obs(station, cand_start - timedelta(minutes=30), cand_end + timedelta(minutes=30))
+        print(f"[debug] [{slug}] obs_series = {obs_series!r}"[:600], file=sys.stderr)
         if obs_series is None:
             print(f"[warn] [{slug}] Nuit {night_key} non traitée (échec récupération obs) — nouvel essai au prochain passage.",
                   file=sys.stderr)
@@ -692,6 +732,8 @@ def process_station(station, now):
                             profile[key] = round(new_val, 2)
                             learned.append({"bucket": bucket, "error_c": round(error, 2), "offset_after": profile[key]})
                 t += timedelta(hours=1)
+
+            print(f"[debug] [{slug}] learned={learned}", file=sys.stderr)
 
         if learned is not None:
             bias["offset_profile"] = smooth_profile(profile)
