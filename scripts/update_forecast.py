@@ -493,12 +493,28 @@ def fetch_infoclimat_series(api_key, station_id, start_dt, end_dt):
         print(f"[warn] Infoclimat: erreur en analysant la réponse ({e}) — station={station_id}", file=sys.stderr)
 
     if not out:
-        preview = json.dumps(data, ensure_ascii=False)[:800]
-        print(
-            f"[warn] Infoclimat: aucune donnée exploitable extraite pour {station_id}. "
-            f"Aperçu brut de la réponse pour diagnostic : {preview}",
-            file=sys.stderr,
-        )
+        hourly_dbg = data.get("hourly") if isinstance(data, dict) else None
+        if isinstance(hourly_dbg, dict):
+            hourly_keys = list(hourly_dbg.keys())
+            station_rows_dbg = hourly_dbg.get(station_id)
+            sample = None
+            if isinstance(station_rows_dbg, dict):
+                sample = dict(list(station_rows_dbg.items())[:3])
+            print(
+                f"[warn] Infoclimat: aucune donnée exploitable extraite pour {station_id}. "
+                f"Clés présentes dans data['hourly'] : {hourly_keys!r} — "
+                f"_params={hourly_dbg.get('_params')!r} — "
+                f"type(hourly[station_id])={type(station_rows_dbg).__name__} — "
+                f"échantillon={sample!r}",
+                file=sys.stderr,
+            )
+        else:
+            preview = json.dumps(data, ensure_ascii=False)[:800]
+            print(
+                f"[warn] Infoclimat: aucune donnée exploitable extraite pour {station_id} "
+                f"(pas de clé 'hourly' exploitable). Aperçu brut : {preview}",
+                file=sys.stderr,
+            )
         return []
     return out
 
