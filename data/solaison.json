@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T18:12:39.233756+02:00",
+  "generated_at": "2026-10-05T18:15:20.715608+02:00",
   "run_time": "2026-10-03T00:00:00+02:00",
   "location": {
     "name": "Brizon - Doline de Solaison",
@@ -13,10 +13,19 @@
   },
   "correction": {
     "current_offset_c": -0.48,
-    "offset_profile": {},
+    "offset_profile": {
+      "2": -6.7,
+      "4": -8.51,
+      "8": -9.7,
+      "10": -10.0,
+      "11": -10.07,
+      "12": -10.1,
+      "13": -10.28,
+      "14": -10.35
+    },
     "alpha": 0.25,
-    "last_night_error_c": null,
-    "last_night_samples": 0,
+    "last_night_error_c": -10.21,
+    "last_night_samples": 8,
     "clear_cloud_threshold_pct": 20,
     "cloud_zero_threshold_pct": 45,
     "calm_wind_threshold_kmh": 10,

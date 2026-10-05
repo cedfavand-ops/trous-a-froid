@@ -1,9 +1,12 @@
 {
-  "offset_profile": {},
+  "offset_profile": {
+    "4": -7.76,
+    "11": -9.23
+  },
   "alpha": 0.25,
-  "last_processed_night": null,
-  "last_night_error_c": null,
-  "last_night_samples": 0,
+  "last_processed_night": "2026-10-04",
+  "last_night_error_c": -6.55,
+  "last_night_samples": 2,
   "history": [
     {
       "night": "2026-10-03",
@@ -20,6 +23,21 @@
     {
       "night": "2026-10-04",
       "buckets_learned": []
+    },
+    {
+      "night": "2026-10-04",
+      "buckets_learned": [
+        {
+          "bucket": 4,
+          "error_c": -5.9,
+          "offset_after": -7.76
+        },
+        {
+          "bucket": 11,
+          "error_c": -7.2,
+          "offset_after": -9.23
+        }
+      ]
     }
   ]
 }

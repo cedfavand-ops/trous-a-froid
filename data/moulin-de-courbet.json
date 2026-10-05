@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T18:12:39.233756+02:00",
+  "generated_at": "2026-10-05T18:15:20.715608+02:00",
   "run_time": "2026-10-03T00:00:00+02:00",
   "location": {
     "name": "Lachapelle-Graillouse - Moulin de Courbet",
@@ -13,10 +13,13 @@
   },
   "correction": {
     "current_offset_c": null,
-    "offset_profile": {},
+    "offset_profile": {
+      "11": -8.4,
+      "13": -9.42
+    },
     "alpha": 0.25,
-    "last_night_error_c": null,
-    "last_night_samples": 0,
+    "last_night_error_c": -5.85,
+    "last_night_samples": 2,
     "clear_cloud_threshold_pct": 20,
     "cloud_zero_threshold_pct": 45,
     "calm_wind_threshold_kmh": 10,
