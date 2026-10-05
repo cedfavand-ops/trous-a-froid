@@ -458,6 +458,34 @@ def fetch_infoclimat_series(api_key, station_id, start_dt, end_dt):
                         out.append((t.astimezone(TZ), float(v)))
                     except (TypeError, ValueError):
                         continue
+            elif isinstance(station_rows, list):
+                # Autre forme possible : une liste de lignes, chacune étant soit
+                # un dict {"dh_utc"|"date"|"time": ..., "temperature"|<nom_param>: ...},
+                # soit une liste positionnelle [horodatage, val_param0, val_param1, ...].
+                for row in station_rows:
+                    t_raw, v = None, None
+                    if isinstance(row, dict):
+                        t_raw = row.get("dh_utc") or row.get("timestamp") or row.get("date") or row.get("time")
+                        v = row.get("temperature")
+                    elif isinstance(row, list) and row:
+                        t_raw = row[0]
+                        if "temperature" in params:
+                            temp_idx = params.index("temperature") + 1  # +1 car row[0] = horodatage
+                            if temp_idx < len(row):
+                                v = row[temp_idx]
+                    if t_raw is None or v is None or v == "":
+                        continue
+                    t_str = str(t_raw).replace("Z", "+00:00").replace(" ", "T")
+                    try:
+                        t = datetime.fromisoformat(t_str)
+                    except ValueError:
+                        continue
+                    if t.tzinfo is None:
+                        t = t.replace(tzinfo=ZoneInfo("UTC"))
+                    try:
+                        out.append((t.astimezone(TZ), float(v)))
+                    except (TypeError, ValueError):
+                        continue
 
         # Anciennes formes plausibles conservées en repli, au cas où l'API
         # renverrait un jour une structure différente pour une autre station.
@@ -500,6 +528,8 @@ def fetch_infoclimat_series(api_key, station_id, start_dt, end_dt):
             sample = None
             if isinstance(station_rows_dbg, dict):
                 sample = dict(list(station_rows_dbg.items())[:3])
+            elif isinstance(station_rows_dbg, list):
+                sample = station_rows_dbg[:3]
             print(
                 f"[warn] Infoclimat: aucune donnée exploitable extraite pour {station_id}. "
                 f"Clés présentes dans data['hourly'] : {hourly_keys!r} — "
