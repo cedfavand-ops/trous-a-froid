@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T17:51:40.813860+02:00",
+  "generated_at": "2026-10-05T18:00:48.516434+02:00",
   "run_time": "2026-10-03T00:00:00+02:00",
   "location": {
     "name": "La Chapelle-en-Vercors - Combe-de-l'Oscence",
@@ -12,7 +12,7 @@
     "end": "2026-10-09T17:00:00+02:00"
   },
   "correction": {
-    "current_offset_c": null,
+    "current_offset_c": -2.0,
     "offset_profile": {},
     "alpha": 0.25,
     "last_night_error_c": null,
