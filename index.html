@@ -314,7 +314,6 @@ function render(data){
     <span>Run modèle : ${runDate}</span>
     <span>Correction actuelle : ${data.correction.current_offset_c !== null ? data.correction.current_offset_c.toFixed(1) + ' °C' : 'inactive (conditions non réunies)'}</span>
     <span>Dernière nuit apprise : ${data.correction.last_night_error_c !== null && data.correction.last_night_error_c !== undefined ? data.correction.last_night_error_c.toFixed(1) + ' °C (écart obs.−modèle)' : 'n/a'}</span>
-    ${data.snow && data.snow.show ? `<span>❄️ Neige fraîche (24h) : ${data.snow.fresh_24h_cm !== null && data.snow.fresh_24h_cm !== undefined ? data.snow.fresh_24h_cm.toFixed(1) + ' cm' : 'n/a'}</span>` : ''}
   `;
 
   const tbody = document.getElementById('rows');
@@ -374,4 +373,36 @@ function render(data){
 }
 
 function drawChart(hours){
-  const ctx = documen
+  const ctx = document.getElementById('chart');
+  const labels = hours.map(h => fmtHour(h.time));
+  const corrected = hours.map(h => h.temp_corrected);
+  const raw = hours.map(h => h.temp_raw);
+  if(window._chart) window._chart.destroy();
+  window._chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Température corrigée', data: corrected, borderColor: '#38bdf8',
+          backgroundColor: 'rgba(56,189,248,0.15)', fill: true, tension: 0.3, pointRadius: 2 },
+        { label: 'Modèle brut (ICON-CH1/CH2)', data: raw, borderColor: '#94a3b8',
+          borderDash: [4,4], pointRadius: 0, tension: 0.3 }
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { labels: { color: '#e2e8f0' } } },
+      scales: {
+        x: { ticks: { color: '#94a3b8', maxRotation: 60, minRotation: 60 }, grid: { color: '#334155' } },
+        y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
+      }
+    }
+  });
+}
+
+renderTabs();
+load();
+</script>
+</body>
+</html>
