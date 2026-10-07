@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-07T14:32:01.000029+02:00",
+  "generated_at": "2026-10-07T14:33:51.296415+02:00",
   "run_time": "2026-10-05T00:00:00+02:00",
   "location": {
     "name": "Tignes - Pramécou",
@@ -642,7 +642,7 @@
       "temp_raw": -4.4,
       "temp_corrected": -5.0,
       "corrected": true,
-      "correction_offset_c": -0.57,
+      "correction_offset_c": -0.6,
       "clarity": 0.12,
       "wind_speed": 7.4,
       "wind_gusts": 20.5,
@@ -866,7 +866,7 @@
       "temp_raw": -0.5,
       "temp_corrected": -1.2,
       "corrected": true,
-      "correction_offset_c": -0.69,
+      "correction_offset_c": -0.68,
       "clarity": 0.26,
       "wind_speed": 8.2,
       "wind_gusts": 19.1,
