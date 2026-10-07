@@ -76,6 +76,10 @@ STATIONS = [
         "source": "datacake",
         "datacake_url": "https://app.datacake.de/pd/39371b61-daed-40b2-b329-d1e9db559c49",
         "env_suffix": "TIGNES",
+        # Affiche un indicateur "neige fraîche cumulée (24h)" sur la page :
+        # une couche de neige fraîche renforce le refroidissement nocturne du
+        # trou à froid (albédo élevé, air sec, meilleure émission IR).
+        "show_snow": True,
     },
     {
         "slug": "beuil",
@@ -738,6 +742,18 @@ def process_station(station, now):
         })
         t += timedelta(hours=1)
 
+    fresh_snow_24h_cm = None
+    if station.get("show_snow"):
+        now_floor = now.replace(minute=0, second=0, microsecond=0)
+        window_24h_start = now_floor - timedelta(hours=23)
+        total_snow = 0.0
+        found_any = False
+        for tt, i in idx_by_time.items():
+            if window_24h_start <= tt <= now_floor and snowfall[i] is not None:
+                total_snow += snowfall[i]
+                found_any = True
+        fresh_snow_24h_cm = round(total_snow, 1) if found_any else None
+
     candidate_evening = window_start.date() - timedelta(days=1)
     cand_start, cand_end = corr_window_for_evening(candidate_evening, sunset_by_date, sunrise_by_date)
     night_ready = cand_end is not None and now >= cand_end
@@ -811,6 +827,10 @@ def process_station(station, now):
             "wind_zero_threshold_kmh": WIND_ZERO_THRESHOLD,
             "high_cloud_attenuation": HIGH_CLOUD_ATTENUATION,
             "sunset_lead_minutes": SUNSET_LEAD_MINUTES,
+        },
+        "snow": {
+            "show": bool(station.get("show_snow", False)),
+            "fresh_24h_cm": fresh_snow_24h_cm,
         },
         "hours": hours_out,
     }
