@@ -1,12 +1,13 @@
 {
   "offset_profile": {
-    "2": -5.3,
+    "1": -3.53,
+    "2": -5.54,
     "6": -8.68
   },
   "alpha": 0.25,
-  "last_processed_night": "2026-10-05",
-  "last_night_error_c": -4.45,
-  "last_night_samples": 2,
+  "last_processed_night": "2026-10-06",
+  "last_night_error_c": -0.2,
+  "last_night_samples": 1,
   "history": [
     {
       "night": "2026-10-03",
@@ -40,6 +41,16 @@
           "bucket": 6,
           "error_c": -6.9,
           "offset_after": -8.68
+        }
+      ]
+    },
+    {
+      "night": "2026-10-06",
+      "buckets_learned": [
+        {
+          "bucket": 1,
+          "error_c": -0.2,
+          "offset_after": -3.53
         }
       ]
     }
