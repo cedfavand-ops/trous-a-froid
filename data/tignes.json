@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-09T18:02:54.831647+02:00",
+  "generated_at": "2026-10-09T19:21:54.662007+02:00",
   "run_time": "2026-10-07T00:00:00+02:00",
   "location": {
     "name": "Tignes - Pramécou",
@@ -42,7 +42,7 @@
   },
   "snow": {
     "show": true,
-    "fresh_24h_cm": 2.1
+    "fresh_24h_cm": 1.2
   },
   "hours": [
     {
