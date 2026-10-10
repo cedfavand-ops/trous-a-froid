@@ -314,6 +314,7 @@ function render(data){
     <span>Run modèle : ${runDate}</span>
     <span>Correction actuelle : ${data.correction.current_offset_c !== null ? data.correction.current_offset_c.toFixed(1) + ' °C' : 'inactive (conditions non réunies)'}</span>
     <span>Dernière nuit apprise : ${data.correction.last_night_error_c !== null && data.correction.last_night_error_c !== undefined ? data.correction.last_night_error_c.toFixed(1) + ' °C (écart obs.−modèle)' : 'n/a'}</span>
+    ${data.day_correction ? `<span>Dernière journée apprise : ${data.day_correction.last_day_error_c !== null && data.day_correction.last_day_error_c !== undefined ? data.day_correction.last_day_error_c.toFixed(1) + ' °C (écart obs.−modèle, Tx)' : 'n/a'}</span>` : ''}
     ${data.snow && data.snow.show ? `<span>❄️ Neige fraîche (24h) : ${data.snow.fresh_24h_cm !== null && data.snow.fresh_24h_cm !== undefined ? data.snow.fresh_24h_cm.toFixed(1) + ' cm' : 'n/a'}</span>` : ''}
   `;
 
@@ -359,8 +360,9 @@ function render(data){
   });
 
   document.getElementById('legend').innerHTML =
-    '* Température corrigée à la baisse par rapport au modèle brut, sur la base des écarts observés '
-    + 'à la station les heures dégagées et calmes précédentes (trou à froid).';
+    '* Température corrigée (à la baisse la nuit, à la hausse ou à la baisse en journée) par rapport au modèle brut, '
+    + 'sur la base des écarts observés à la station les heures dégagées et calmes précédentes (trou à froid la nuit, '
+    + 'biais de Tx le jour).';
 
   const st = STATIONS.find(s => s.slug === currentSlug);
   document.getElementById('footer').innerHTML = `
