@@ -155,6 +155,7 @@ SUNSET_LEAD_MINUTES = 15
 DEFAULT_ALPHA = 0.25
 MAX_HISTORY = 90
 MAX_BUCKET_HOURS = 20
+DAY_MAX_BUCKET_HOURS = 16
 LEARN_CLARITY_MIN = 0.6
 FORECAST_NIGHTS = 4
 CH1_FORECAST_DAYS = 2
@@ -301,6 +302,14 @@ def load_bias_state(path):
         state.setdefault("last_night_error_c", None)
         state.setdefault("last_night_samples", 0)
         state.setdefault("history", [])
+        # Correction de journée (Tx) - même mécanique que la nuit (profil par
+        # case horaire, EMA), mais fenêtre et historique indépendants.
+        state.setdefault("day_offset_profile", {})
+        state.setdefault("day_alpha", DEFAULT_ALPHA)
+        state.setdefault("last_processed_day", None)
+        state.setdefault("last_day_error_c", None)
+        state.setdefault("last_day_samples", 0)
+        state.setdefault("day_history", [])
         return state
     return {
         "offset_profile": {},
@@ -309,6 +318,12 @@ def load_bias_state(path):
         "last_night_error_c": None,
         "last_night_samples": 0,
         "history": [],
+        "day_offset_profile": {},
+        "day_alpha": DEFAULT_ALPHA,
+        "last_processed_day": None,
+        "last_day_error_c": None,
+        "last_day_samples": 0,
+        "day_history": [],
     }
 
 
@@ -584,6 +599,27 @@ def corr_window_for_evening(evening_date, sunset_by_date, sunrise_by_date):
     return start, end
 
 
+def day_window_for_date(day_date, sunset_by_date, sunrise_by_date):
+    """Fenêtre de correction diurne pour la date donnée : du lever du soleil
+    (+1h, symétrique du SUNSET_LEAD_MINUTES ... +1h utilisé côté nuit) au
+    coucher du soleil (-SUNSET_LEAD_MINUTES). Complémentaire exacte de la
+    fenêtre nocturne (corr_window_for_evening) : les deux se recollent sans
+    trou ni recouvrement sur 24h."""
+    sunrise_dt = sunrise_by_date.get(day_date)
+    sunset_dt = sunset_by_date.get(day_date)
+    if sunrise_dt is None or sunset_dt is None:
+        return None, None
+    # Pas d'arrondi sur le début : doit matcher exactement la fin de la
+    # fenêtre de nuit précédente (corr_window_for_evening, qui ne l'arrondit
+    # pas non plus), pour que les deux fenêtres se recollent sans trou ni
+    # recouvrement sur la grille horaire.
+    start = sunrise_dt + timedelta(hours=1)
+    end = (sunset_dt - timedelta(minutes=SUNSET_LEAD_MINUTES)).replace(minute=0, second=0, microsecond=0)
+    if end <= start:
+        return None, None
+    return start, end
+
+
 def fetch_station_obs(station, start_dt, end_dt):
     """Point d'entrée unique vers la bonne source d'observation selon
     station["source"]. Retourne toujours le même contrat que
@@ -637,6 +673,8 @@ def process_station(station, now):
     bias = load_bias_state(bias_path)
     profile = bias["offset_profile"]
     alpha = bias.get("alpha", DEFAULT_ALPHA)
+    day_profile = bias["day_offset_profile"]
+    day_alpha = bias.get("day_alpha", DEFAULT_ALPHA)
 
     om1 = fetch_openmeteo(station["lat"], station["lon"], station.get("elevation_m"),
                            past_days=2, forecast_days=CH1_FORECAST_DAYS, model="meteoswiss_icon_ch1")
@@ -679,14 +717,35 @@ def process_station(station, now):
         if c_start is not None and c_end is not None:
             night_windows.append((c_start, c_end))
 
+    # Fenêtres de journée (correction Tx) - une par date calendaire couverte
+    # par la fenêtre de prévision, complémentaires des fenêtres de nuit.
+    day_windows = []
+    for n in range(FORECAST_NIGHTS + 2):
+        day_date = window_start.date() + timedelta(days=n)
+        d_start, d_end = day_window_for_date(day_date, sunset_by_date, sunrise_by_date)
+        if d_start is not None and d_end is not None:
+            day_windows.append((d_start, d_end))
+
     def offset_for_bucket(bucket):
         key = str(bucket)
         return profile[key] if key in profile else default_offset(bucket)
+
+    def day_offset_for_bucket(bucket):
+        # Pas de modèle a priori pour le biais diurne (contrairement à la
+        # nuit) : tant qu'aucune donnée n'a été apprise, la correction est
+        # nulle - on ne change rien tant qu'on n'a pas de preuve du biais.
+        return day_profile.get(str(bucket), 0.0)
 
     def find_night_window(t):
         for c_start, c_end in night_windows:
             if c_start <= t <= c_end:
                 return c_start, c_end
+        return None, None
+
+    def find_day_window(t):
+        for d_start, d_end in day_windows:
+            if d_start <= t <= d_end:
+                return d_start, d_end
         return None, None
 
     current_offset_c = None
@@ -708,14 +767,31 @@ def process_station(station, now):
 
         eff_cloud = effective_cloud(cl, cm, ch)
         corr_start, corr_end = find_night_window(t)
-        in_corr_window = corr_start is not None
-        clarity = clarity_factor(eff_cloud, ws) if in_corr_window else 0.0
-        apply_corr = in_corr_window and clarity > 0
+        in_night_window = corr_start is not None
+        day_start, day_end = find_day_window(t)
+        in_day_window = day_start is not None
+
+        if in_night_window:
+            period = "night"
+            w_start = corr_start
+            max_bucket = MAX_BUCKET_HOURS
+            get_offset = offset_for_bucket
+        elif in_day_window:
+            period = "day"
+            w_start = day_start
+            max_bucket = DAY_MAX_BUCKET_HOURS
+            get_offset = day_offset_for_bucket
+        else:
+            period = None
+            w_start = None
+
+        clarity = clarity_factor(eff_cloud, ws) if period else 0.0
+        apply_corr = period is not None and clarity > 0
 
         applied_offset = None
         if apply_corr:
-            bucket = min(int((t - corr_start).total_seconds() // 3600), MAX_BUCKET_HOURS)
-            applied_offset = offset_for_bucket(bucket) * clarity
+            bucket = min(int((t - w_start).total_seconds() // 3600), max_bucket)
+            applied_offset = get_offset(bucket) * clarity
             corrected_t = raw_t + applied_offset
             if t.replace(minute=0, second=0, microsecond=0) == now.replace(minute=0, second=0, microsecond=0):
                 current_offset_c = applied_offset
@@ -729,8 +805,9 @@ def process_station(station, now):
             "temp_raw": round(raw_t, 1),
             "temp_corrected": round(corrected_t, 1),
             "corrected": apply_corr,
+            "correction_period": period,
             "correction_offset_c": round(applied_offset, 2) if applied_offset is not None else None,
-            "clarity": round(clarity, 2) if in_corr_window else None,
+            "clarity": round(clarity, 2) if period else None,
             "wind_speed": round(ws, 1),
             "wind_gusts": round(wg, 1),
             "wind_dir": round(wd),
@@ -807,6 +884,63 @@ def process_station(station, now):
             bias["history"].append({"night": night_key, "buckets_learned": learned})
             bias["history"] = bias["history"][-MAX_HISTORY:]
 
+    # --- Apprentissage rétrospectif de la correction de journée (Tx) -------
+    # Même principe que la nuit : on cherche la journée la plus récente déjà
+    # terminée (aujourd'hui si son créneau diurne est fini, sinon hier) et on
+    # ne la traite qu'une fois (bias["last_processed_day"]).
+    candidate_day_date = now.date()
+    d_start, d_end = day_window_for_date(candidate_day_date, sunset_by_date, sunrise_by_date)
+    if d_end is None or now < d_end:
+        candidate_day_date = now.date() - timedelta(days=1)
+        d_start, d_end = day_window_for_date(candidate_day_date, sunset_by_date, sunrise_by_date)
+    day_ready = d_end is not None and now >= d_end
+    day_key = candidate_day_date.isoformat()
+
+    if day_ready and bias.get("last_processed_day") != day_key and station_has_credentials(station):
+        obs_series_day = fetch_station_obs(station, d_start - timedelta(minutes=30), d_end + timedelta(minutes=30))
+        if obs_series_day is None:
+            print(f"[warn] [{slug}] Journée {day_key} non traitée (échec récupération obs) — nouvel essai au prochain passage.",
+                  file=sys.stderr)
+            learned_day = None
+        else:
+            learned_day = []
+            # d_start n'est pas forcément aligné sur l'heure pile (il doit
+            # recoller exactement à la fin de la fenêtre de nuit précédente) -
+            # on démarre l'itération à la première heure pile >= d_start,
+            # seule grille sur laquelle existent des données horaires.
+            t = d_start.replace(minute=0, second=0, microsecond=0)
+            if t < d_start:
+                t += timedelta(hours=1)
+            while t <= d_end:
+                if t in idx_by_time:
+                    i = idx_by_time[t]
+                    eff_cloud = effective_cloud(cloud_low[i], cloud_mid[i], cloud_high[i])
+                    ws_ = wind_speed[i] or 0
+                    clarity_ = clarity_factor(eff_cloud, ws_)
+                    if clarity_ >= LEARN_CLARITY_MIN:
+                        obs_v = nearest_value(obs_series_day, t)
+                        if obs_v is not None and temp[i] is not None:
+                            bucket = min(int((t - d_start).total_seconds() // 3600), DAY_MAX_BUCKET_HOURS)
+                            error = obs_v - temp[i]
+                            key = str(bucket)
+                            old_val = day_profile.get(key, 0.0)
+                            new_val = (1 - day_alpha) * old_val + day_alpha * error
+                            day_profile[key] = round(new_val, 2)
+                            learned_day.append({"bucket": bucket, "error_c": round(error, 2), "offset_after": day_profile[key]})
+                t += timedelta(hours=1)
+
+            print(f"[debug] [{slug}] learned_day={learned_day}", file=sys.stderr)
+
+        if learned_day is not None:
+            bias["day_offset_profile"] = smooth_profile(day_profile)
+            bias["last_processed_day"] = day_key
+            bias["last_day_samples"] = len(learned_day)
+            bias["last_day_error_c"] = (
+                round(sum(x["error_c"] for x in learned_day) / len(learned_day), 2) if learned_day else None
+            )
+            bias["day_history"].append({"day": day_key, "buckets_learned": learned_day})
+            bias["day_history"] = bias["day_history"][-MAX_HISTORY:]
+
     save_bias_state(bias_path, bias)
 
     output = {
@@ -827,6 +961,12 @@ def process_station(station, now):
             "wind_zero_threshold_kmh": WIND_ZERO_THRESHOLD,
             "high_cloud_attenuation": HIGH_CLOUD_ATTENUATION,
             "sunset_lead_minutes": SUNSET_LEAD_MINUTES,
+        },
+        "day_correction": {
+            "offset_profile": {k: bias["day_offset_profile"][k] for k in sorted(bias["day_offset_profile"], key=int)},
+            "alpha": day_alpha,
+            "last_day_error_c": bias.get("last_day_error_c"),
+            "last_day_samples": bias.get("last_day_samples", 0),
         },
         "snow": {
             "show": bool(station.get("show_snow", False)),
