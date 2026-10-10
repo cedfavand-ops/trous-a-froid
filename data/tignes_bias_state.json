@@ -2,22 +2,22 @@
   "offset_profile": {
     "0": -1.64,
     "1": -1.95,
-    "2": -2.23,
-    "3": -2.62,
-    "4": -2.93,
-    "5": -3.01,
+    "2": -2.25,
+    "3": -2.61,
+    "4": -2.9,
+    "5": -2.98,
     "6": -2.88,
-    "7": -2.73,
-    "8": -2.71,
+    "7": -2.75,
+    "8": -2.72,
     "9": -2.78,
-    "10": -2.85,
-    "11": -3.07,
-    "12": -3.72,
-    "13": -5.41,
+    "10": -2.87,
+    "11": -3.13,
+    "12": -3.88,
+    "13": -5.57,
     "14": -8.15
   },
   "alpha": 0.25,
-  "last_processed_night": "2026-10-08",
+  "last_processed_night": "2026-10-09",
   "last_night_error_c": null,
   "last_night_samples": 0,
   "history": [
@@ -758,6 +758,21 @@
     },
     {
       "night": "2026-10-08",
+      "buckets_learned": []
+    },
+    {
+      "night": "2026-10-09",
+      "buckets_learned": []
+    }
+  ],
+  "day_offset_profile": {},
+  "day_alpha": 0.25,
+  "last_processed_day": "2026-10-09",
+  "last_day_error_c": null,
+  "last_day_samples": 0,
+  "day_history": [
+    {
+      "day": "2026-10-09",
       "buckets_learned": []
     }
   ]
