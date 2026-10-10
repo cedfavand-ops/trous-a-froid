@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-10T17:45:50.885292+02:00",
+  "generated_at": "2026-10-10T21:51:54.339824+02:00",
   "run_time": "2026-10-08T00:00:00+02:00",
   "location": {
     "name": "Beuil - Cumba Clava",
@@ -12,7 +12,7 @@
     "end": "2026-10-14T17:00:00+02:00"
   },
   "correction": {
-    "current_offset_c": null,
+    "current_offset_c": -5.17,
     "offset_profile": {
       "0": -0.52,
       "1": -2.43,
@@ -42,11 +42,15 @@
   },
   "day_correction": {
     "offset_profile": {
+      "3": -1.1,
+      "4": -0.55,
+      "5": -0.12,
+      "6": 0.42,
       "9": 0.48
     },
     "alpha": 0.25,
-    "last_day_error_c": 1.9,
-    "last_day_samples": 1
+    "last_day_error_c": -1.28,
+    "last_day_samples": 4
   },
   "snow": {
     "show": false,
