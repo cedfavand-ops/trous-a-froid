@@ -786,7 +786,9 @@ def process_station(station, now):
             w_start = None
 
         clarity = clarity_factor(eff_cloud, ws) if period else 0.0
-        apply_corr = period is not None and clarity > 0
+        # raw_t peut être None sur un trou ponctuel de données modèle (bord de
+        # fusion CH1/CH2) - dans ce cas on n'essaie pas de corriger.
+        apply_corr = period is not None and clarity > 0 and raw_t is not None
 
         applied_offset = None
         if apply_corr:
@@ -802,8 +804,8 @@ def process_station(station, now):
 
         hours_out.append({
             "time": t.isoformat(),
-            "temp_raw": round(raw_t, 1),
-            "temp_corrected": round(corrected_t, 1),
+            "temp_raw": round(raw_t, 1) if raw_t is not None else None,
+            "temp_corrected": round(corrected_t, 1) if corrected_t is not None else None,
             "corrected": apply_corr,
             "correction_period": period,
             "correction_offset_c": round(applied_offset, 2) if applied_offset is not None else None,
