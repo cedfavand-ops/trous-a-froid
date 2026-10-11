@@ -77,6 +77,13 @@
   #map-view{display:none;}
   #map-view.active{display:block;}
   #leaflet-map{height:520px; border-radius:14px; overflow:hidden; background:var(--card);}
+
+  #live-view{display:none;}
+  #live-view.active{display:block;}
+  #leaflet-live-map{height:520px; border-radius:14px; overflow:hidden; background:var(--card);}
+  .live-tooltip-temp{font-weight:700;font-size:1.05rem;}
+  #live-detail{margin-top:16px;}
+  #live-detail .temp{font-size:.85rem;}
   .map-tooltip{
     background:var(--card) !important; color:var(--text) !important; border:1px solid var(--line) !important;
     border-radius:8px !important; padding:4px 8px !important; font-size:.8rem !important;
@@ -130,6 +137,12 @@
   <div id="map-view">
     <div id="leaflet-map"></div>
     <div class="legend">Cliquer sur une station pour le détail jour par jour. Étiquette permanente : Tn / Tx de demain.</div>
+  </div>
+
+  <div id="live-view">
+    <div id="leaflet-live-map"></div>
+    <div class="legend">🛰️ Carte des températures <b>mesurées en direct</b> (stations Datacake uniquement — dernière valeur reçue de chaque station, pas une prévision). Cliquer sur une station affiche l'historique des observations récentes ci-dessous.</div>
+    <div id="live-detail"></div>
   </div>
 </div>
 
@@ -206,16 +219,30 @@ function renderTabs(){
   mapBtn.textContent = '🗺️ Carte';
   mapBtn.onclick = () => { currentSlug = 'MAP'; renderTabs(); showMapView(); loadMap(); };
   tabs.appendChild(mapBtn);
+
+  const liveBtn = document.createElement('button');
+  liveBtn.className = 'tab' + (currentSlug === 'LIVE' ? ' active' : '');
+  liveBtn.textContent = '🛰️ En direct';
+  liveBtn.onclick = () => { currentSlug = 'LIVE'; renderTabs(); showLiveView(); loadLiveMap(); };
+  tabs.appendChild(liveBtn);
 }
 
 function showStationView(){
   document.getElementById('station-view').style.display = 'block';
   document.getElementById('map-view').classList.remove('active');
+  document.getElementById('live-view').classList.remove('active');
 }
 function showMapView(){
   document.getElementById('station-view').style.display = 'none';
   document.getElementById('map-view').classList.add('active');
+  document.getElementById('live-view').classList.remove('active');
   if (window._leafletMap) setTimeout(() => window._leafletMap.invalidateSize(), 50);
+}
+function showLiveView(){
+  document.getElementById('station-view').style.display = 'none';
+  document.getElementById('map-view').classList.remove('active');
+  document.getElementById('live-view').classList.add('active');
+  if (window._leafletLiveMap) setTimeout(() => window._leafletLiveMap.invalidateSize(), 50);
 }
 
 async function load(){
@@ -290,6 +317,91 @@ async function loadMap(){
       '<div class="err">Impossible de charger les prévisions des stations pour la carte.</div>';
   }
   setTimeout(() => window._leafletMap.invalidateSize(), 50);
+}
+
+async function loadLiveMap(){
+  document.getElementById('error').innerHTML = '';
+  document.getElementById('live-detail').innerHTML =
+    '<div class="legend">Cliquez sur une station sur la carte pour afficher son historique de mesures récentes.</div>';
+
+  if (!window._leafletLiveMap) {
+    window._leafletLiveMap = L.map('leaflet-live-map');
+    L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+      attribution: 'Données carte : &copy; <a href="https://www.openstreetmap.org/copyright">contributeurs OpenStreetMap</a>, SRTM &nbsp;|&nbsp; Style : &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)',
+      maxZoom: 17
+    }).addTo(window._leafletLiveMap);
+    window._leafletLiveMarkers = [];
+  }
+  window._leafletLiveMarkers.forEach(m => window._leafletLiveMap.removeLayer(m));
+  window._leafletLiveMarkers = [];
+
+  const results = await Promise.allSettled(
+    STATIONS.map(st => fetch(`data/${st.slug}.json?_=` + Date.now()).then(r => {
+      if (!r.ok) throw new Error('introuvable');
+      return r.json();
+    }))
+  );
+
+  const bounds = [];
+  let anyLive = false;
+  results.forEach((res, i) => {
+    const st = STATIONS[i];
+    if (res.status !== 'fulfilled') return;
+    const data = res.value;
+    const lat = data.location && data.location.lat, lon = data.location && data.location.lon;
+    if (lat == null || lon == null) return;
+    // Seules les stations Datacake publient des observations "en direct" -
+    // les stations Infoclimat n'apparaissent donc pas sur cette carte.
+    if (!data.live || !data.live.available || !data.live.latest) return;
+    anyLive = true;
+    bounds.push([lat, lon]);
+
+    const latest = data.live.latest;
+    const tooltipLabel = `<b>${st.name}</b><br><span class="live-tooltip-temp">${latest.temp_c.toFixed(1)}°</span>`;
+
+    const marker = L.marker([lat, lon]).addTo(window._leafletLiveMap);
+    marker.bindTooltip(tooltipLabel, { permanent: true, direction: 'top', className: 'map-tooltip', offset: [0, -8] });
+    marker.on('click', () => showLiveDetail(st, data));
+    window._leafletLiveMarkers.push(marker);
+  });
+
+  if (bounds.length) {
+    window._leafletLiveMap.fitBounds(bounds, { padding: [50, 50] });
+  } else if (!anyLive) {
+    document.getElementById('error').innerHTML =
+      '<div class="err">Aucune donnée "en direct" disponible pour le moment (stations Datacake uniquement). '
+      + 'Les données seront publiées au prochain passage du workflow GitHub Actions.</div>';
+  }
+  setTimeout(() => window._leafletLiveMap.invalidateSize(), 50);
+}
+
+function showLiveDetail(st, data){
+  const box = document.getElementById('live-detail');
+  const latest = data.live.latest;
+  const latestDate = latest ? new Date(latest.time) : null;
+  const recent = (data.live.recent || []).slice().reverse(); // plus récent en premier
+
+  let html = `<div class="chart-card">
+    <h2>${st.name}${data.location.elevation_m ? ' · ' + data.location.elevation_m + ' m' : ''}
+      &nbsp;—&nbsp; dernière valeur : <span style="color:var(--accent);">${latest ? latest.temp_c.toFixed(1) + '°' : '—'}</span>
+      ${latestDate ? `<span style="color:var(--muted);font-weight:400;font-size:.78rem;"> (${latestDate.toLocaleString('fr-FR')})</span>` : ''}
+    </h2>`;
+
+  if (!recent.length) {
+    html += `<div class="legend">Pas encore d'historique disponible pour cette station.</div>`;
+  } else {
+    html += `<div class="table-scroll" style="max-height:380px;overflow-y:auto;">
+      <table style="min-width:0;">
+        <thead><tr><th>Heure</th><th>Température mesurée</th></tr></thead>
+        <tbody>`;
+    recent.forEach(r => {
+      html += `<tr><td>${fmtHour(r.time)}</td><td class="temp">${r.temp_c.toFixed(1)}°</td></tr>`;
+    });
+    html += `</tbody></table></div>`;
+  }
+  html += `</div>`;
+  box.innerHTML = html;
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 function renderMinMax(hours){
