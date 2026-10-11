@@ -568,6 +568,35 @@ def fetch_infoclimat_series(api_key, station_id, start_dt, end_dt):
     return out
 
 
+LIVE_OBS_HOURS = 48
+
+
+def fetch_recent_observations(station, now, hours=LIVE_OBS_HOURS):
+    """Pour les stations Datacake uniquement : relevé des observations réelles
+    des dernières `hours` heures, pour la carte "températures en direct"
+    (dernière valeur mesurée + historique horaire cliquable). Contrat :
+      - dict {"latest": {...}|None, "recent": [...]} en cas de succès
+        (recent peut être vide si la station n'a rien renvoyé)
+      - None si la requête elle-même a échoué (pour permettre à l'appelant de
+        conserver les dernières valeurs publiées plutôt que d'afficher un trou)
+    """
+    if station["source"] != "datacake":
+        return None
+    token = os.environ.get(f"DATACAKE_TOKEN_{station['env_suffix']}", "").strip()
+    device_id = os.environ.get(f"DATACAKE_DEVICE_ID_{station['env_suffix']}", "").strip()
+    temp_field = os.environ.get(f"DATACAKE_TEMP_FIELD_{station['env_suffix']}", "TEMPERATURE").strip()
+    if not (token and device_id):
+        return None
+    start_dt = now - timedelta(hours=hours)
+    series = fetch_datacake_series(token, device_id, temp_field, start_dt, now)
+    if series is None:
+        return None
+    series = sorted(series, key=lambda x: x[0])
+    recent = [{"time": t.isoformat(), "temp_c": round(v, 1)} for t, v in series]
+    latest = recent[-1] if recent else None
+    return {"latest": latest, "recent": recent}
+
+
 def nearest_value(series, target_dt, max_gap_minutes=40):
     best, best_gap = None, None
     for t, v in series:
@@ -990,6 +1019,24 @@ def process_station(station, now):
 
     save_bias_state(bias_path, bias)
 
+    # --- Observations récentes "en direct" (carte, stations Datacake) ------
+    live = fetch_recent_observations(station, now)
+    if live is None:
+        # Échec de la requête (ou station non-Datacake) : on tente de
+        # conserver les dernières valeurs déjà publiées plutôt que de faire
+        # disparaître la station de la carte "en direct".
+        try:
+            with open(forecast_path, "r", encoding="utf-8") as f:
+                prev_output = json.load(f)
+            live = prev_output.get("live")
+        except Exception:
+            live = None
+    live_out = {
+        "available": bool(live and live.get("recent")),
+        "latest": (live or {}).get("latest"),
+        "recent": (live or {}).get("recent", []),
+    }
+
     output = {
         "generated_at": now.isoformat(),
         "run_time": times[0].isoformat() if times else None,
@@ -1019,6 +1066,7 @@ def process_station(station, now):
             "show": bool(station.get("show_snow", False)),
             "fresh_24h_cm": fresh_snow_24h_cm,
         },
+        "live": live_out,
         "hours": hours_out,
     }
     with open(forecast_path, "w", encoding="utf-8") as f:
