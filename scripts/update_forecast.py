@@ -748,8 +748,8 @@ def process_station(station, now):
                 return d_start, d_end
         return None, None
 
-    current_offset_c = None
-    hours_out = []
+    # --- Passe 1 : collecte brute heure par heure --------------------------
+    rows = []
     t = window_start
     while t <= window_end:
         if t not in idx_by_time:
@@ -784,23 +784,63 @@ def process_station(station, now):
         else:
             period = None
             w_start = None
+            max_bucket = None
+            get_offset = None
 
-        clarity = clarity_factor(eff_cloud, ws) if period else 0.0
+        clarity_raw = clarity_factor(eff_cloud, ws) if period else 0.0
+
+        rows.append({
+            "t": t, "raw_t": raw_t, "ws": ws, "wg": wg, "wd": wd, "ct": ct,
+            "cl": cl, "cm": cm, "ch": ch, "pr": pr, "rn": rn, "sn": sn, "hu": hu,
+            "period": period, "w_start": w_start, "max_bucket": max_bucket,
+            "get_offset": get_offset, "clarity_raw": clarity_raw,
+        })
+        t += timedelta(hours=1)
+
+    # --- Passe 2 : lissage temporel de la clarté ----------------------------
+    # Un pic isolé de nébulosité (ou de vent) sur une seule heure modèle fait
+    # chuter la clarté de cette heure à 0 et donc annuler brutalement la
+    # correction, qui revient tout aussi brutalement l'heure suivante (écarts
+    # de 10°C+ observés). On lisse la clarté sur les heures voisines (moyenne
+    # pondérée 0.25/0.5/0.25), en ne mélangeant jamais deux fenêtres
+    # différentes (nuit/jour, ou nuits non contiguës séparées par une
+    # journée) pour ne pas atténuer les vraies transitions jour/nuit.
+    clarity_smoothed = []
+    for idx, row in enumerate(rows):
+        if row["period"] is None:
+            clarity_smoothed.append(0.0)
+            continue
+        total_w, total_v = 0.0, 0.0
+        for off, w in ((-1, 0.25), (0, 0.5), (1, 0.25)):
+            j = idx + off
+            if 0 <= j < len(rows) and rows[j]["period"] == row["period"] and rows[j]["w_start"] == row["w_start"]:
+                total_v += rows[j]["clarity_raw"] * w
+                total_w += w
+        clarity_smoothed.append(total_v / total_w if total_w > 0 else row["clarity_raw"])
+
+    # --- Passe 3 : application de la correction (clarté lissée) ------------
+    current_offset_c = None
+    hours_out = []
+    for idx, row in enumerate(rows):
+        t = row["t"]
+        raw_t = row["raw_t"]
+        period = row["period"]
+        clarity = clarity_smoothed[idx]
         # raw_t peut être None sur un trou ponctuel de données modèle (bord de
         # fusion CH1/CH2) - dans ce cas on n'essaie pas de corriger.
         apply_corr = period is not None and clarity > 0 and raw_t is not None
 
         applied_offset = None
         if apply_corr:
-            bucket = min(int((t - w_start).total_seconds() // 3600), max_bucket)
-            applied_offset = get_offset(bucket) * clarity
+            bucket = min(int((t - row["w_start"]).total_seconds() // 3600), row["max_bucket"])
+            applied_offset = row["get_offset"](bucket) * clarity
             corrected_t = raw_t + applied_offset
             if t.replace(minute=0, second=0, microsecond=0) == now.replace(minute=0, second=0, microsecond=0):
                 current_offset_c = applied_offset
         else:
             corrected_t = raw_t
 
-        picto = pick_picto(ct, cl, cm, ch, pr, rn, sn, hu, ws)
+        picto = pick_picto(row["ct"], row["cl"], row["cm"], row["ch"], row["pr"], row["rn"], row["sn"], row["hu"], row["ws"])
 
         hours_out.append({
             "time": t.isoformat(),
@@ -810,16 +850,15 @@ def process_station(station, now):
             "correction_period": period,
             "correction_offset_c": round(applied_offset, 2) if applied_offset is not None else None,
             "clarity": round(clarity, 2) if period else None,
-            "wind_speed": round(ws, 1),
-            "wind_gusts": round(wg, 1),
-            "wind_dir": round(wd),
-            "cloud_cover": round(ct),
-            "cloud_cover_low": round(cl) if cl is not None else None,
-            "cloud_cover_mid": round(cm) if cm is not None else None,
-            "cloud_cover_high": round(ch) if ch is not None else None,
+            "wind_speed": round(row["ws"], 1),
+            "wind_gusts": round(row["wg"], 1),
+            "wind_dir": round(row["wd"]),
+            "cloud_cover": round(row["ct"]),
+            "cloud_cover_low": round(row["cl"]) if row["cl"] is not None else None,
+            "cloud_cover_mid": round(row["cm"]) if row["cm"] is not None else None,
+            "cloud_cover_high": round(row["ch"]) if row["ch"] is not None else None,
             "picto": picto,
         })
-        t += timedelta(hours=1)
 
     fresh_snow_24h_cm = None
     if station.get("show_snow"):
