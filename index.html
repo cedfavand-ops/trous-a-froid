@@ -51,8 +51,10 @@
   .clouds .m{color:#a5b4fc;}
   .clouds .h{color:#c4b5fd;}
   .temp{font-weight:700;font-size:1rem;}
-  .temp.corrected{color:var(--cold);}
-  .temp.corrected::after{content:" *";color:var(--accent);}
+  .temp.corrected-cold{color:var(--cold);}
+  .temp.corrected-cold::after{content:" *";color:var(--accent);}
+  .temp.corrected-warm{color:var(--warm);}
+  .temp.corrected-warm::after{content:" *";color:var(--accent);}
   .raw-strike{font-size:.7rem;color:var(--muted);text-decoration:line-through;display:block;}
   .gust{color:#f472b6;font-size:.72rem;display:block;margin-top:1px;}
   .wind-dir{display:inline-block;font-size:1.5rem;line-height:1;transition:transform .2s;}
@@ -177,6 +179,7 @@ function groupMinMaxByDay(hours){
   const byDay = {};
   const order = [];
   (hours || []).forEach(h => {
+    if (h.temp_corrected === null || h.temp_corrected === undefined) return; // trou de donnée modèle
     const d = new Date(h.time);
     const key = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
     if (!(key in byDay)) { byDay[key] = { d, min: h.temp_corrected, max: h.temp_corrected }; order.push(key); }
@@ -347,8 +350,15 @@ function render(data){
         </div>
       </td>
       <td>
-        <span class="temp ${h.corrected ? 'corrected' : ''}">${h.temp_corrected.toFixed(1)}°</span>
-        ${h.corrected ? `<span class="raw-strike">modèle brut ${h.temp_raw.toFixed(1)}°</span>` : ''}
+        ${h.temp_corrected === null || h.temp_corrected === undefined
+          ? '<span class="temp">—</span>'
+          : (() => {
+              const correctedClass = h.corrected
+                ? (h.correction_offset_c !== null && h.correction_offset_c > 0 ? 'corrected-warm' : 'corrected-cold')
+                : '';
+              return `<span class="temp ${correctedClass}">${h.temp_corrected.toFixed(1)}°</span>
+                ${h.corrected && h.temp_raw !== null && h.temp_raw !== undefined ? `<span class="raw-strike">modèle brut ${h.temp_raw.toFixed(1)}°</span>` : ''}`;
+            })()}
       </td>
       <td>
         ${Math.round(h.wind_speed)} km/h
