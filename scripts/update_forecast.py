@@ -842,11 +842,17 @@ def process_station(station, now):
 
         picto = pick_picto(row["ct"], row["cl"], row["cm"], row["ch"], row["pr"], row["rn"], row["sn"], row["hu"], row["ws"])
 
+        # N'affiche "corrigé" (barré + couleur) que si l'écart est réellement
+        # perceptible - sinon (ex: profil de jour pas encore appris, décalage
+        # encore à 0) on affiche juste la valeur normale, sans astérisque
+        # trompeur sur un écart nul.
+        is_meaningful = applied_offset is not None and abs(applied_offset) >= 0.05
+
         hours_out.append({
             "time": t.isoformat(),
             "temp_raw": round(raw_t, 1) if raw_t is not None else None,
             "temp_corrected": round(corrected_t, 1) if corrected_t is not None else None,
-            "corrected": apply_corr,
+            "corrected": apply_corr and is_meaningful,
             "correction_period": period,
             "correction_offset_c": round(applied_offset, 2) if applied_offset is not None else None,
             "clarity": round(clarity, 2) if period else None,
