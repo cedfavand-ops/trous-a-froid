@@ -798,16 +798,18 @@
     }
   ],
   "day_offset_profile": {
-    "3": -1.1,
-    "4": -0.55,
-    "5": -0.12,
-    "6": 0.42,
-    "9": 0.48
+    "2": 0.05,
+    "3": -2.1,
+    "4": -0.27,
+    "5": 0.32,
+    "6": 0.26,
+    "7": 0.4,
+    "9": 1.18
   },
   "day_alpha": 0.25,
-  "last_processed_day": "2026-10-10",
-  "last_day_error_c": -1.28,
-  "last_day_samples": 4,
+  "last_processed_day": "2026-10-11",
+  "last_day_error_c": -0.06,
+  "last_day_samples": 7,
   "day_history": [
     {
       "day": "2026-10-09",
@@ -841,6 +843,46 @@
           "bucket": 6,
           "error_c": 2.1,
           "offset_after": 0.53
+        }
+      ]
+    },
+    {
+      "day": "2026-10-11",
+      "buckets_learned": [
+        {
+          "bucket": 2,
+          "error_c": 0.2,
+          "offset_after": 0.05
+        },
+        {
+          "bucket": 3,
+          "error_c": -8.9,
+          "offset_after": -3.05
+        },
+        {
+          "bucket": 4,
+          "error_c": 2.4,
+          "offset_after": 0.19
+        },
+        {
+          "bucket": 5,
+          "error_c": 1.8,
+          "offset_after": 0.36
+        },
+        {
+          "bucket": 6,
+          "error_c": -0.3,
+          "offset_after": 0.24
+        },
+        {
+          "bucket": 7,
+          "error_c": 1.1,
+          "offset_after": 0.27
+        },
+        {
+          "bucket": 9,
+          "error_c": 3.3,
+          "offset_after": 1.18
         }
       ]
     }
