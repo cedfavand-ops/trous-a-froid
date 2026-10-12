@@ -1,25 +1,25 @@
 {
   "offset_profile": {
-    "0": -0.52,
-    "1": -2.1,
-    "2": -2.65,
-    "3": -4.97,
+    "0": 0.43,
+    "1": -1.8,
+    "2": -2.92,
+    "3": -4.77,
     "4": -5.95,
-    "5": -6.9,
-    "6": -7.45,
-    "7": -8.41,
-    "8": -8.49,
-    "9": -9.29,
-    "10": -9.22,
-    "11": -9.88,
-    "12": -9.64,
-    "13": -9.31,
-    "14": -9.05
+    "5": -6.84,
+    "6": -7.24,
+    "7": -6.63,
+    "8": -6.63,
+    "9": -8.8,
+    "10": -9.06,
+    "11": -8.16,
+    "12": -7.81,
+    "13": -8.39,
+    "14": -8.09
   },
   "alpha": 0.25,
-  "last_processed_night": "2026-10-10",
-  "last_night_error_c": -8.16,
-  "last_night_samples": 13,
+  "last_processed_night": "2026-10-11",
+  "last_night_error_c": -1.77,
+  "last_night_samples": 7,
   "history": [
     {
       "night": "2026-09-18",
@@ -793,6 +793,46 @@
           "bucket": 14,
           "error_c": -11.7,
           "offset_after": -9.05
+        }
+      ]
+    },
+    {
+      "night": "2026-10-11",
+      "buckets_learned": [
+        {
+          "bucket": 0,
+          "error_c": 3.3,
+          "offset_after": 0.43
+        },
+        {
+          "bucket": 7,
+          "error_c": -1.1,
+          "offset_after": -6.58
+        },
+        {
+          "bucket": 8,
+          "error_c": 1.2,
+          "offset_after": -6.07
+        },
+        {
+          "bucket": 11,
+          "error_c": -2.6,
+          "offset_after": -8.06
+        },
+        {
+          "bucket": 12,
+          "error_c": -1.4,
+          "offset_after": -7.58
+        },
+        {
+          "bucket": 13,
+          "error_c": -6.6,
+          "offset_after": -8.63
+        },
+        {
+          "bucket": 14,
+          "error_c": -5.2,
+          "offset_after": -8.09
         }
       ]
     }
