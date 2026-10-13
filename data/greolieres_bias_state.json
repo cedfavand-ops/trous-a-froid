@@ -1376,14 +1376,17 @@
     }
   ],
   "day_offset_profile": {
-    "3": 0.48,
-    "4": 1.06,
-    "5": 0.95,
+    "0": -0.62,
+    "1": 0.1,
+    "2": 0.53,
+    "3": 0.59,
+    "4": 0.96,
+    "5": 0.92,
     "9": 0.66
   },
   "day_alpha": 0.25,
-  "last_processed_day": "2026-10-11",
-  "last_day_error_c": 2.07,
+  "last_processed_day": "2026-10-12",
+  "last_day_error_c": 0.2,
   "last_day_samples": 3,
   "day_history": [
     {
@@ -1433,6 +1436,26 @@
           "bucket": 5,
           "error_c": 1.7,
           "offset_after": 0.96
+        }
+      ]
+    },
+    {
+      "day": "2026-10-12",
+      "buckets_learned": [
+        {
+          "bucket": 0,
+          "error_c": -2.5,
+          "offset_after": -0.62
+        },
+        {
+          "bucket": 1,
+          "error_c": 0.6,
+          "offset_after": 0.15
+        },
+        {
+          "bucket": 2,
+          "error_c": 2.5,
+          "offset_after": 0.62
         }
       ]
     }
