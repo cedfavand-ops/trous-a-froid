@@ -1,23 +1,25 @@
 {
   "offset_profile": {
-    "2": -4.6,
-    "3": -6.52,
-    "4": -7.26,
-    "5": -7.18,
-    "6": -7.84,
-    "7": -9.09,
-    "8": -9.37,
-    "9": -9.27,
-    "10": -8.97,
-    "11": -9.02,
-    "12": -9.21,
-    "13": -9.16,
+    "0": -2.15,
+    "1": -4.37,
+    "2": -5.32,
+    "3": -6.53,
+    "4": -7.31,
+    "5": -7.76,
+    "6": -8.44,
+    "7": -9.26,
+    "8": -9.38,
+    "9": -9.32,
+    "10": -9.0,
+    "11": -9.21,
+    "12": -9.62,
+    "13": -9.78,
     "14": -9.61
   },
   "alpha": 0.25,
-  "last_processed_night": "2026-10-11",
-  "last_night_error_c": -7.2,
-  "last_night_samples": 6,
+  "last_processed_night": "2026-10-12",
+  "last_night_error_c": -8.44,
+  "last_night_samples": 13,
   "history": [
     {
       "night": "2026-10-03",
@@ -178,15 +180,94 @@
           "offset_after": -9.61
         }
       ]
+    },
+    {
+      "night": "2026-10-12",
+      "buckets_learned": [
+        {
+          "bucket": 0,
+          "error_c": -2.6,
+          "offset_after": -2.15
+        },
+        {
+          "bucket": 1,
+          "error_c": -4.8,
+          "offset_after": -4.68
+        },
+        {
+          "bucket": 2,
+          "error_c": -6.9,
+          "offset_after": -5.17
+        },
+        {
+          "bucket": 3,
+          "error_c": -7.0,
+          "offset_after": -6.64
+        },
+        {
+          "bucket": 4,
+          "error_c": -7.7,
+          "offset_after": -7.37
+        },
+        {
+          "bucket": 5,
+          "error_c": -9.3,
+          "offset_after": -7.71
+        },
+        {
+          "bucket": 6,
+          "error_c": -10.0,
+          "offset_after": -8.38
+        },
+        {
+          "bucket": 7,
+          "error_c": -10.4,
+          "offset_after": -9.42
+        },
+        {
+          "bucket": 9,
+          "error_c": -9.8,
+          "offset_after": -9.4
+        },
+        {
+          "bucket": 10,
+          "error_c": -8.6,
+          "offset_after": -8.88
+        },
+        {
+          "bucket": 11,
+          "error_c": -9.7,
+          "offset_after": -9.19
+        },
+        {
+          "bucket": 12,
+          "error_c": -11.0,
+          "offset_after": -9.66
+        },
+        {
+          "bucket": 13,
+          "error_c": -11.9,
+          "offset_after": -9.84
+        }
+      ]
     }
   ],
   "day_offset_profile": {
-    "2": -0.18
+    "0": -2.48,
+    "1": -0.96,
+    "2": -0.18,
+    "3": 0.22,
+    "4": 0.15,
+    "5": 0.15,
+    "6": 0.28,
+    "7": 0.33,
+    "8": 0.22,
+    "9": -0.65
   },
   "day_alpha": 0.25,
-  "last_processed_day": "2026-10-11",
-  "last_day_error_c": -0.7,
-  "last_day_samples": 1,
+  "last_processed_day": "2026-10-12",
+  "last_day_error_c": -0.95,
+  "last_day_samples": 10,
   "day_history": [
     {
       "day": "2026-10-10",
@@ -199,6 +280,61 @@
           "bucket": 2,
           "error_c": -0.7,
           "offset_after": -0.18
+        }
+      ]
+    },
+    {
+      "day": "2026-10-12",
+      "buckets_learned": [
+        {
+          "bucket": 0,
+          "error_c": -9.9,
+          "offset_after": -2.48
+        },
+        {
+          "bucket": 1,
+          "error_c": -3.2,
+          "offset_after": -0.8
+        },
+        {
+          "bucket": 2,
+          "error_c": -0.1,
+          "offset_after": -0.16
+        },
+        {
+          "bucket": 3,
+          "error_c": 1.3,
+          "offset_after": 0.33
+        },
+        {
+          "bucket": 4,
+          "error_c": 0.5,
+          "offset_after": 0.12
+        },
+        {
+          "bucket": 5,
+          "error_c": 0.5,
+          "offset_after": 0.12
+        },
+        {
+          "bucket": 6,
+          "error_c": 1.2,
+          "offset_after": 0.3
+        },
+        {
+          "bucket": 7,
+          "error_c": 1.3,
+          "offset_after": 0.33
+        },
+        {
+          "bucket": 8,
+          "error_c": 1.5,
+          "offset_after": 0.38
+        },
+        {
+          "bucket": 9,
+          "error_c": -2.6,
+          "offset_after": -0.65
         }
       ]
     }
