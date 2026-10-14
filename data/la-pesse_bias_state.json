@@ -1102,20 +1102,20 @@
     }
   ],
   "day_offset_profile": {
-    "0": -3.49,
-    "1": -1.77,
-    "2": -0.4,
-    "3": 0.37,
-    "4": 0.64,
+    "0": -4.87,
+    "1": -2.03,
+    "2": -0.24,
+    "3": 0.35,
+    "4": 0.6,
     "5": 0.65,
-    "6": 0.63,
-    "8": 0.34,
+    "6": 0.59,
+    "8": 0.3,
     "9": -0.25
   },
   "day_alpha": 0.25,
-  "last_processed_day": "2026-10-13",
-  "last_day_error_c": null,
-  "last_day_samples": 0,
+  "last_processed_day": "2026-10-14",
+  "last_day_error_c": -3.33,
+  "last_day_samples": 3,
   "day_history": [
     {
       "day": "2026-10-09",
@@ -1193,6 +1193,26 @@
     {
       "day": "2026-10-13",
       "buckets_learned": []
+    },
+    {
+      "day": "2026-10-14",
+      "buckets_learned": [
+        {
+          "bucket": 0,
+          "error_c": -9.0,
+          "offset_after": -4.87
+        },
+        {
+          "bucket": 1,
+          "error_c": -2.1,
+          "offset_after": -1.85
+        },
+        {
+          "bucket": 2,
+          "error_c": 1.1,
+          "offset_after": -0.03
+        }
+      ]
     }
   ],
   "last_night_verif": {
@@ -1201,5 +1221,10 @@
     "observed_tn_c": 1.5,
     "diff_c": -0.6
   },
-  "last_day_verif": null
+  "last_day_verif": {
+    "day": "2026-10-14",
+    "forecast_tx_c": 16.1,
+    "observed_tx_c": 18.8,
+    "diff_c": -2.7
+  }
 }
