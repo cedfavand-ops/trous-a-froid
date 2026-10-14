@@ -911,21 +911,21 @@
     }
   ],
   "day_offset_profile": {
-    "0": -1.48,
-    "1": -1.8,
-    "2": -2.38,
-    "3": -2.75,
-    "4": -2.39,
-    "5": -2.07,
-    "6": -2.01,
-    "7": -2.15,
-    "8": -2.12,
-    "9": -2.12
+    "0": -0.89,
+    "1": -1.53,
+    "2": -2.87,
+    "3": -3.54,
+    "4": -3.86,
+    "5": -4.16,
+    "6": -4.31,
+    "7": -4.36,
+    "8": -4.3,
+    "9": -4.24
   },
   "day_alpha": 0.25,
-  "last_processed_day": "2026-10-13",
-  "last_day_error_c": null,
-  "last_day_samples": 0,
+  "last_processed_day": "2026-10-14",
+  "last_day_error_c": -7.27,
+  "last_day_samples": 10,
   "day_history": [
     {
       "day": "2026-10-09",
@@ -1008,6 +1008,61 @@
     {
       "day": "2026-10-13",
       "buckets_learned": []
+    },
+    {
+      "day": "2026-10-14",
+      "buckets_learned": [
+        {
+          "bucket": 0,
+          "error_c": 0.9,
+          "offset_after": -0.89
+        },
+        {
+          "bucket": 1,
+          "error_c": 0.0,
+          "offset_after": -1.35
+        },
+        {
+          "bucket": 2,
+          "error_c": -5.0,
+          "offset_after": -3.04
+        },
+        {
+          "bucket": 3,
+          "error_c": -6.1,
+          "offset_after": -3.59
+        },
+        {
+          "bucket": 4,
+          "error_c": -8.2,
+          "offset_after": -3.84
+        },
+        {
+          "bucket": 5,
+          "error_c": -10.6,
+          "offset_after": -4.2
+        },
+        {
+          "bucket": 6,
+          "error_c": -11.2,
+          "offset_after": -4.31
+        },
+        {
+          "bucket": 7,
+          "error_c": -11.1,
+          "offset_after": -4.39
+        },
+        {
+          "bucket": 8,
+          "error_c": -10.8,
+          "offset_after": -4.29
+        },
+        {
+          "bucket": 9,
+          "error_c": -10.6,
+          "offset_after": -4.24
+        }
+      ]
     }
   ],
   "last_night_verif": {
@@ -1016,5 +1071,10 @@
     "observed_tn_c": -2.1,
     "diff_c": 2.5
   },
-  "last_day_verif": null
+  "last_day_verif": {
+    "day": "2026-10-14",
+    "forecast_tx_c": 8.0,
+    "observed_tx_c": 6.4,
+    "diff_c": 1.6
+  }
 }

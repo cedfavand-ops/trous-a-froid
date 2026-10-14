@@ -1471,18 +1471,21 @@
     }
   ],
   "day_offset_profile": {
-    "0": -0.69,
-    "1": 0.16,
-    "2": 0.71,
-    "3": 0.68,
-    "4": 0.9,
-    "5": 0.87,
-    "9": 0.54
+    "0": -3.29,
+    "1": -1.26,
+    "2": 0.47,
+    "3": 1.05,
+    "4": 1.14,
+    "5": 0.99,
+    "6": 0.78,
+    "7": 0.7,
+    "8": 0.65,
+    "9": 0.58
   },
   "day_alpha": 0.25,
-  "last_processed_day": "2026-10-13",
-  "last_day_error_c": 0.4,
-  "last_day_samples": 4,
+  "last_processed_day": "2026-10-14",
+  "last_day_error_c": -0.11,
+  "last_day_samples": 10,
   "day_history": [
     {
       "day": "2026-10-09",
@@ -1578,6 +1581,61 @@
           "offset_after": 0.54
         }
       ]
+    },
+    {
+      "day": "2026-10-14",
+      "buckets_learned": [
+        {
+          "bucket": 0,
+          "error_c": -11.1,
+          "offset_after": -3.29
+        },
+        {
+          "bucket": 1,
+          "error_c": -5.5,
+          "offset_after": -1.25
+        },
+        {
+          "bucket": 2,
+          "error_c": 0.7,
+          "offset_after": 0.71
+        },
+        {
+          "bucket": 3,
+          "error_c": 2.3,
+          "offset_after": 1.09
+        },
+        {
+          "bucket": 4,
+          "error_c": 2.0,
+          "offset_after": 1.18
+        },
+        {
+          "bucket": 5,
+          "error_c": 1.4,
+          "offset_after": 1.0
+        },
+        {
+          "bucket": 6,
+          "error_c": 3.0,
+          "offset_after": 0.75
+        },
+        {
+          "bucket": 7,
+          "error_c": 2.8,
+          "offset_after": 0.7
+        },
+        {
+          "bucket": 8,
+          "error_c": 2.6,
+          "offset_after": 0.65
+        },
+        {
+          "bucket": 9,
+          "error_c": 0.7,
+          "offset_after": 0.58
+        }
+      ]
     }
   ],
   "last_night_verif": {
@@ -1586,5 +1644,10 @@
     "observed_tn_c": -4.1,
     "diff_c": 4.7
   },
-  "last_day_verif": null
+  "last_day_verif": {
+    "day": "2026-10-14",
+    "forecast_tx_c": 18.5,
+    "observed_tx_c": 20.5,
+    "diff_c": -2.0
+  }
 }
