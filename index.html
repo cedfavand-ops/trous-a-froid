@@ -187,21 +187,57 @@ function fmtHour(iso){
   return d.toLocaleString('fr-FR', {weekday:'short', hour:'2-digit', minute:'2-digit'});
 }
 
-// Regroupe une série horaire en Tn/Tx par jour calendaire (heure locale).
-function groupMinMaxByDay(hours){
-  const byDay = {};
-  const order = [];
-  (hours || []).forEach(h => {
-    if (h.temp_corrected === null || h.temp_corrected === undefined) return; // trou de donnée modèle
-    const d = new Date(h.time);
-    const key = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
-    if (!(key in byDay)) { byDay[key] = { d, min: h.temp_corrected, max: h.temp_corrected }; order.push(key); }
-    else {
-      byDay[key].min = Math.min(byDay[key].min, h.temp_corrected);
-      byDay[key].max = Math.max(byDay[key].max, h.temp_corrected);
-    }
+// Regroupe une série horaire en Tn/Tx par "jour météorologique", selon la
+// convention standard (et non le jour calendaire minuit-minuit) :
+//   - Tn du jour J = minimum entre 18h UTC (J-1) et 18h UTC (J)
+//   - Tx du jour J = maximum entre 6h UTC (J) et 6h UTC (J+1)
+// Un jour n'est renvoyé que si sa fenêtre Tn (resp. Tx) est entièrement
+// couverte par la période de prévision disponible, pour ne jamais afficher
+// un Tn/Tx tronqué en début ou fin de période.
+const HOUR_MS = 3600 * 1000;
+const DAY_MS = 24 * HOUR_MS;
+
+function groupExtremesWMO(hours){
+  const entries = (hours || [])
+    .map(h => ({ t: new Date(h.time).getTime(), v: h.temp_corrected }))
+    .filter(e => !isNaN(e.t));
+  if (!entries.length) return [];
+  const minT = Math.min(...entries.map(e => e.t));
+  const maxT = Math.max(...entries.map(e => e.t));
+
+  const utcMidnight = ms => {
+    const d = new Date(ms);
+    return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+  };
+
+  const tnByDay = {}, txByDay = {};
+  entries.forEach(({ t, v }) => {
+    if (v === null || v === undefined) return; // trou de donnée modèle
+    const mid = utcMidnight(t);
+    const hourOfDayUTC = (t - mid) / HOUR_MS;
+    // Jour Tn : la fenêtre bascule à 18h UTC (soir -> jour suivant).
+    const tnDay = mid + (hourOfDayUTC >= 18 ? DAY_MS : 0);
+    tnByDay[tnDay] = (tnDay in tnByDay) ? Math.min(tnByDay[tnDay], v) : v;
+    // Jour Tx : la fenêtre bascule à 6h UTC (nuit -> jour précédent).
+    const txDay = mid + (hourOfDayUTC < 6 ? -DAY_MS : 0);
+    txByDay[txDay] = (txDay in txByDay) ? Math.max(txByDay[txDay], v) : v;
   });
-  return order.map(key => byDay[key]);
+
+  const allDays = Array.from(new Set([...Object.keys(tnByDay), ...Object.keys(txByDay)].map(Number))).sort((a, b) => a - b);
+  const out = [];
+  allDays.forEach(dayMs => {
+    const tnWinStart = dayMs - DAY_MS + 18 * HOUR_MS, tnWinEnd = dayMs + 18 * HOUR_MS;
+    const txWinStart = dayMs + 6 * HOUR_MS, txWinEnd = dayMs + DAY_MS + 6 * HOUR_MS;
+    const tnOk = (dayMs in tnByDay) && tnWinStart >= minT && tnWinEnd <= maxT;
+    const txOk = (dayMs in txByDay) && txWinStart >= minT && txWinEnd <= maxT;
+    if (!tnOk && !txOk) return;
+    out.push({
+      d: new Date(dayMs + 12 * HOUR_MS), // midi UTC de ce jour : libellé de date stable, hors de toute fenêtre
+      min: tnOk ? tnByDay[dayMs] : null,
+      max: txOk ? txByDay[dayMs] : null,
+    });
+  });
+  return out;
 }
 
 function renderTabs(){
@@ -292,16 +328,18 @@ async function loadMap(){
     anyOk = true;
     bounds.push([lat, lon]);
 
-    const days = groupMinMaxByDay(data.hours || []).slice(1);
+    const days = groupExtremesWMO(data.hours || []);
     const tomorrow = days[0];
-    const tooltipLabel = tomorrow
+    const tooltipLabel = (tomorrow && tomorrow.min !== null && tomorrow.max !== null)
       ? `<b>${st.name}</b><br><span class="popup-tn">${Math.round(tomorrow.min)}°</span> / <span class="popup-tx">${Math.round(tomorrow.max)}°</span>`
       : `<b>${st.name}</b><br>—`;
 
     let popupHtml = `<b>${st.name}</b>${data.location.elevation_m ? ' · ' + data.location.elevation_m + ' m' : ''}<br><br>`;
     days.forEach(d => {
-      const lbl = d.d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' });
-      popupHtml += `${lbl} : <span class="popup-tn">${d.min.toFixed(1)}°</span> / <span class="popup-tx">${d.max.toFixed(1)}°</span><br>`;
+      const lbl = d.d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
+      const tnTxt = d.min !== null ? d.min.toFixed(1) + '°' : '—';
+      const txTxt = d.max !== null ? d.max.toFixed(1) + '°' : '—';
+      popupHtml += `${lbl} : <span class="popup-tn">${tnTxt}</span> / <span class="popup-tx">${txTxt}</span><br>`;
     });
 
     const marker = L.marker([lat, lon]).addTo(window._leafletMap);
@@ -405,18 +443,42 @@ function showLiveDetail(st, data){
 }
 
 function renderMinMax(hours){
-  // Le premier groupe (aujourd'hui) est toujours partiel : la fenêtre ne
-  // démarre qu'à 18h, donc son "Tn" ne serait que le minimum de ce soir,
-  // pas un vrai minimum journalier - on ne l'affiche pas.
-  const days = groupMinMaxByDay(hours).slice(1);
+  // Tn/Tx par jour météorologique (18h UTC/18h UTC pour Tn, 6h UTC/6h UTC
+  // pour Tx) - seuls les jours dont la fenêtre est entièrement couverte par
+  // la période de prévision sont renvoyés par groupExtremesWMO.
+  const days = groupExtremesWMO(hours);
   const box = document.getElementById('minmax');
   box.innerHTML = days.map(({ d, min, max }) => {
-    const label = d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' });
+    const label = d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
+    const tnTxt = min !== null ? min.toFixed(1) + '°' : '—';
+    const txTxt = max !== null ? max.toFixed(1) + '°' : '—';
     return `<div class="minmax-day">
       <div class="day-label">${label}</div>
-      <span class="tn">${min.toFixed(1)}°</span><span class="sep">/</span><span class="tx">${max.toFixed(1)}°</span>
+      <span class="tn">${tnTxt}</span><span class="sep">/</span><span class="tx">${txTxt}</span>
     </div>`;
   }).join('');
+}
+
+// Couleur de l'écart prévu/observé (Tn ou Tx) : vert si proche, orange si
+// moyen, rouge si franchement raté - un simple repère visuel de fiabilité.
+function verifColor(diffC){
+  const a = Math.abs(diffC);
+  if (a < 1) return '#4ade80';
+  if (a < 2.5) return '#fbbf24';
+  return '#f87171';
+}
+
+// Construit le <span> méta "Fiabilité Tn/Tx" à partir de data.verification.night
+// ou .day (ou null si pas encore calculé, ex. juste après la mise en place du
+// workflow). forecastKey/observedKey valent "forecast_tn_c"/"observed_tn_c"
+// (nuit) ou "forecast_tx_c"/"observed_tx_c" (jour).
+function fmtVerifSpan(label, verif, forecastKey, observedKey){
+  if (!verif || verif.diff_c === null || verif.diff_c === undefined) {
+    return `<span>${label} : n/a</span>`;
+  }
+  const sign = verif.diff_c >= 0 ? '+' : '';
+  return `<span>${label} : <b style="color:${verifColor(verif.diff_c)}">${sign}${verif.diff_c.toFixed(1)} °C</b>` +
+    ` <span style="color:var(--muted);">(prévu ${verif[forecastKey].toFixed(1)}° / mesuré ${verif[observedKey].toFixed(1)}°)</span></span>`;
 }
 
 function render(data){
@@ -430,6 +492,8 @@ function render(data){
     <span>Correction actuelle : ${data.correction.current_offset_c !== null ? data.correction.current_offset_c.toFixed(1) + ' °C' : 'inactive (conditions non réunies)'}</span>
     <span>Dernière nuit apprise : ${data.correction.last_night_error_c !== null && data.correction.last_night_error_c !== undefined ? data.correction.last_night_error_c.toFixed(1) + ' °C (écart obs.−modèle)' : 'n/a'}</span>
     ${data.day_correction ? `<span>Dernière journée apprise : ${data.day_correction.last_day_error_c !== null && data.day_correction.last_day_error_c !== undefined ? data.day_correction.last_day_error_c.toFixed(1) + ' °C (écart obs.−modèle, Tx)' : 'n/a'}</span>` : ''}
+    ${fmtVerifSpan('Fiabilité Tn (nuit dernière)', data.verification && data.verification.night, 'forecast_tn_c', 'observed_tn_c')}
+    ${fmtVerifSpan("Fiabilité Tx (journée d'hier)", data.verification && data.verification.day, 'forecast_tx_c', 'observed_tx_c')}
     ${data.snow && data.snow.show ? `<span>❄️ Neige fraîche (24h) : ${data.snow.fresh_24h_cm !== null && data.snow.fresh_24h_cm !== undefined ? data.snow.fresh_24h_cm.toFixed(1) + ' cm' : 'n/a'}</span>` : ''}
   `;
 
@@ -484,7 +548,9 @@ function render(data){
   document.getElementById('legend').innerHTML =
     '* Température corrigée (à la baisse la nuit, à la hausse ou à la baisse en journée) par rapport au modèle brut, '
     + 'sur la base des écarts observés à la station les heures dégagées et calmes précédentes (trou à froid la nuit, '
-    + 'biais de Tx le jour).';
+    + 'biais de Tx le jour). Fiabilité Tn/Tx : écart entre le Tn (ou Tx) réellement prévu la veille (avec le profil '
+    + 'de correction d\'alors) et le Tn/Tx effectivement mesuré à la station — un indicateur de la fiabilité des '
+    + 'prévisions, distinct de l\'apprentissage du profil.';
 
   const st = STATIONS.find(s => s.slug === currentSlug);
   document.getElementById('footer').innerHTML = `
