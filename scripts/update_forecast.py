@@ -310,6 +310,12 @@ def load_bias_state(path):
         state.setdefault("last_day_error_c", None)
         state.setdefault("last_day_samples", 0)
         state.setdefault("day_history", [])
+        # Fiabilité : écart entre le Tn/Tx réellement prévu (profil figé tel
+        # qu'il était avant l'apprentissage de cette nuit/journée) et le
+        # Tn/Tx réellement observé à la station - indicateur de confiance
+        # affiché sur la page, indépendant du mécanisme d'apprentissage.
+        state.setdefault("last_night_verif", None)
+        state.setdefault("last_day_verif", None)
         return state
     return {
         "offset_profile": {},
@@ -324,6 +330,8 @@ def load_bias_state(path):
         "last_day_error_c": None,
         "last_day_samples": 0,
         "day_history": [],
+        "last_night_verif": None,
+        "last_day_verif": None,
     }
 
 
@@ -595,6 +603,41 @@ def fetch_recent_observations(station, now, hours=LIVE_OBS_HOURS):
     recent = [{"time": t.isoformat(), "temp_c": round(v, 1)} for t, v in series]
     latest = recent[-1] if recent else None
     return {"latest": latest, "recent": recent}
+
+
+def corrected_series_over_window(
+    w_start, w_end, idx_by_time, temp, cloud_low, cloud_mid, cloud_high, wind_speed,
+    max_bucket, profile_snapshot, default_fn=None,
+):
+    """Reconstitue, heure par heure sur [w_start, w_end], la température
+    "telle que prévue" en appliquant un profil de correction figé (celui
+    d'avant l'apprentissage du jour/de la nuit en cours) - sert uniquement à
+    l'indicateur de fiabilité (Tn/Tx prévus vs réellement observés), jamais
+    à l'apprentissage lui-même (qui mute le profil en direct).
+
+    `w_start` peut ne pas être aligné sur l'heure pile (cas de la fenêtre de
+    jour, dont le début doit recoller exactement à la fin de la fenêtre de
+    nuit précédente) : on itère à partir de la première heure pile >= w_start
+    (seule grille sur laquelle existent des données horaires), mais le calcul
+    de la case horaire (bucket) reste basé sur w_start non arrondi, exactement
+    comme dans la boucle d'apprentissage correspondante."""
+    vals = []
+    t = w_start.replace(minute=0, second=0, microsecond=0)
+    if t < w_start:
+        t += timedelta(hours=1)
+    while t <= w_end:
+        if t in idx_by_time:
+            i = idx_by_time[t]
+            if temp[i] is not None:
+                eff_cloud = effective_cloud(cloud_low[i], cloud_mid[i], cloud_high[i])
+                ws_ = wind_speed[i] or 0
+                clarity_ = clarity_factor(eff_cloud, ws_)
+                bucket = min(int((t - w_start).total_seconds() // 3600), max_bucket)
+                key = str(bucket)
+                offset = profile_snapshot.get(key, default_fn(bucket) if default_fn else 0.0)
+                vals.append(temp[i] + offset * clarity_)
+        t += timedelta(hours=1)
+    return vals
 
 
 def nearest_value(series, target_dt, max_gap_minutes=40):
@@ -928,6 +971,11 @@ def process_station(station, now):
                   file=sys.stderr)
             learned = None
         else:
+            # Profil tel qu'il était avant l'apprentissage de cette nuit -
+            # c'est ce profil (pas celui mis à jour ci-dessous) qui a réellement
+            # servi à produire les prévisions affichées cette nuit-là, donc
+            # c'est lui qu'il faut comparer à l'observé pour juger la fiabilité.
+            night_profile_snapshot = dict(profile)
             learned = []
             t = cand_start
             while t <= cand_end:
@@ -960,6 +1008,24 @@ def process_station(station, now):
             bias["history"].append({"night": night_key, "buckets_learned": learned})
             bias["history"] = bias["history"][-MAX_HISTORY:]
 
+            # --- Fiabilité : Tn réellement prévu (profil figé) vs Tn observé ---
+            forecast_vals = corrected_series_over_window(
+                cand_start, cand_end, idx_by_time, temp, cloud_low, cloud_mid, cloud_high,
+                wind_speed, MAX_BUCKET_HOURS, night_profile_snapshot, default_fn=default_offset,
+            )
+            observed_vals = [v for _, v in obs_series]
+            if forecast_vals and observed_vals:
+                forecast_tn = min(forecast_vals)
+                observed_tn = min(observed_vals)
+                bias["last_night_verif"] = {
+                    "night": night_key,
+                    "forecast_tn_c": round(forecast_tn, 1),
+                    "observed_tn_c": round(observed_tn, 1),
+                    "diff_c": round(forecast_tn - observed_tn, 1),
+                }
+            else:
+                bias["last_night_verif"] = None
+
     # --- Apprentissage rétrospectif de la correction de journée (Tx) -------
     # Même principe que la nuit : on cherche la journée la plus récente déjà
     # terminée (aujourd'hui si son créneau diurne est fini, sinon hier) et on
@@ -979,6 +1045,10 @@ def process_station(station, now):
                   file=sys.stderr)
             learned_day = None
         else:
+            # Même logique que côté nuit : on fige le profil d'avant mise à
+            # jour pour juger a posteriori de la fiabilité de ce qui a été
+            # réellement affiché aux utilisateurs pendant cette journée.
+            day_profile_snapshot = dict(day_profile)
             learned_day = []
             # d_start n'est pas forcément aligné sur l'heure pile (il doit
             # recoller exactement à la fin de la fenêtre de nuit précédente) -
@@ -1016,6 +1086,24 @@ def process_station(station, now):
             )
             bias["day_history"].append({"day": day_key, "buckets_learned": learned_day})
             bias["day_history"] = bias["day_history"][-MAX_HISTORY:]
+
+            # --- Fiabilité : Tx réellement prévu (profil figé) vs Tx observé ---
+            forecast_vals_day = corrected_series_over_window(
+                d_start, d_end, idx_by_time, temp, cloud_low, cloud_mid, cloud_high,
+                wind_speed, DAY_MAX_BUCKET_HOURS, day_profile_snapshot, default_fn=lambda b: 0.0,
+            )
+            observed_vals_day = [v for _, v in obs_series_day]
+            if forecast_vals_day and observed_vals_day:
+                forecast_tx = max(forecast_vals_day)
+                observed_tx = max(observed_vals_day)
+                bias["last_day_verif"] = {
+                    "day": day_key,
+                    "forecast_tx_c": round(forecast_tx, 1),
+                    "observed_tx_c": round(observed_tx, 1),
+                    "diff_c": round(forecast_tx - observed_tx, 1),
+                }
+            else:
+                bias["last_day_verif"] = None
 
     save_bias_state(bias_path, bias)
 
@@ -1065,6 +1153,10 @@ def process_station(station, now):
         "snow": {
             "show": bool(station.get("show_snow", False)),
             "fresh_24h_cm": fresh_snow_24h_cm,
+        },
+        "verification": {
+            "night": bias.get("last_night_verif"),
+            "day": bias.get("last_day_verif"),
         },
         "live": live_out,
         "hours": hours_out,
