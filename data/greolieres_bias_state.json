@@ -1546,20 +1546,20 @@
     }
   ],
   "day_offset_profile": {
-    "0": -3.29,
-    "1": -1.26,
-    "2": 0.47,
-    "3": 1.05,
-    "4": 1.14,
-    "5": 0.99,
-    "6": 0.78,
-    "7": 0.7,
-    "8": 0.65,
-    "9": 0.58
+    "0": -5.24,
+    "1": -2.3,
+    "2": 0.21,
+    "3": 1.13,
+    "4": 1.35,
+    "5": 1.14,
+    "6": 1.05,
+    "7": 1.28,
+    "8": 0.99,
+    "9": 0.51
   },
   "day_alpha": 0.25,
-  "last_processed_day": "2026-10-14",
-  "last_day_error_c": -0.11,
+  "last_processed_day": "2026-10-15",
+  "last_day_error_c": -0.29,
   "last_day_samples": 10,
   "day_history": [
     {
@@ -1711,6 +1711,61 @@
           "offset_after": 0.58
         }
       ]
+    },
+    {
+      "day": "2026-10-15",
+      "buckets_learned": [
+        {
+          "bucket": 0,
+          "error_c": -11.1,
+          "offset_after": -5.24
+        },
+        {
+          "bucket": 1,
+          "error_c": -5.3,
+          "offset_after": -2.27
+        },
+        {
+          "bucket": 2,
+          "error_c": 0.7,
+          "offset_after": 0.53
+        },
+        {
+          "bucket": 3,
+          "error_c": 1.6,
+          "offset_after": 1.19
+        },
+        {
+          "bucket": 4,
+          "error_c": 2.3,
+          "offset_after": 1.43
+        },
+        {
+          "bucket": 5,
+          "error_c": 1.5,
+          "offset_after": 1.12
+        },
+        {
+          "bucket": 6,
+          "error_c": 1.5,
+          "offset_after": 0.96
+        },
+        {
+          "bucket": 7,
+          "error_c": 3.5,
+          "offset_after": 1.4
+        },
+        {
+          "bucket": 8,
+          "error_c": 2.1,
+          "offset_after": 1.01
+        },
+        {
+          "bucket": 9,
+          "error_c": 0.3,
+          "offset_after": 0.51
+        }
+      ]
     }
   ],
   "last_night_verif": {
@@ -1720,9 +1775,9 @@
     "diff_c": 7.9
   },
   "last_day_verif": {
-    "day": "2026-10-14",
-    "forecast_tx_c": 18.5,
-    "observed_tx_c": 20.5,
-    "diff_c": -2.0
+    "day": "2026-10-15",
+    "forecast_tx_c": 19.9,
+    "observed_tx_c": 21.0,
+    "diff_c": -1.1
   }
 }
