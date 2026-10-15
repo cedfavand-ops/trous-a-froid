@@ -1,25 +1,25 @@
 {
   "offset_profile": {
     "0": -1.65,
-    "1": -5.73,
-    "2": -8.68,
-    "3": -10.48,
-    "4": -11.85,
-    "5": -12.52,
-    "6": -12.69,
-    "7": -13.26,
+    "1": -5.56,
+    "2": -8.51,
+    "3": -10.36,
+    "4": -11.51,
+    "5": -12.4,
+    "6": -12.73,
+    "7": -13.02,
     "8": -13.55,
-    "9": -13.2,
-    "10": -12.97,
-    "11": -12.58,
-    "12": -12.17,
-    "13": -11.22,
-    "14": -10.83
+    "9": -13.84,
+    "10": -13.89,
+    "11": -13.87,
+    "12": -13.8,
+    "13": -13.03,
+    "14": -13.26
   },
   "alpha": 0.4,
-  "last_processed_night": "2026-10-13",
-  "last_night_error_c": null,
-  "last_night_samples": 0,
+  "last_processed_night": "2026-10-14",
+  "last_night_error_c": -14.47,
+  "last_night_samples": 10,
   "history": [
     {
       "night": "2026-09-07",
@@ -1317,6 +1317,61 @@
     {
       "night": "2026-10-13",
       "buckets_learned": []
+    },
+    {
+      "night": "2026-10-14",
+      "buckets_learned": [
+        {
+          "bucket": 4,
+          "error_c": -11.0,
+          "offset_after": -11.51
+        },
+        {
+          "bucket": 6,
+          "error_c": -12.8,
+          "offset_after": -12.73
+        },
+        {
+          "bucket": 7,
+          "error_c": -12.5,
+          "offset_after": -12.96
+        },
+        {
+          "bucket": 8,
+          "error_c": -13.7,
+          "offset_after": -13.61
+        },
+        {
+          "bucket": 9,
+          "error_c": -14.9,
+          "offset_after": -13.88
+        },
+        {
+          "bucket": 10,
+          "error_c": -15.3,
+          "offset_after": -13.9
+        },
+        {
+          "bucket": 11,
+          "error_c": -15.7,
+          "offset_after": -13.83
+        },
+        {
+          "bucket": 12,
+          "error_c": -16.8,
+          "offset_after": -14.02
+        },
+        {
+          "bucket": 13,
+          "error_c": -15.1,
+          "offset_after": -12.77
+        },
+        {
+          "bucket": 14,
+          "error_c": -16.9,
+          "offset_after": -13.26
+        }
+      ]
     }
   ],
   "day_offset_profile": {
@@ -1466,10 +1521,10 @@
     }
   ],
   "last_night_verif": {
-    "night": "2026-10-13",
-    "forecast_tn_c": 6.8,
-    "observed_tn_c": 3.8,
-    "diff_c": 3.0
+    "night": "2026-10-14",
+    "forecast_tn_c": -3.4,
+    "observed_tn_c": -6.8,
+    "diff_c": 3.4
   },
   "last_day_verif": {
     "day": "2026-10-14",
