@@ -1445,20 +1445,20 @@
     }
   ],
   "day_offset_profile": {
-    "0": -8.34,
-    "1": -6.04,
-    "2": -2.3,
-    "3": -0.39,
-    "4": 0.24,
-    "5": 0.35,
-    "6": 0.3,
-    "7": 0.35,
-    "8": 0.28,
-    "9": -1.33
+    "0": -10.73,
+    "1": -7.86,
+    "2": -2.64,
+    "3": -0.06,
+    "4": 0.58,
+    "5": 0.66,
+    "6": 0.58,
+    "7": 0.7,
+    "8": 0.48,
+    "9": -0.85
   },
   "day_alpha": 0.25,
-  "last_processed_day": "2026-10-15",
-  "last_day_error_c": -4.08,
+  "last_processed_day": "2026-10-16",
+  "last_day_error_c": -2.37,
   "last_day_samples": 10,
   "day_history": [
     {
@@ -1643,6 +1643,61 @@
           "offset_after": -1.33
         }
       ]
+    },
+    {
+      "day": "2026-10-16",
+      "buckets_learned": [
+        {
+          "bucket": 0,
+          "error_c": -17.9,
+          "offset_after": -10.73
+        },
+        {
+          "bucket": 1,
+          "error_c": -15.9,
+          "offset_after": -8.5
+        },
+        {
+          "bucket": 2,
+          "error_c": -1.1,
+          "offset_after": -2.0
+        },
+        {
+          "bucket": 3,
+          "error_c": 2.0,
+          "offset_after": 0.21
+        },
+        {
+          "bucket": 4,
+          "error_c": 1.8,
+          "offset_after": 0.63
+        },
+        {
+          "bucket": 5,
+          "error_c": 1.7,
+          "offset_after": 0.69
+        },
+        {
+          "bucket": 6,
+          "error_c": 1.2,
+          "offset_after": 0.52
+        },
+        {
+          "bucket": 7,
+          "error_c": 1.9,
+          "offset_after": 0.74
+        },
+        {
+          "bucket": 8,
+          "error_c": 2.0,
+          "offset_after": 0.71
+        },
+        {
+          "bucket": 9,
+          "error_c": 0.6,
+          "offset_after": -0.85
+        }
+      ]
     }
   ],
   "last_night_verif": {
@@ -1652,9 +1707,9 @@
     "diff_c": 4.8
   },
   "last_day_verif": {
-    "day": "2026-10-15",
-    "forecast_tx_c": 18.7,
-    "observed_tx_c": 20.1,
-    "diff_c": -1.4
+    "day": "2026-10-16",
+    "forecast_tx_c": 17.1,
+    "observed_tx_c": 18.8,
+    "diff_c": -1.8
   }
 }
