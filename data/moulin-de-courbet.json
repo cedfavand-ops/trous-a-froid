@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-16T18:06:08.397918+02:00",
+  "generated_at": "2026-10-16T18:59:06.462058+02:00",
   "run_time": "2026-10-14T00:00:00+02:00",
   "location": {
     "name": "Lachapelle-Graillouse - Moulin de Courbet",
@@ -12,7 +12,7 @@
     "end": "2026-10-20T17:00:00+02:00"
   },
   "correction": {
-    "current_offset_c": -0.63,
+    "current_offset_c": -0.02,
     "offset_profile": {
       "0": -0.02,
       "1": -2.68,
@@ -85,10 +85,10 @@
     {
       "time": "2026-10-16T18:00:00+02:00",
       "temp_raw": 18.1,
-      "temp_corrected": 17.5,
-      "corrected": true,
+      "temp_corrected": 18.1,
+      "corrected": false,
       "correction_period": "night",
-      "correction_offset_c": -0.63,
+      "correction_offset_c": -0.02,
       "clarity": 1.0,
       "wind_speed": 9.5,
       "wind_gusts": 19.4,
@@ -102,10 +102,10 @@
     {
       "time": "2026-10-16T19:00:00+02:00",
       "temp_raw": 14.5,
-      "temp_corrected": 11.6,
+      "temp_corrected": 11.8,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -2.91,
+      "correction_offset_c": -2.68,
       "clarity": 1.0,
       "wind_speed": 8.4,
       "wind_gusts": 18.0,
@@ -119,10 +119,10 @@
     {
       "time": "2026-10-16T20:00:00+02:00",
       "temp_raw": 12.3,
-      "temp_corrected": 7.2,
+      "temp_corrected": 7.3,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -5.1,
+      "correction_offset_c": -5.0,
       "clarity": 1.0,
       "wind_speed": 7.7,
       "wind_gusts": 18.4,
@@ -136,10 +136,10 @@
     {
       "time": "2026-10-16T21:00:00+02:00",
       "temp_raw": 11.0,
-      "temp_corrected": 5.9,
+      "temp_corrected": 6.0,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -5.06,
+      "correction_offset_c": -5.03,
       "clarity": 0.75,
       "wind_speed": 6.4,
       "wind_gusts": 13.7,
@@ -156,7 +156,7 @@
       "temp_corrected": 9.2,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -1.95,
+      "correction_offset_c": -1.94,
       "clarity": 0.25,
       "wind_speed": 7.0,
       "wind_gusts": 12.6,

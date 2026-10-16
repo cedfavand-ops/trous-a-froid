@@ -1,25 +1,25 @@
 {
   "offset_profile": {
-    "0": -1.02,
-    "1": -2.99,
-    "2": -4.47,
-    "3": -5.83,
-    "4": -5.66,
-    "5": -6.1,
-    "6": -6.86,
-    "7": -7.76,
-    "8": -8.36,
-    "9": -8.7,
-    "10": -8.97,
-    "11": -8.95,
-    "12": -9.07,
-    "13": -9.28,
-    "14": -9.35
+    "0": -1.27,
+    "1": -3.45,
+    "2": -5.25,
+    "3": -6.61,
+    "4": -6.8,
+    "5": -6.54,
+    "6": -7.99,
+    "7": -8.88,
+    "8": -9.37,
+    "9": -9.7,
+    "10": -9.97,
+    "11": -9.97,
+    "12": -10.06,
+    "13": -10.27,
+    "14": -10.31
   },
   "alpha": 0.25,
-  "last_processed_night": "2026-10-14",
-  "last_night_error_c": -8.99,
-  "last_night_samples": 8,
+  "last_processed_night": "2026-10-15",
+  "last_night_error_c": -10.77,
+  "last_night_samples": 14,
   "history": [
     {
       "night": "2026-10-03",
@@ -359,24 +359,99 @@
           "offset_after": -9.35
         }
       ]
+    },
+    {
+      "night": "2026-10-15",
+      "buckets_learned": [
+        {
+          "bucket": 0,
+          "error_c": -2.0,
+          "offset_after": -1.27
+        },
+        {
+          "bucket": 1,
+          "error_c": -5.1,
+          "offset_after": -3.52
+        },
+        {
+          "bucket": 2,
+          "error_c": -7.7,
+          "offset_after": -5.28
+        },
+        {
+          "bucket": 3,
+          "error_c": -9.8,
+          "offset_after": -6.82
+        },
+        {
+          "bucket": 4,
+          "error_c": -10.8,
+          "offset_after": -6.95
+        },
+        {
+          "bucket": 6,
+          "error_c": -12.2,
+          "offset_after": -8.2
+        },
+        {
+          "bucket": 7,
+          "error_c": -12.4,
+          "offset_after": -8.92
+        },
+        {
+          "bucket": 8,
+          "error_c": -12.5,
+          "offset_after": -9.39
+        },
+        {
+          "bucket": 9,
+          "error_c": -12.7,
+          "offset_after": -9.7
+        },
+        {
+          "bucket": 10,
+          "error_c": -13.2,
+          "offset_after": -10.03
+        },
+        {
+          "bucket": 11,
+          "error_c": -12.9,
+          "offset_after": -9.94
+        },
+        {
+          "bucket": 12,
+          "error_c": -12.9,
+          "offset_after": -10.03
+        },
+        {
+          "bucket": 13,
+          "error_c": -13.4,
+          "offset_after": -10.31
+        },
+        {
+          "bucket": 14,
+          "error_c": -13.2,
+          "offset_after": -10.31
+        }
+      ]
     }
   ],
   "day_offset_profile": {
-    "0": -5.46,
-    "1": -4.47,
-    "2": -3.28,
-    "3": -0.95,
-    "4": 0.15,
-    "5": 0.24,
-    "6": 0.16,
-    "7": 0.1,
-    "8": 0.06,
-    "9": -0.14
+    "0": -8.02,
+    "1": -7.54,
+    "2": -5.48,
+    "3": -2.23,
+    "4": -0.03,
+    "5": 0.26,
+    "6": 0.14,
+    "7": 0.22,
+    "8": 0.29,
+    "9": -0.48
   },
   "day_alpha": 0.25,
-  "last_processed_day": "2026-10-14",
-  "last_day_error_c": -2.03,
-  "last_day_samples": 6,
+  "last_processed_day": "2026-10-16",
+  "last_day_error_c": -5.0,
+  "last_day_samples": 10,
   "day_history": [
     {
       "day": "2026-10-10",
@@ -532,18 +607,73 @@
           "offset_after": 0.09
         }
       ]
+    },
+    {
+      "day": "2026-10-16",
+      "buckets_learned": [
+        {
+          "bucket": 0,
+          "error_c": -15.7,
+          "offset_after": -8.02
+        },
+        {
+          "bucket": 1,
+          "error_c": -17.9,
+          "offset_after": -7.83
+        },
+        {
+          "bucket": 2,
+          "error_c": -13.0,
+          "offset_after": -5.71
+        },
+        {
+          "bucket": 3,
+          "error_c": -5.3,
+          "offset_after": -2.04
+        },
+        {
+          "bucket": 4,
+          "error_c": 0.9,
+          "offset_after": 0.34
+        },
+        {
+          "bucket": 5,
+          "error_c": 0.4,
+          "offset_after": 0.28
+        },
+        {
+          "bucket": 6,
+          "error_c": -0.1,
+          "offset_after": 0.09
+        },
+        {
+          "bucket": 7,
+          "error_c": 0.5,
+          "offset_after": 0.2
+        },
+        {
+          "bucket": 8,
+          "error_c": 1.7,
+          "offset_after": 0.47
+        },
+        {
+          "bucket": 9,
+          "error_c": -1.5,
+          "offset_after": -0.48
+        }
+      ]
     }
   ],
   "last_night_verif": {
-    "night": "2026-10-14",
-    "forecast_tn_c": -0.7,
-    "observed_tn_c": -1.3,
-    "diff_c": 0.6
+    "night": "2026-10-15",
+    "forecast_tn_c": -1.5,
+    "observed_tn_c": -5.5,
+    "diff_c": 4.0
   },
   "last_day_verif": {
-    "day": "2026-10-14",
-    "forecast_tx_c": 18.5,
-    "observed_tx_c": 18.5,
-    "diff_c": 0.0
+    "day": "2026-10-16",
+    "forecast_tx_c": 20.3,
+    "observed_tx_c": 20.8,
+    "diff_c": -0.5
   }
 }
