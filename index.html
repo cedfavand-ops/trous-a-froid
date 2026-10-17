@@ -119,6 +119,8 @@
             <th>Heure</th>
             <th>Ciel</th>
             <th>Température</th>
+            <th>Point de rosée</th>
+            <th>T 850 hPa</th>
             <th>Vent</th>
             <th>Direction</th>
           </tr>
@@ -508,7 +510,7 @@ function render(data){
       const sep = document.createElement('tr');
       sep.className = 'day-sep';
       const label = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
-      sep.innerHTML = `<td colspan="5">${label}</td>`;
+      sep.innerHTML = `<td colspan="7">${label}</td>`;
       tbody.appendChild(sep);
     }
     const hourNum = d.getHours();
@@ -536,6 +538,8 @@ function render(data){
                 ${h.corrected && h.temp_raw !== null && h.temp_raw !== undefined ? `<span class="raw-strike">modèle brut ${h.temp_raw.toFixed(1)}°</span>` : ''}`;
             })()}
       </td>
+      <td>${h.dew_point_c === null || h.dew_point_c === undefined ? '—' : h.dew_point_c.toFixed(1) + '°'}</td>
+      <td>${h.temp_850hpa_c === null || h.temp_850hpa_c === undefined ? '—' : h.temp_850hpa_c.toFixed(1) + '°'}</td>
       <td>
         ${Math.round(h.wind_speed)} km/h
         ${h.wind_gusts ? `<span class="gust">raf. ${Math.round(h.wind_gusts)}</span>` : ''}
@@ -550,7 +554,8 @@ function render(data){
     + 'sur la base des écarts observés à la station les heures dégagées et calmes précédentes (trou à froid la nuit, '
     + 'biais de Tx le jour). Fiabilité Tn/Tx : écart entre le Tn (ou Tx) réellement prévu la veille (avec le profil '
     + 'de correction d\'alors) et le Tn/Tx effectivement mesuré à la station — un indicateur de la fiabilité des '
-    + 'prévisions, distinct de l\'apprentissage du profil.';
+    + 'prévisions, distinct de l\'apprentissage du profil. T 850 hPa : température à ~1500 m d\'altitude '
+    + '(modèle DWD ICON-EU, indicative - non utilisée pour la correction).';
 
   const st = STATIONS.find(s => s.slug === currentSlug);
   document.getElementById('footer').innerHTML = `
