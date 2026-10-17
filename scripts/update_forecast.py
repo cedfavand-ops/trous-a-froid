@@ -177,7 +177,7 @@ def fetch_openmeteo(lat, lon, elevation_m=None, past_days=2, forecast_days=3, mo
         "hourly": ",".join([
             "temperature_2m", "wind_speed_10m", "wind_direction_10m", "wind_gusts_10m",
             "cloud_cover", "cloud_cover_low", "cloud_cover_mid", "cloud_cover_high",
-            "precipitation", "rain", "snowfall", "relative_humidity_2m",
+            "precipitation", "rain", "snowfall", "relative_humidity_2m", "dew_point_2m",
         ]),
         "daily": "sunrise,sunset",
         "models": model,
@@ -192,6 +192,51 @@ def fetch_openmeteo(lat, lon, elevation_m=None, past_days=2, forecast_days=3, mo
     return http_get_json(url)
 
 
+# Température à 850 hPa : non disponible sur les modèles MeteoSwiss ICON-CH1/CH2
+# (les niveaux de pression ne sont pas encore intégrés côté Open-Meteo pour
+# cette famille de modèles) - récupérée séparément sur ICON-EU (DWD, 7 km,
+# couvre toute l'Europe donc toutes nos stations). Purement indicative
+# (advection d'air en altitude) : jamais utilisée pour la correction ni
+# l'apprentissage, qui restent basés uniquement sur ICON-CH1/CH2.
+TEMP_850HPA_MODEL = "dwd_icon_eu"
+
+
+def fetch_850hpa_temp(lat, lon, forecast_days):
+    params = {
+        "latitude": lat,
+        "longitude": lon,
+        "hourly": "temperature_850hPa",
+        "models": TEMP_850HPA_MODEL,
+        "timezone": "Europe/Berlin",
+        "forecast_days": forecast_days,
+        "past_days": 0,
+    }
+    url = "https://api.open-meteo.com/v1/forecast?" + urllib.parse.urlencode(params)
+    try:
+        return http_get_json(url)
+    except Exception as e:
+        print(f"[warn] Échec récupération température 850 hPa (ICON-EU) : {e}", file=sys.stderr)
+        return None
+
+
+def index_850hpa_by_time(om850):
+    """Retourne {datetime_local: temperature_850hPa}, ou {} si la requête a
+    échoué ou renvoyé une forme inattendue - l'affichage doit simplement se
+    passer de la donnée ce passage-ci, jamais planter dessus."""
+    out = {}
+    if not om850 or "hourly" not in om850:
+        return out
+    h850 = om850["hourly"]
+    times850 = h850.get("time", [])
+    vals850 = h850.get("temperature_850hPa", [])
+    for t_str, v in zip(times850, vals850):
+        try:
+            out[parse_iso_local(t_str)] = v
+        except Exception:
+            continue
+    return out
+
+
 def merge_ch1_ch2(om1, om2):
     h1, h2 = om1["hourly"], om2["hourly"]
     idx1 = {t: i for i, t in enumerate(h1["time"])}
@@ -201,17 +246,18 @@ def merge_ch1_ch2(om1, om2):
     var_names = [
         "temperature_2m", "wind_speed_10m", "wind_direction_10m", "wind_gusts_10m",
         "cloud_cover", "cloud_cover_low", "cloud_cover_mid", "cloud_cover_high",
-        "precipitation", "rain", "snowfall", "relative_humidity_2m",
+        "precipitation", "rain", "snowfall", "relative_humidity_2m", "dew_point_2m",
     ]
     merged_hourly = {"time": all_times}
     for name in var_names:
         vals = []
+        arr1, arr2 = h1.get(name), h2.get(name)
         for t in all_times:
             v = None
-            if t in idx1 and h1.get(name, [None])[idx1[t]] is not None:
-                v = h1[name][idx1[t]]
-            elif t in idx2 and h2.get(name, [None])[idx2[t]] is not None:
-                v = h2[name][idx2[t]]
+            if arr1 is not None and t in idx1 and idx1[t] < len(arr1) and arr1[idx1[t]] is not None:
+                v = arr1[idx1[t]]
+            elif arr2 is not None and t in idx2 and idx2[t] < len(arr2) and arr2[idx2[t]] is not None:
+                v = arr2[idx2[t]]
             vals.append(v)
         merged_hourly[name] = vals
 
@@ -771,8 +817,16 @@ def process_station(station, now):
     rain = series("rain")
     snowfall = series("snowfall")
     humidity = series("relative_humidity_2m")
+    dew_point = series("dew_point_2m")
 
     idx_by_time = {t: i for i, t in enumerate(times)}
+
+    # Température à 850 hPa (ICON-EU, indicative) - requête séparée des
+    # modèles CH1/CH2 (voir commentaire sur TEMP_850HPA_MODEL). On demande une
+    # marge confortable pour couvrir toute la fenêtre de prévision (jusqu'à
+    # FORECAST_NIGHTS + quelques jours plus loin que la station elle-même).
+    om850 = fetch_850hpa_temp(station["lat"], station["lon"], forecast_days=CH2_FORECAST_DAYS + 2)
+    temp850_by_time = index_850hpa_by_time(om850)
 
     daily_dates = [datetime.fromisoformat(d).date() for d in om["daily"]["time"]]
     sunrise_by_date, sunset_by_date = {}, {}
@@ -836,6 +890,8 @@ def process_station(station, now):
         cl, cm, ch = cloud_low[i], cloud_mid[i], cloud_high[i]
         pr, rn, sn = precipitation[i] or 0, rain[i] or 0, snowfall[i] or 0
         hu = humidity[i]
+        dp = dew_point[i]
+        t850 = temp850_by_time.get(t)
 
         eff_cloud = effective_cloud(cl, cm, ch)
         corr_start, corr_end = find_night_window(t)
@@ -864,6 +920,7 @@ def process_station(station, now):
         rows.append({
             "t": t, "raw_t": raw_t, "ws": ws, "wg": wg, "wd": wd, "ct": ct,
             "cl": cl, "cm": cm, "ch": ch, "pr": pr, "rn": rn, "sn": sn, "hu": hu,
+            "dp": dp, "t850": t850,
             "period": period, "w_start": w_start, "max_bucket": max_bucket,
             "get_offset": get_offset, "clarity_raw": clarity_raw,
         })
@@ -935,6 +992,8 @@ def process_station(station, now):
             "cloud_cover_low": round(row["cl"]) if row["cl"] is not None else None,
             "cloud_cover_mid": round(row["cm"]) if row["cm"] is not None else None,
             "cloud_cover_high": round(row["ch"]) if row["ch"] is not None else None,
+            "dew_point_c": round(row["dp"], 1) if row["dp"] is not None else None,
+            "temp_850hpa_c": round(row["t850"], 1) if row["t850"] is not None else None,
             "picto": picto,
         })
 
