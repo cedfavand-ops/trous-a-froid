@@ -1,24 +1,24 @@
 {
   "offset_profile": {
-    "0": 0.39,
-    "1": -2.26,
-    "2": -4.53,
-    "3": -6.5,
-    "4": -7.72,
-    "5": -8.38,
-    "6": -8.68,
-    "7": -8.83,
-    "8": -9.07,
-    "9": -9.56,
-    "10": -10.12,
-    "11": -10.49,
-    "12": -10.7,
-    "13": -10.85,
-    "14": -11.19
+    "0": 0.52,
+    "1": -2.46,
+    "2": -5.0,
+    "3": -6.68,
+    "4": -7.95,
+    "5": -8.54,
+    "6": -8.82,
+    "7": -8.81,
+    "8": -8.95,
+    "9": -9.26,
+    "10": -9.77,
+    "11": -9.86,
+    "12": -9.79,
+    "13": -10.08,
+    "14": -10.42
   },
   "alpha": 0.25,
-  "last_processed_night": "2026-10-15",
-  "last_night_error_c": -10.13,
+  "last_processed_night": "2026-10-16",
+  "last_night_error_c": -7.31,
   "last_night_samples": 15,
   "history": [
     {
@@ -419,24 +419,104 @@
           "offset_after": -11.19
         }
       ]
+    },
+    {
+      "night": "2026-10-16",
+      "buckets_learned": [
+        {
+          "bucket": 0,
+          "error_c": 0.9,
+          "offset_after": 0.52
+        },
+        {
+          "bucket": 1,
+          "error_c": -3.3,
+          "offset_after": -2.52
+        },
+        {
+          "bucket": 2,
+          "error_c": -7.1,
+          "offset_after": -5.17
+        },
+        {
+          "bucket": 3,
+          "error_c": -7.3,
+          "offset_after": -6.7
+        },
+        {
+          "bucket": 4,
+          "error_c": -9.2,
+          "offset_after": -8.09
+        },
+        {
+          "bucket": 5,
+          "error_c": -9.1,
+          "offset_after": -8.56
+        },
+        {
+          "bucket": 6,
+          "error_c": -9.5,
+          "offset_after": -8.88
+        },
+        {
+          "bucket": 7,
+          "error_c": -8.6,
+          "offset_after": -8.77
+        },
+        {
+          "bucket": 8,
+          "error_c": -8.5,
+          "offset_after": -8.93
+        },
+        {
+          "bucket": 9,
+          "error_c": -8.1,
+          "offset_after": -9.2
+        },
+        {
+          "bucket": 10,
+          "error_c": -9.1,
+          "offset_after": -9.87
+        },
+        {
+          "bucket": 11,
+          "error_c": -8.1,
+          "offset_after": -9.89
+        },
+        {
+          "bucket": 12,
+          "error_c": -6.7,
+          "offset_after": -9.7
+        },
+        {
+          "bucket": 13,
+          "error_c": -7.8,
+          "offset_after": -10.09
+        },
+        {
+          "bucket": 14,
+          "error_c": -8.1,
+          "offset_after": -10.42
+        }
+      ]
     }
   ],
   "day_offset_profile": {
-    "0": -3.75,
-    "1": -1.35,
-    "2": 0.37,
-    "3": 0.91,
-    "4": 0.81,
-    "5": 0.82,
-    "6": 0.79,
-    "7": 1.03,
-    "8": 1.13,
+    "0": -4.01,
+    "1": -1.19,
+    "2": 0.38,
+    "3": 0.84,
+    "4": 0.83,
+    "5": 0.81,
+    "6": 0.83,
+    "7": 1.01,
+    "8": 1.12,
     "9": 1.16
   },
   "day_alpha": 0.25,
-  "last_processed_day": "2026-10-16",
-  "last_day_error_c": 0.01,
-  "last_day_samples": 10,
+  "last_processed_day": "2026-10-17",
+  "last_day_error_c": -1.17,
+  "last_day_samples": 3,
   "day_history": [
     {
       "day": "2026-10-10",
@@ -651,18 +731,38 @@
           "offset_after": 1.16
         }
       ]
+    },
+    {
+      "day": "2026-10-17",
+      "buckets_learned": [
+        {
+          "bucket": 0,
+          "error_c": -4.8,
+          "offset_after": -4.01
+        },
+        {
+          "bucket": 1,
+          "error_c": 0.2,
+          "offset_after": -0.96
+        },
+        {
+          "bucket": 2,
+          "error_c": 1.1,
+          "offset_after": 0.55
+        }
+      ]
     }
   ],
   "last_night_verif": {
-    "night": "2026-10-15",
-    "forecast_tn_c": 1.0,
+    "night": "2026-10-16",
+    "forecast_tn_c": -0.9,
     "observed_tn_c": -1.8,
-    "diff_c": 2.8
+    "diff_c": 0.9
   },
   "last_day_verif": {
-    "day": "2026-10-16",
-    "forecast_tx_c": 21.5,
-    "observed_tx_c": 21.6,
-    "diff_c": -0.1
+    "day": "2026-10-17",
+    "forecast_tx_c": 18.1,
+    "observed_tx_c": 20.1,
+    "diff_c": -2.0
   }
 }
