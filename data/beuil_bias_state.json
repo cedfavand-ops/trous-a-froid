@@ -1,25 +1,25 @@
 {
   "offset_profile": {
-    "0": -0.72,
-    "1": -2.3,
-    "2": -3.0,
-    "3": -5.83,
-    "4": -7.25,
-    "5": -8.62,
-    "6": -9.59,
-    "7": -10.0,
-    "8": -9.84,
-    "9": -9.98,
-    "10": -10.98,
-    "11": -11.39,
-    "12": -11.23,
-    "13": -11.27,
+    "0": 0.38,
+    "1": -2.82,
+    "2": -4.75,
+    "3": -6.84,
+    "4": -8.05,
+    "5": -9.5,
+    "6": -9.99,
+    "7": -10.65,
+    "8": -10.54,
+    "9": -10.9,
+    "10": -11.49,
+    "11": -11.99,
+    "12": -11.86,
+    "13": -11.12,
     "14": -9.37
   },
   "alpha": 0.25,
-  "last_processed_night": "2026-10-15",
-  "last_night_error_c": -10.46,
-  "last_night_samples": 13,
+  "last_processed_night": "2026-10-16",
+  "last_night_error_c": -10.56,
+  "last_night_samples": 14,
   "history": [
     {
       "night": "2026-09-18",
@@ -1065,6 +1065,81 @@
           "offset_after": -11.72
         }
       ]
+    },
+    {
+      "night": "2026-10-16",
+      "buckets_learned": [
+        {
+          "bucket": 0,
+          "error_c": 3.7,
+          "offset_after": 0.38
+        },
+        {
+          "bucket": 1,
+          "error_c": -5.6,
+          "offset_after": -3.12
+        },
+        {
+          "bucket": 2,
+          "error_c": -9.4,
+          "offset_after": -4.6
+        },
+        {
+          "bucket": 3,
+          "error_c": -10.9,
+          "offset_after": -7.1
+        },
+        {
+          "bucket": 4,
+          "error_c": -9.8,
+          "offset_after": -7.89
+        },
+        {
+          "bucket": 5,
+          "error_c": -13.2,
+          "offset_after": -9.77
+        },
+        {
+          "bucket": 6,
+          "error_c": -10.6,
+          "offset_after": -9.84
+        },
+        {
+          "bucket": 7,
+          "error_c": -13.5,
+          "offset_after": -10.88
+        },
+        {
+          "bucket": 8,
+          "error_c": -12.1,
+          "offset_after": -10.4
+        },
+        {
+          "bucket": 9,
+          "error_c": -13.6,
+          "offset_after": -10.88
+        },
+        {
+          "bucket": 10,
+          "error_c": -13.0,
+          "offset_after": -11.48
+        },
+        {
+          "bucket": 11,
+          "error_c": -14.3,
+          "offset_after": -12.12
+        },
+        {
+          "bucket": 12,
+          "error_c": -14.0,
+          "offset_after": -11.92
+        },
+        {
+          "bucket": 13,
+          "error_c": -11.5,
+          "offset_after": -11.33
+        }
+      ]
     }
   ],
   "day_offset_profile": {
@@ -1351,10 +1426,10 @@
     }
   ],
   "last_night_verif": {
-    "night": "2026-10-15",
-    "forecast_tn_c": -0.5,
-    "observed_tn_c": -6.0,
-    "diff_c": 5.5
+    "night": "2026-10-16",
+    "forecast_tn_c": -5.2,
+    "observed_tn_c": -7.2,
+    "diff_c": 2.0
   },
   "last_day_verif": {
     "day": "2026-10-16",
