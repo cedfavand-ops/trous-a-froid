@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-17T20:03:17.403112+02:00",
+  "generated_at": "2026-10-17T20:15:01.254592+02:00",
   "run_time": "2026-10-15T00:00:00+02:00",
   "location": {
     "name": "La Pesse - Le Cernétrou",
@@ -78,18 +78,10 @@
   "live": {
     "available": true,
     "latest": {
-      "time": "2026-10-17T19:37:16+02:00",
-      "temp_c": 5.7
+      "time": "2026-10-17T20:07:17+02:00",
+      "temp_c": 5.5
     },
     "recent": [
-      {
-        "time": "2026-10-15T20:07:18+02:00",
-        "temp_c": 2.1
-      },
-      {
-        "time": "2026-10-15T20:10:07+02:00",
-        "temp_c": 1.1
-      },
       {
         "time": "2026-10-15T20:20:07+02:00",
         "temp_c": 1.1
@@ -1605,6 +1597,22 @@
       {
         "time": "2026-10-17T19:37:16+02:00",
         "temp_c": 5.7
+      },
+      {
+        "time": "2026-10-17T19:40:07+02:00",
+        "temp_c": 5.5
+      },
+      {
+        "time": "2026-10-17T19:50:07+02:00",
+        "temp_c": 5.5
+      },
+      {
+        "time": "2026-10-17T20:00:07+02:00",
+        "temp_c": 5.4
+      },
+      {
+        "time": "2026-10-17T20:07:17+02:00",
+        "temp_c": 5.5
       }
     ]
   },
@@ -2372,10 +2380,10 @@
     {
       "time": "2026-10-19T10:00:00+02:00",
       "temp_raw": 9.2,
-      "temp_corrected": 6.1,
+      "temp_corrected": 6.0,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -3.08,
+      "correction_offset_c": -3.22,
       "clarity": 1.0,
       "wind_speed": 8.9,
       "wind_gusts": 22.0,
@@ -2391,10 +2399,10 @@
     {
       "time": "2026-10-19T11:00:00+02:00",
       "temp_raw": 10.8,
-      "temp_corrected": 10.5,
+      "temp_corrected": 10.2,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -0.33,
+      "correction_offset_c": -0.58,
       "clarity": 1.0,
       "wind_speed": 9.0,
       "wind_gusts": 24.1,
@@ -2410,10 +2418,10 @@
     {
       "time": "2026-10-19T12:00:00+02:00",
       "temp_raw": 11.7,
-      "temp_corrected": 12.4,
+      "temp_corrected": 12.3,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": 0.73,
+      "correction_offset_c": 0.6,
       "clarity": 1.0,
       "wind_speed": 9.3,
       "wind_gusts": 29.5,
@@ -2429,10 +2437,10 @@
     {
       "time": "2026-10-19T13:00:00+02:00",
       "temp_raw": 13.0,
-      "temp_corrected": 13.9,
+      "temp_corrected": 14.0,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": 0.91,
+      "correction_offset_c": 0.96,
       "clarity": 1.0,
       "wind_speed": 8.7,
       "wind_gusts": 29.2,
@@ -2448,10 +2456,10 @@
     {
       "time": "2026-10-19T14:00:00+02:00",
       "temp_raw": 14.1,
-      "temp_corrected": 15.5,
+      "temp_corrected": 15.4,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": 1.41,
+      "correction_offset_c": 1.32,
       "clarity": 1.0,
       "wind_speed": 8.5,
       "wind_gusts": 27.4,
@@ -2470,7 +2478,7 @@
       "temp_corrected": 15.7,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": 1.01,
+      "correction_offset_c": 0.96,
       "clarity": 0.76,
       "wind_speed": 6.4,
       "wind_gusts": 24.1,
@@ -2486,10 +2494,10 @@
     {
       "time": "2026-10-19T16:00:00+02:00",
       "temp_raw": 14.7,
-      "temp_corrected": 14.9,
+      "temp_corrected": 15.0,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": 0.23,
+      "correction_offset_c": 0.25,
       "clarity": 0.28,
       "wind_speed": 4.8,
       "wind_gusts": 17.6,
@@ -3303,10 +3311,10 @@
     {
       "time": "2026-10-21T11:00:00+02:00",
       "temp_raw": 5.4,
-      "temp_corrected": 2.4,
+      "temp_corrected": 2.2,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -3.02,
+      "correction_offset_c": -3.15,
       "clarity": 0.98,
       "wind_speed": 6.6,
       "wind_gusts": 26.6,
@@ -3322,10 +3330,10 @@
     {
       "time": "2026-10-21T12:00:00+02:00",
       "temp_raw": 6.2,
-      "temp_corrected": 5.9,
+      "temp_corrected": 5.7,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -0.29,
+      "correction_offset_c": -0.51,
       "clarity": 0.87,
       "wind_speed": 11.0,
       "wind_gusts": 27.4,
@@ -3341,10 +3349,10 @@
     {
       "time": "2026-10-21T13:00:00+02:00",
       "temp_raw": 7.2,
-      "temp_corrected": 7.6,
+      "temp_corrected": 7.5,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": 0.4,
+      "correction_offset_c": 0.33,
       "clarity": 0.55,
       "wind_speed": 14.2,
       "wind_gusts": 36.0,
@@ -3360,10 +3368,10 @@
     {
       "time": "2026-10-21T14:00:00+02:00",
       "temp_raw": 7.6,
-      "temp_corrected": 7.7,
+      "temp_corrected": 7.8,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": 0.15,
+      "correction_offset_c": 0.16,
       "clarity": 0.16,
       "wind_speed": 16.8,
       "wind_gusts": 41.4,
