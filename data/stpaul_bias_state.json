@@ -1,0 +1,16 @@
+{
+  "offset_profile": {},
+  "alpha": 0.25,
+  "last_processed_night": null,
+  "last_night_error_c": null,
+  "last_night_samples": 0,
+  "history": [],
+  "day_offset_profile": {},
+  "day_alpha": 0.25,
+  "last_processed_day": null,
+  "last_day_error_c": null,
+  "last_day_samples": 0,
+  "day_history": [],
+  "last_night_verif": null,
+  "last_day_verif": null
+}
