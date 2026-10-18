@@ -30,16 +30,24 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(ROOT, "data")
 OUT_PATH = os.path.join(DATA_DIR, "efento.json")
 
-TOKEN = os.environ.get("EFENTO_TOKEN", "").strip()
+TOKEN = os.environ.get("EFENTO_TOKEN", "").strip().strip('"').strip("'")
 STATION_NAME = os.environ.get("EFENTO_STATION_NAME", "").strip() or "Causse de Montbel"
 FORCED_POINT_ID = os.environ.get("EFENTO_MEASUREMENT_POINT_ID", "").strip()
+FORCED_LOCATION_ID = os.environ.get("EFENTO_LOCATION_ID", "").strip()
 HOURS = 48
 
 # Schémas d'authentification essayés dans l'ordre jusqu'au premier qui répond 200.
 AUTH_SCHEMES = [
-    ("X-API-KEY", lambda t: {"X-API-KEY": t}),
+    ("Authorization brut (documenté par Efento)", lambda t: {"Authorization": t}),
     ("Bearer", lambda t: {"Authorization": f"Bearer {t}"}),
-    ("Authorization brut", lambda t: {"Authorization": t}),
+    ("X-API-KEY", lambda t: {"X-API-KEY": t}),
+]
+# Un jeton limité à une localisation n'a pas forcément accès à /organizations :
+# on teste plusieurs points d'accès, un seul 200 suffit à valider le schéma.
+PROBE_ENDPOINTS = [
+    ("/measurement-points", {"limit": 20}),
+    ("/locations", None),
+    ("/organizations", None),
 ]
 
 _headers = {}
@@ -76,17 +84,23 @@ def api_get(path, params=None):
 def authenticate():
     global _headers
     for name, build in AUTH_SCHEMES:
-        try:
-            http_get("/organizations", None, build(TOKEN))
-        except urllib.error.HTTPError as e:
-            log(f"[info] Authentification '{name}' refusée (HTTP {e.code}).")
-            continue
-        except Exception as e:
-            log(f"[info] Authentification '{name}' : erreur {e}.")
-            continue
-        _headers = build(TOKEN)
-        log(f"[info] Authentification acceptée : schéma '{name}'.")
-        return True
+        for path, params in PROBE_ENDPOINTS:
+            try:
+                http_get(path, params, build(TOKEN))
+            except urllib.error.HTTPError as e:
+                body = ""
+                try:
+                    body = e.read().decode("utf-8", errors="replace")[:200]
+                except Exception:
+                    pass
+                log(f"[info] '{name}' sur {path} -> HTTP {e.code} {body}")
+                continue
+            except Exception as e:
+                log(f"[info] '{name}' sur {path} -> erreur {e}")
+                continue
+            _headers = build(TOKEN)
+            log(f"[info] Authentification acceptée : schéma '{name}' (testé sur {path}).")
+            return True
     return False
 
 
@@ -112,25 +126,43 @@ def find_measurement_points():
         return [{"id": FORCED_POINT_ID, "name": f"point {FORCED_POINT_ID}"}]
 
     needle = STATION_NAME.lower()
-    orgs = api_get("/organizations")
-    org_list = (orgs or {}).get("organizations") or []
-    log(f"[info] {len(org_list)} organisation(s) visible(s) : {[o.get('name') for o in org_list]}")
+    candidates = []   # (nom de localisation, point)
 
-    matches, seen = [], set()
-    all_names = []
-    for org in org_list:
-        locations = paged("/locations", "locations", {"organization-id": org.get("id")})
-        log(f"[info] Organisation '{org.get('name')}' : {len(locations)} localisation(s) : {[l.get('name') for l in locations]}")
-        for loc in locations:
-            points = paged("/measurement-points", "measurementPoints", {"location-ids": loc.get("id")})
-            for pt in points:
-                all_names.append(f"{loc.get('name')} / {pt.get('name')}")
-                hay = f"{loc.get('name', '')} {pt.get('name', '')}".lower()
-                if needle in hay and pt.get("id") not in seen:
-                    seen.add(pt.get("id"))
-                    matches.append(pt)
+    if FORCED_LOCATION_ID:
+        for pt in paged("/measurement-points", "measurementPoints", {"location-ids": FORCED_LOCATION_ID}):
+            candidates.append(("", pt))
+    else:
+        # 1) Parcours complet organisation -> localisation -> points, si autorisé.
+        orgs = api_get("/organizations")
+        org_list = (orgs or {}).get("organizations") or []
+        if org_list:
+            log(f"[info] {len(org_list)} organisation(s) : {[o.get('name') for o in org_list]}")
+            for org in org_list:
+                for loc in paged("/locations", "locations", {"organization-id": org.get("id")}):
+                    log(f"[info] Localisation '{loc.get('name')}' (id {loc.get('id')})")
+                    for pt in paged("/measurement-points", "measurementPoints", {"location-ids": loc.get("id")}):
+                        candidates.append((loc.get("name", ""), pt))
+        # 2) Jeton limité à une localisation : /organizations inaccessible,
+        #    on interroge directement les points / localisations visibles.
+        if not candidates:
+            log("[info] Parcours par organisation indisponible : essai direct sur /measurement-points.")
+            for pt in paged("/measurement-points", "measurementPoints", {}):
+                candidates.append(("", pt))
+        if not candidates:
+            for loc in paged("/locations", "locations", {}):
+                log(f"[info] Localisation visible '{loc.get('name')}' (id {loc.get('id')})")
+                for pt in paged("/measurement-points", "measurementPoints", {"location-ids": loc.get("id")}):
+                    candidates.append((loc.get("name", ""), pt))
+
+    names = [f"{ln} / {p.get('name')} (id {p.get('id')})" for ln, p in candidates]
+    log(f"[info] Points de mesure visibles ({len(candidates)}) : {names}")
+    matches = [p for ln, p in candidates if needle in f"{ln} {p.get('name', '')}".lower()]
+    if not matches and 0 < len(candidates) <= 3:
+        log(f"[warn] Aucun nom ne correspond à '{STATION_NAME}', mais seuls {len(candidates)} point(s) "
+            "sont accessibles avec ce jeton : ils sont tous utilisés.")
+        matches = [p for _, p in candidates]
     if not matches:
-        log(f"[error] Aucun point de mesure ne correspond à '{STATION_NAME}'. Points visibles : {all_names}")
+        log(f"[error] Aucun point de mesure ne correspond à '{STATION_NAME}'.")
     else:
         log(f"[info] Points retenus : {[(m.get('id'), m.get('name')) for m in matches]}")
     return matches
