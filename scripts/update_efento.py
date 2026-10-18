@@ -83,6 +83,9 @@ def api_get(path, params=None):
 
 def authenticate():
     global _headers
+    log(f"[info] Jeton lu depuis le secret : {len(TOKEN)} caractères, "
+        f"espaces/retours internes : {any(c.isspace() for c in TOKEN)}, "
+        f"commence par '{TOKEN[:2]}…' et finit par '…{TOKEN[-2:]}'.")
     for name, build in AUTH_SCHEMES:
         for path, params in PROBE_ENDPOINTS:
             try:
@@ -185,14 +188,35 @@ def parse_time(raw):
     return dt.astimezone(TZ)
 
 
-def classify(channel):
-    """'temp', 'hum' ou None, d'après le type / nom du canal."""
+DEFAULT_CHANNEL_MAP = {1: "temp", 2: "hum"}   # capteurs Efento température/humidité
+
+
+def kind_from_label(channel):
     label = f"{channel.get('type', '')} {channel.get('name', '')}".lower()
     if "temp" in label:
         return "temp"
     if "humid" in label or label.strip().startswith("rh") or " rh" in label:
         return "hum"
     return None
+
+
+def channel_map_from_point(pt):
+    """{numéro de canal: 'temp'|'hum'} lu dans le point de mesure (dernière
+    mesure, qui porte le type des canaux) ; repli sur 1=temp, 2=hum."""
+    mapping = dict(DEFAULT_CHANNEL_MAP)
+    chans = ((pt.get("measurements") or {}).get("channels")) or []
+    found = {}
+    for ch in chans:
+        kind = kind_from_label(ch)
+        if kind and ch.get("number") is not None:
+            found[ch["number"]] = kind
+    if found:
+        mapping = found
+    return mapping
+
+
+def classify(channel, mapping):
+    return kind_from_label(channel) or mapping.get(channel.get("number"))
 
 
 def to_float(v):
@@ -202,7 +226,8 @@ def to_float(v):
         return None
 
 
-def extract_samples(payload):
+def extract_samples(payload, mapping=None):
+    mapping = mapping or DEFAULT_CHANNEL_MAP
     """Renvoie une liste de (datetime, 'temp'|'hum', valeur) depuis la réponse
     des mesures, en gérant plusieurs structures plausibles."""
     if isinstance(payload, dict):
@@ -218,12 +243,12 @@ def extract_samples(payload):
             continue
         if isinstance(it.get("channels"), list):          # un instant, plusieurs canaux
             for ch in it["channels"]:
-                kind = classify(ch)
+                kind = classify(ch, mapping)
                 v = to_float(ch.get("value"))
                 if kind and v is not None:
                     out.append((t, kind, v))
         else:                                              # une ligne par canal
-            kind = classify(it)
+            kind = classify(it, mapping)
             v = to_float(it.get("value"))
             if kind and v is not None:
                 out.append((t, kind, v))
@@ -256,7 +281,9 @@ def main():
         if not sample_logged:
             log(f"[debug] Extrait brut de la réponse des mesures : {json.dumps(payload, ensure_ascii=False)[:700]}")
             sample_logged = True
-        samples = extract_samples(payload)
+        cmap = channel_map_from_point(pt)
+        log(f"[info] Correspondance canaux utilisée : {cmap}")
+        samples = extract_samples(payload, cmap)
         log(f"[info] Point {pt.get('id')} : {len(samples)} valeur(s) température/humidité extraites.")
         for t, kind, v in samples:
             merged.setdefault(t, {})[kind] = v
