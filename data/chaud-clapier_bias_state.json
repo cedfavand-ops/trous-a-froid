@@ -1758,5 +1758,24 @@
     "forecast_tx_c": 6.5,
     "observed_tx_c": 4.9,
     "diff_c": 1.6
+  },
+  "cond_log": {
+    "columns": [
+      "bucket",
+      "heure_loc",
+      "obs_c",
+      "modele_c",
+      "erreur_c",
+      "prevu_corrige_c",
+      "clarte",
+      "nebul_eff_pct",
+      "vent_kmh",
+      "t_moins_td_c",
+      "t_moins_t850_c",
+      "hr_pct",
+      "appris"
+    ],
+    "night": [],
+    "day": []
   }
 }
