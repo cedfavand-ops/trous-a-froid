@@ -24,6 +24,7 @@ jobs:
           EFENTO_STATION_NAME: Causse de Montbel
           # Optionnel : renseigner l'ID du point de mesure (visible dans les
           # logs au premier passage) pour éviter la recherche par nom.
+          # EFENTO_LOCATION_ID: "5655"
           # EFENTO_MEASUREMENT_POINT_ID: "123456"
         run: python scripts/update_efento.py
 
