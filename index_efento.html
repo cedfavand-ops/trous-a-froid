@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trous à froid — Prévisions</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root{
+    --bg:#0f172a; --card:#1e293b; --card2:#26334a; --text:#e2e8f0; --muted:#94a3b8;
+    --accent:#38bdf8; --cold:#60a5fa; --warm:#f87171; --line:#334155;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    background:linear-gradient(180deg,var(--bg),#0b1220); color:var(--text); padding:16px;
+  }
+  header{max-width:1100px;margin:0 auto 14px;}
+  .logo{height:60px;margin-bottom:10px;display:block;}
+  h1{font-size:1.4rem;margin:0 0 4px;}
+  .sub{color:var(--muted);font-size:.9rem;}
+  .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;font-size:.82rem;color:var(--muted);}
+  .meta span{background:var(--card);padding:4px 10px;border-radius:20px;}
+  .wrap{max-width:1100px;margin:0 auto;}
+
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+  .tab{
+    background:var(--card); color:var(--muted); border:1px solid var(--line);
+    padding:8px 16px; border-radius:10px; cursor:pointer; font-size:.88rem;
+    transition:all .15s;
+  }
+  .tab:hover{color:var(--text);}
+  .tab.active{background:var(--accent); color:#0b1220; border-color:var(--accent); font-weight:600;}
+
+  .table-scroll{overflow-x:auto;background:var(--card);border-radius:14px;padding:8px;}
+  table{border-collapse:collapse;width:100%;min-width:900px;}
+  th,td{padding:8px 6px;text-align:center;font-size:.82rem;white-space:nowrap;}
+  thead th{color:var(--muted);font-weight:500;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--card);}
+  tbody tr:hover{background:var(--card2);}
+  tbody tr.night{background:rgba(56,189,248,0.04);}
+  .day-sep td{
+    background:var(--card2); color:var(--accent); font-weight:700; text-align:left;
+    padding:10px 12px; text-transform:capitalize; border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line); position:sticky; top:0; z-index:1;
+  }
+  .picto{width:34px;height:34px;display:block;margin:0 auto;}
+  .clouds{font-size:.65rem;color:var(--muted);margin-top:2px;white-space:nowrap;}
+  .clouds b{color:#93c5fd;font-weight:600;}
+  .clouds .m{color:#a5b4fc;}
+  .clouds .h{color:#c4b5fd;}
+  .temp{font-weight:700;font-size:1rem;}
+  .temp.corrected-cold{color:var(--cold);}
+  .temp.corrected-cold::after{content:" *";color:var(--accent);}
+  .temp.corrected-warm{color:var(--warm);}
+  .temp.corrected-warm::after{content:" *";color:var(--accent);}
+  .raw-strike{font-size:.7rem;color:var(--muted);text-decoration:line-through;display:block;}
+  .gust{color:#f472b6;font-size:.72rem;display:block;margin-top:1px;}
+  .wind-dir{display:inline-block;font-size:1.5rem;line-height:1;transition:transform .2s;}
+  .legend{font-size:.75rem;color:var(--muted);margin-top:10px;line-height:1.5;}
+  .chart-card{background:var(--card);border-radius:14px;padding:16px;margin-top:20px;}
+  .chart-card h2{font-size:1rem;margin:0 0 10px;color:var(--muted);font-weight:600;}
+  canvas{max-height:340px;}
+  footer{max-width:1100px;margin:20px auto 0;color:var(--muted);font-size:.75rem;text-align:center;}
+  a{color:var(--accent);}
+  .minmax{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .minmax-day{
+    background:var(--card); border-radius:12px; padding:10px 16px; text-align:center;
+    min-width:100px; flex:1;
+  }
+  .minmax-day .day-label{font-size:.75rem;color:var(--muted);text-transform:capitalize;margin-bottom:6px;}
+  .minmax-day .tn{color:var(--cold);font-weight:700;font-size:1.05rem;}
+  .minmax-day .tx{color:var(--warm);font-weight:700;font-size:1.05rem;}
+  .minmax-day .sep{color:var(--muted);margin:0 4px;}
+
+  #map-view{display:none;}
+  #map-view.active{display:block;}
+  #leaflet-map{height:520px; border-radius:14px; overflow:hidden; background:var(--card);}
+
+  #efento-view{display:none;}
+  #efento-view.active{display:block;}
+  .efento-cards{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .efento-card{background:var(--card);border-radius:12px;padding:10px 16px;text-align:center;min-width:120px;flex:1;}
+  .efento-card .lbl{font-size:.75rem;color:var(--muted);margin-bottom:6px;}
+  .efento-card .val{font-weight:700;font-size:1.15rem;}
+  #live-view{display:none;}
+  #live-view.active{display:block;}
+  #leaflet-live-map{height:520px; border-radius:14px; overflow:hidden; background:var(--card);}
+  .live-tooltip-temp{font-weight:700;font-size:1.05rem;}
+  #live-detail{margin-top:16px;}
+  #live-detail .temp{font-size:.85rem;}
+  .map-tooltip{
+    background:var(--card) !important; color:var(--text) !important; border:1px solid var(--line) !important;
+    border-radius:8px !important; padding:4px 8px !important; font-size:.8rem !important;
+    box-shadow:none !important;
+  }
+  .map-tooltip::before{border-top-color:var(--card) !important;}
+  .leaflet-popup-content-wrapper{background:var(--card) !important; color:var(--text) !important; border-radius:10px !important;}
+  .leaflet-popup-content{font-size:.82rem; line-height:1.5;}
+  .leaflet-popup-tip{background:var(--card) !important;}
+  .popup-tn{color:var(--cold); font-weight:700;}
+  .popup-tx{color:var(--warm); font-weight:700;}
+  .err{background:#7f1d1d;color:#fecaca;padding:10px 14px;border-radius:10px;margin-bottom:14px;}
+</style>
+</head>
+<body>
+<header>
+  <img class="logo" src="icons/logo.png" alt="Étude des trous à froid en France">
+  <h1>❄️ Trous à froid — Prévisions</h1>
+  <div class="sub">ICON-CH1 puis ICON-CH2 (MétéoSuisse via Open-Meteo) · 4 prochaines nuits · Températures nocturnes corrigées pour le trou à froid</div>
+  <div class="meta" id="meta"></div>
+</header>
+
+<div class="wrap">
+  <div class="tabs" id="tabs"></div>
+  <div id="error"></div>
+
+  <div id="station-view">
+    <div class="minmax" id="minmax"></div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Heure</th>
+            <th>Ciel</th>
+            <th>Température</th>
+            <th>Point de rosée</th>
+            <th>T 850 hPa</th>
+            <th>Vent</th>
+            <th>Direction</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="legend" id="legend"></div>
+
+    <div class="chart-card">
+      <h2>Évolution de la température (corrigée)</h2>
+      <canvas id="chart"></canvas>
+    </div>
+  </div>
+
+  <div id="map-view">
+    <div id="leaflet-map"></div>
+    <div class="legend">Cliquer sur une station pour le détail jour par jour. Étiquette permanente : Tn / Tx de demain.</div>
+  </div>
+
+  <div id="efento-view">
+    <div class="efento-cards" id="efento-cards"></div>
+    <div class="chart-card">
+      <h2 id="efento-title">Station Efento</h2>
+      <canvas id="efento-chart"></canvas>
+    </div>
+    <div class="legend">Mesures réelles du capteur Efento (jour en cours, heure locale). Tn / Tx = minimum / maximum mesurés depuis 00h.</div>
+  </div>
+
+  <div id="live-view">
+    <div id="leaflet-live-map"></div>
+    <div class="legend">🛰️ Carte des températures <b>mesurées en direct</b> (stations Datacake uniquement — dernière valeur reçue de chaque station, pas une prévision). Cliquer sur une station affiche l'historique des observations récentes ci-dessous.</div>
+    <div id="live-detail"></div>
+  </div>
+</div>
+
+<footer id="footer"></footer>
+
+<script>
+// Ajouter une station ici suffit à la faire apparaître comme onglet -
+// le fichier data/<slug>.json correspondant doit être généré par le workflow.
+const STATIONS = [
+  { slug: "greolieres",        name: "Gréolières-les-Neiges",                    datacake: "https://app.datacake.de/pd/8edbfefb-584e-4866-a684-0b84928b85c9" },
+  { slug: "chaud-clapier",     name: "Doline de Chaud Clapier",                  datacake: "https://app.datacake.de/pd/d4b23fdc-eca0-4658-9d0b-66829a0b9890" },
+  { slug: "la-pesse",          name: "La Pesse - Le Cernétrou",                  datacake: "https://app.datacake.de/pd/96a819b1-c90c-4353-8a65-ba13f4fd0276" },
+  { slug: "tignes",            name: "Tignes - Pramécou",                        datacake: "https://app.datacake.de/pd/39371b61-daed-40b2-b329-d1e9db559c49" },
+  { slug: "beuil",             name: "Beuil - Cumba Clava",                      datacake: "https://app.datacake.de/pd/6152f64c-a2bc-4678-b6d0-77836ae26eb8" },
+  { slug: "stpaul",            name: "Saint-Paul-le-Froid",                      datacake: "https://app.datacake.de/pd/65e2a79e-7400-468c-b7de-655557c32aa4" },
+  { slug: "randon",           name: "Châteauneuf-de-Randon",                    datacake: "https://app.datacake.de/pd/c21a6a3f-174d-46ff-8237-c61cedb15b45" },
+  { slug: "darbounouse",      name: "Combe de Darbounouse",                     datacake: "https://www.infoclimat.fr/observations-meteo/temps-reel/la-chapelle-en-vercors-combe-de-darbounouse/STATIC0213.html" },
+  { slug: "oscence",           name: "Combe-de-l'Oscence",                       datacake: "https://www.infoclimat.fr/observations-meteo/temps-reel/la-chapelle-en-vercors-combe-de-l-oscence/000UF.html" },
+  { slug: "moulin-de-courbet", name: "Moulin de Courbet",                        datacake: "https://www.infoclimat.fr/observations-meteo/temps-reel/lachapelle-graillouse-moulin-de-courbet/STATIC0407.html" },
+  { slug: "saint-christol",    name: "Saint-Christol",                           datacake: "https://www.infoclimat.fr/observations-meteo/temps-reel/saint-christol/STATIC0257.html" },
+  { slug: "solaison",          name: "Doline de Solaison",                       datacake: "https://www.infoclimat.fr/observations-meteo/temps-reel/brizon-doline-de-solaison/STATIC0305.html" },
+];
+
+const PICTO_MAP = {
+  "clair": "icons/clair.png", "peu-nuageux": "icons/peu-nuageux.png", "tres-nuageux": "icons/tres-nuageux.png",
+  "couvert": "icons/couvert.png", "voile": "icons/voile.png", "pluie-faible": "icons/pluie-faible.png",
+  "pluie-forte": "icons/pluie-forte.png", "neige": "icons/neige.png", "brouillard": "icons/brouillard.png"
+};
+const PICTO_LABEL = {
+  "clair":"Ciel clair","peu-nuageux":"Peu nuageux","tres-nuageux":"Très nuageux","couvert":"Couvert",
+  "voile":"Ciel voilé","pluie-faible":"Pluie faible","pluie-forte":"Pluie forte","neige":"Neige","brouillard":"Brouillard"
+};
+
+let currentSlug = STATIONS[0].slug; // ou 'MAP' pour la vue carte
+
+function windColor(speed){
+  if(speed < 10) return '#60a5fa';
+  if(speed < 20) return '#34d399';
+  if(speed < 35) return '#fbbf24';
+  return '#f87171';
+}
+function fmtHour(iso){
+  const d = new Date(iso);
+  return d.toLocaleString('fr-FR', {weekday:'short', hour:'2-digit', minute:'2-digit'});
+}
+
+// Regroupe une série horaire en Tn/Tx par "jour météorologique", selon la
+// convention standard (et non le jour calendaire minuit-minuit) :
+//   - Tn du jour J = minimum entre 18h UTC (J-1) et 18h UTC (J)
+//   - Tx du jour J = maximum entre 6h UTC (J) et 6h UTC (J+1)
+// Un jour n'est renvoyé que si sa fenêtre Tn (resp. Tx) est entièrement
+// couverte par la période de prévision disponible, pour ne jamais afficher
+// un Tn/Tx tronqué en début ou fin de période.
+const HOUR_MS = 3600 * 1000;
+const DAY_MS = 24 * HOUR_MS;
+
+function groupExtremesWMO(hours){
+  const entries = (hours || [])
+    .map(h => ({ t: new Date(h.time).getTime(), v: h.temp_corrected }))
+    .filter(e => !isNaN(e.t));
+  if (!entries.length) return [];
+  const minT = Math.min(...entries.map(e => e.t));
+  const maxT = Math.max(...entries.map(e => e.t));
+
+  const utcMidnight = ms => {
+    const d = new Date(ms);
+    return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+  };
+
+  const tnByDay = {}, txByDay = {};
+  entries.forEach(({ t, v }) => {
+    if (v === null || v === undefined) return; // trou de donnée modèle
+    const mid = utcMidnight(t);
+    const hourOfDayUTC = (t - mid) / HOUR_MS;
+    // Jour Tn : la fenêtre bascule à 18h UTC (soir -> jour suivant).
+    const tnDay = mid + (hourOfDayUTC >= 18 ? DAY_MS : 0);
+    tnByDay[tnDay] = (tnDay in tnByDay) ? Math.min(tnByDay[tnDay], v) : v;
+    // Jour Tx : la fenêtre bascule à 6h UTC (nuit -> jour précédent).
+    const txDay = mid + (hourOfDayUTC < 6 ? -DAY_MS : 0);
+    txByDay[txDay] = (txDay in txByDay) ? Math.max(txByDay[txDay], v) : v;
+  });
+
+  const allDays = Array.from(new Set([...Object.keys(tnByDay), ...Object.keys(txByDay)].map(Number))).sort((a, b) => a - b);
+  const out = [];
+  allDays.forEach(dayMs => {
+    const tnWinStart = dayMs - DAY_MS + 18 * HOUR_MS, tnWinEnd = dayMs + 18 * HOUR_MS;
+    const txWinStart = dayMs + 6 * HOUR_MS, txWinEnd = dayMs + DAY_MS + 6 * HOUR_MS;
+    const tnOk = (dayMs in tnByDay) && tnWinStart >= minT && tnWinEnd <= maxT;
+    const txOk = (dayMs in txByDay) && txWinStart >= minT && txWinEnd <= maxT;
+    if (!tnOk && !txOk) return;
+    out.push({
+      d: new Date(dayMs + 12 * HOUR_MS), // midi UTC de ce jour : libellé de date stable, hors de toute fenêtre
+      min: tnOk ? tnByDay[dayMs] : null,
+      max: txOk ? txByDay[dayMs] : null,
+    });
+  });
+  return out;
+}
+
+function renderTabs(){
+  const tabs = document.getElementById('tabs');
+  tabs.innerHTML = '';
+  STATIONS.forEach(st => {
+    const btn = document.createElement('button');
+    btn.className = 'tab' + (st.slug === currentSlug ? ' active' : '');
+    btn.textContent = st.name;
+    btn.onclick = () => { currentSlug = st.slug; renderTabs(); showStationView(); load(); };
+    tabs.appendChild(btn);
+  });
+  const mapBtn = document.createElement('button');
+  mapBtn.className = 'tab' + (currentSlug === 'MAP' ? ' active' : '');
+  mapBtn.textContent = '🗺️ Carte';
+  mapBtn.onclick = () => { currentSlug = 'MAP'; renderTabs(); showMapView(); loadMap(); };
+  tabs.appendChild(mapBtn);
+
+  const liveBtn = document.createElement('button');
+  liveBtn.className = 'tab' + (currentSlug === 'LIVE' ? ' active' : '');
+  liveBtn.textContent = '🛰️ En direct';
+  liveBtn.onclick = () => { currentSlug = 'LIVE'; renderTabs(); showLiveView(); loadLiveMap(); };
+  tabs.appendChild(liveBtn);
+
+  const efBtn = document.createElement('button');
+  efBtn.className = 'tab' + (currentSlug === 'EFENTO' ? ' active' : '');
+  efBtn.textContent = '🌡️ Efento';
+  efBtn.onclick = () => { currentSlug = 'EFENTO'; renderTabs(); showEfentoView(); loadEfento(); };
+  tabs.appendChild(efBtn);
+}
+
+function showStationView(){
+  document.getElementById('station-view').style.display = 'block';
+  document.getElementById('map-view').classList.remove('active');
+  document.getElementById('live-view').classList.remove('active');
+  document.getElementById('efento-view').classList.remove('active');
+}
+function showMapView(){
+  document.getElementById('station-view').style.display = 'none';
+  document.getElementById('map-view').classList.add('active');
+  document.getElementById('live-view').classList.remove('active');
+  document.getElementById('efento-view').classList.remove('active');
+  if (window._leafletMap) setTimeout(() => window._leafletMap.invalidateSize(), 50);
+}
+function showEfentoView(){
+  document.getElementById('station-view').style.display = 'none';
+  document.getElementById('map-view').classList.remove('active');
+  document.getElementById('live-view').classList.remove('active');
+  document.getElementById('efento-view').classList.add('active');
+}
+
+// Onglet Efento : lit data/efento.json (généré côté serveur, le token API
+// n'est jamais exposé dans la page). Format attendu :
+// { generated_at, name, series: [ {time, temp_c, humidity_pct}, ... ] }
+async function loadEfento(){
+  const err = document.getElementById('error');
+  err.innerHTML = '';
+  const cards = document.getElementById('efento-cards');
+  try{
+    const res = await fetch('data/efento.json?_=' + Date.now());
+    if(!res.ok) throw new Error('data/efento.json introuvable');
+    const data = await res.json();
+    const now = new Date();
+    const sameDay = d => d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth() && d.getDate()===now.getDate();
+    const all = (data.series || []).map(p => ({ t: new Date(p.time), temp: p.temp_c, hum: p.humidity_pct }))
+      .filter(p => !isNaN(p.t)).sort((a,b) => a.t - b.t);
+    const today = all.filter(p => sameDay(p.t));
+    const temps = today.map(p => p.temp).filter(v => v !== null && v !== undefined);
+    const last = all.length ? all[all.length-1] : null;
+    const fmt = (v, u) => (v === null || v === undefined) ? '—' : v.toFixed(1) + u;
+    cards.innerHTML = `
+      <div class="efento-card"><div class="lbl">Tn du jour</div><div class="val" style="color:var(--cold)">${temps.length ? fmt(Math.min(...temps),'°') : '—'}</div></div>
+      <div class="efento-card"><div class="lbl">Tx du jour</div><div class="val" style="color:var(--warm)">${temps.length ? fmt(Math.max(...temps),'°') : '—'}</div></div>
+      <div class="efento-card"><div class="lbl">Dernière mesure${last ? ' (' + last.t.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}) + ')' : ''}</div>
+        <div class="val">${last ? fmt(last.temp,'°') + ' · ' + fmt(last.hum,' %') : '—'}</div></div>`;
+    document.getElementById('efento-title').textContent = (data.name || 'Station Efento') + ' — aujourd\'hui';
+
+    if(window._efChart) window._efChart.destroy();
+    window._efChart = new Chart(document.getElementById('efento-chart'), {
+      type: 'line',
+      data: {
+        labels: today.map(p => p.t.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})),
+        datasets: [
+          { label: 'Température (°C)', data: today.map(p => p.temp), borderColor: '#38bdf8', backgroundColor: 'rgba(56,189,248,0.15)', yAxisID: 'y', tension: 0.3, pointRadius: 0, spanGaps: true },
+          { label: 'Humidité (%)', data: today.map(p => p.hum), borderColor: '#a78bfa', yAxisID: 'y2', tension: 0.3, pointRadius: 0, spanGaps: true }
+        ]
+      },
+      options: {
+        responsive: true, interaction: { mode: 'index', intersect: false },
+        plugins: { legend: { labels: { color: '#e2e8f0' } } },
+        scales: {
+          x: { ticks: { color: '#94a3b8', maxTicksLimit: 12 }, grid: { color: '#334155' } },
+          y: { position: 'left', ticks: { color: '#38bdf8' }, grid: { color: '#334155' }, title: { display: true, text: '°C', color: '#38bdf8' } },
+          y2: { position: 'right', min: 0, max: 100, ticks: { color: '#a78bfa' }, grid: { drawOnChartArea: false }, title: { display: true, text: '%', color: '#a78bfa' } }
+        }
+      }
+    });
+    document.getElementById('footer').innerHTML = 'Capteur Efento (Efento Cloud) · données générées automatiquement' +
+      (data.generated_at ? ' · mise à jour ' + new Date(data.generated_at).toLocaleString('fr-FR') : '');
+  }catch(e){
+    cards.innerHTML = '';
+    if(window._efChart){ window._efChart.destroy(); window._efChart = null; }
+    err.innerHTML = '<div class="err">Impossible de charger les données Efento (' + e.message + '). Le fichier sera créé au premier passage du workflow.</div>';
+  }
+}
+
+function showLiveView(){
+  document.getElementById('station-view').style.display = 'none';
+  document.getElementById('map-view').classList.remove('active');
+  document.getElementById('live-view').classList.add('active');
+  document.getElementById('efento-view').classList.remove('active');
+  if (window._leafletLiveMap) setTimeout(() => window._leafletLiveMap.invalidateSize(), 50);
+}
+
+async function load(){
+  document.getElementById('error').innerHTML = '';
+  try{
+    const res = await fetch(`data/${currentSlug}.json?_=` + Date.now());
+    if(!res.ok) throw new Error(`data/${currentSlug}.json introuvable`);
+    const data = await res.json();
+    render(data);
+  }catch(e){
+    document.getElementById('error').innerHTML =
+      '<div class="err">Impossible de charger les prévisions (' + e.message + '). '
+      + 'Le fichier sera créé au premier passage du workflow GitHub Actions.</div>';
+    document.getElementById('rows').innerHTML = '';
+    document.getElementById('minmax').innerHTML = '';
+  }
+}
+
+async function loadMap(){
+  document.getElementById('error').innerHTML = '';
+  if (!window._leafletMap) {
+    window._leafletMap = L.map('leaflet-map');
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 17
+    }).addTo(window._leafletMap);
+    window._leafletMarkers = [];
+  }
+  window._leafletMarkers.forEach(m => window._leafletMap.removeLayer(m));
+  window._leafletMarkers = [];
+
+  const results = await Promise.allSettled(
+    STATIONS.map(st => fetch(`data/${st.slug}.json?_=` + Date.now()).then(r => {
+      if (!r.ok) throw new Error('introuvable');
+      return r.json();
+    }))
+  );
+
+  const bounds = [];
+  let anyOk = false;
+  results.forEach((res, i) => {
+    const st = STATIONS[i];
+    if (res.status !== 'fulfilled') return;
+    const data = res.value;
+    const lat = data.location && data.location.lat, lon = data.location && data.location.lon;
+    if (lat == null || lon == null) return;
+    anyOk = true;
+    bounds.push([lat, lon]);
+
+    const days = groupExtremesWMO(data.hours || []);
+    const tomorrow = days[0];
+    const tooltipLabel = (tomorrow && tomorrow.min !== null && tomorrow.max !== null)
+      ? `<b>${st.name}</b><br><span class="popup-tn">${Math.round(tomorrow.min)}°</span> / <span class="popup-tx">${Math.round(tomorrow.max)}°</span>`
+      : `<b>${st.name}</b><br>—`;
+
+    let popupHtml = `<b>${st.name}</b>${data.location.elevation_m ? ' · ' + data.location.elevation_m + ' m' : ''}<br><br>`;
+    days.forEach(d => {
+      const lbl = d.d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
+      const tnTxt = d.min !== null ? d.min.toFixed(1) + '°' : '—';
+      const txTxt = d.max !== null ? d.max.toFixed(1) + '°' : '—';
+      popupHtml += `${lbl} : <span class="popup-tn">${tnTxt}</span> / <span class="popup-tx">${txTxt}</span><br>`;
+    });
+
+    const marker = L.marker([lat, lon]).addTo(window._leafletMap);
+    marker.bindPopup(popupHtml);
+    marker.bindTooltip(tooltipLabel, { permanent: true, direction: 'top', className: 'map-tooltip', offset: [0, -8] });
+    window._leafletMarkers.push(marker);
+  });
+
+  if (bounds.length) {
+    window._leafletMap.fitBounds(bounds, { padding: [50, 50] });
+  } else if (!anyOk) {
+    document.getElementById('error').innerHTML =
+      '<div class="err">Impossible de charger les prévisions des stations pour la carte.</div>';
+  }
+  setTimeout(() => window._leafletMap.invalidateSize(), 50);
+}
+
+async function loadLiveMap(){
+  document.getElementById('error').innerHTML = '';
+  document.getElementById('live-detail').innerHTML =
+    '<div class="legend">Cliquez sur une station sur la carte pour afficher son historique de mesures récentes.</div>';
+
+  if (!window._leafletLiveMap) {
+    window._leafletLiveMap = L.map('leaflet-live-map');
+    L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+      attribution: 'Données carte : &copy; <a href="https://www.openstreetmap.org/copyright">contributeurs OpenStreetMap</a>, SRTM &nbsp;|&nbsp; Style : &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)',
+      maxZoom: 17
+    }).addTo(window._leafletLiveMap);
+    window._leafletLiveMarkers = [];
+  }
+  window._leafletLiveMarkers.forEach(m => window._leafletLiveMap.removeLayer(m));
+  window._leafletLiveMarkers = [];
+
+  const results = await Promise.allSettled(
+    STATIONS.map(st => fetch(`data/${st.slug}.json?_=` + Date.now()).then(r => {
+      if (!r.ok) throw new Error('introuvable');
+      return r.json();
+    }))
+  );
+
+  const bounds = [];
+  let anyLive = false;
+  results.forEach((res, i) => {
+    const st = STATIONS[i];
+    if (res.status !== 'fulfilled') return;
+    const data = res.value;
+    const lat = data.location && data.location.lat, lon = data.location && data.location.lon;
+    if (lat == null || lon == null) return;
+    // Seules les stations Datacake publient des observations "en direct" -
+    // les stations Infoclimat n'apparaissent donc pas sur cette carte.
+    if (!data.live || !data.live.available || !data.live.latest) return;
+    anyLive = true;
+    bounds.push([lat, lon]);
+
+    const latest = data.live.latest;
+    const tooltipLabel = `<b>${st.name}</b><br><span class="live-tooltip-temp">${latest.temp_c.toFixed(1)}°</span>`;
+
+    const marker = L.marker([lat, lon]).addTo(window._leafletLiveMap);
+    marker.bindTooltip(tooltipLabel, { permanent: true, direction: 'top', className: 'map-tooltip', offset: [0, -8] });
+    marker.on('click', () => showLiveDetail(st, data));
+    window._leafletLiveMarkers.push(marker);
+  });
+
+  if (bounds.length) {
+    window._leafletLiveMap.fitBounds(bounds, { padding: [50, 50] });
+  } else if (!anyLive) {
+    document.getElementById('error').innerHTML =
+      '<div class="err">Aucune donnée "en direct" disponible pour le moment (stations Datacake uniquement). '
+      + 'Les données seront publiées au prochain passage du workflow GitHub Actions.</div>';
+  }
+  setTimeout(() => window._leafletLiveMap.invalidateSize(), 50);
+}
+
+function showLiveDetail(st, data){
+  const box = document.getElementById('live-detail');
+  const latest = data.live.latest;
+  const latestDate = latest ? new Date(latest.time) : null;
+  const recent = (data.live.recent || []).slice().reverse(); // plus récent en premier
+
+  let html = `<div class="chart-card">
+    <h2>${st.name}${data.location.elevation_m ? ' · ' + data.location.elevation_m + ' m' : ''}
+      &nbsp;—&nbsp; dernière valeur : <span style="color:var(--accent);">${latest ? latest.temp_c.toFixed(1) + '°' : '—'}</span>
+      ${latestDate ? `<span style="color:var(--muted);font-weight:400;font-size:.78rem;"> (${latestDate.toLocaleString('fr-FR')})</span>` : ''}
+    </h2>`;
+
+  if (!recent.length) {
+    html += `<div class="legend">Pas encore d'historique disponible pour cette station.</div>`;
+  } else {
+    html += `<div class="table-scroll" style="max-height:380px;overflow-y:auto;">
+      <table style="min-width:0;">
+        <thead><tr><th>Heure</th><th>Température mesurée</th></tr></thead>
+        <tbody>`;
+    recent.forEach(r => {
+      html += `<tr><td>${fmtHour(r.time)}</td><td class="temp">${r.temp_c.toFixed(1)}°</td></tr>`;
+    });
+    html += `</tbody></table></div>`;
+  }
+  html += `</div>`;
+  box.innerHTML = html;
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function renderMinMax(hours){
+  // Tn/Tx par jour météorologique (18h UTC/18h UTC pour Tn, 6h UTC/6h UTC
+  // pour Tx) - seuls les jours dont la fenêtre est entièrement couverte par
+  // la période de prévision sont renvoyés par groupExtremesWMO.
+  const days = groupExtremesWMO(hours);
+  const box = document.getElementById('minmax');
+  box.innerHTML = days.map(({ d, min, max }) => {
+    const label = d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
+    const tnTxt = min !== null ? min.toFixed(1) + '°' : '—';
+    const txTxt = max !== null ? max.toFixed(1) + '°' : '—';
+    return `<div class="minmax-day">
+      <div class="day-label">${label}</div>
+      <span class="tn">${tnTxt}</span><span class="sep">/</span><span class="tx">${txTxt}</span>
+    </div>`;
+  }).join('');
+}
+
+// Couleur de l'écart prévu/observé (Tn ou Tx) : vert si proche, orange si
+// moyen, rouge si franchement raté - un simple repère visuel de fiabilité.
+function verifColor(diffC){
+  const a = Math.abs(diffC);
+  if (a < 1) return '#4ade80';
+  if (a < 2.5) return '#fbbf24';
+  return '#f87171';
+}
+
+// Construit le <span> méta "Fiabilité Tn/Tx" à partir de data.verification.night
+// ou .day (ou null si pas encore calculé, ex. juste après la mise en place du
+// workflow). forecastKey/observedKey valent "forecast_tn_c"/"observed_tn_c"
+// (nuit) ou "forecast_tx_c"/"observed_tx_c" (jour).
+function fmtVerifSpan(label, verif, forecastKey, observedKey){
+  if (!verif || verif.diff_c === null || verif.diff_c === undefined) {
+    return `<span>${label} : n/a</span>`;
+  }
+  const sign = verif.diff_c >= 0 ? '+' : '';
+  return `<span>${label} : <b style="color:${verifColor(verif.diff_c)}">${sign}${verif.diff_c.toFixed(1)} °C</b>` +
+    ` <span style="color:var(--muted);">(prévu ${verif[forecastKey].toFixed(1)}° / mesuré ${verif[observedKey].toFixed(1)}°)</span></span>`;
+}
+
+function render(data){
+  const meta = document.getElementById('meta');
+  const genDate = data.generated_at ? new Date(data.generated_at).toLocaleString('fr-FR') : '—';
+  const runDate = data.run_time ? new Date(data.run_time).toLocaleString('fr-FR') : '?';
+  meta.innerHTML = `
+    <span>${data.location.name}${data.location.elevation_m ? ' · ' + data.location.elevation_m + ' m' : ''}</span>
+    <span>Généré le ${genDate}</span>
+    <span>Run modèle : ${runDate}</span>
+    <span>Correction actuelle : ${data.correction.current_offset_c !== null ? data.correction.current_offset_c.toFixed(1) + ' °C' : 'inactive (conditions non réunies)'}</span>
+    <span>Dernière nuit apprise : ${data.correction.last_night_error_c !== null && data.correction.last_night_error_c !== undefined ? data.correction.last_night_error_c.toFixed(1) + ' °C (écart obs.−modèle)' : 'n/a'}</span>
+    ${data.day_correction ? `<span>Dernière journée apprise : ${data.day_correction.last_day_error_c !== null && data.day_correction.last_day_error_c !== undefined ? data.day_correction.last_day_error_c.toFixed(1) + ' °C (écart obs.−modèle, Tx)' : 'n/a'}</span>` : ''}
+    ${fmtVerifSpan('Fiabilité Tn (nuit dernière)', data.verification && data.verification.night, 'forecast_tn_c', 'observed_tn_c')}
+    ${fmtVerifSpan("Fiabilité Tx (journée d'hier)", data.verification && data.verification.day, 'forecast_tx_c', 'observed_tx_c')}
+    ${data.snow && data.snow.show ? `<span>❄️ Neige fraîche (24h) : ${data.snow.fresh_24h_cm !== null && data.snow.fresh_24h_cm !== undefined ? data.snow.fresh_24h_cm.toFixed(1) + ' cm' : 'n/a'}</span>` : ''}
+  `;
+
+  const tbody = document.getElementById('rows');
+  tbody.innerHTML = '';
+  let lastDateKey = null;
+  (data.hours || []).forEach(h => {
+    const d = new Date(h.time);
+    const dateKey = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+    if (dateKey !== lastDateKey) {
+      lastDateKey = dateKey;
+      const sep = document.createElement('tr');
+      sep.className = 'day-sep';
+      const label = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+      sep.innerHTML = `<td colspan="7">${label}</td>`;
+      tbody.appendChild(sep);
+    }
+    const hourNum = d.getHours();
+    const isNight = hourNum >= 19 || hourNum < 8;
+    const tr = document.createElement('tr');
+    if(isNight) tr.classList.add('night');
+    const pictoSrc = PICTO_MAP[h.picto] || '';
+    const pictoLabel = PICTO_LABEL[h.picto] || h.picto;
+    tr.innerHTML = `
+      <td>${fmtHour(h.time)}</td>
+      <td>
+        <img class="picto" src="${pictoSrc}" alt="${pictoLabel}" title="${pictoLabel}" onerror="this.style.display='none'">
+        <div class="clouds" title="Nébulosité basse / moyenne / haute">
+          <b>${h.cloud_cover_low ?? '–'}</b>/<span class="m">${h.cloud_cover_mid ?? '–'}</span>/<span class="h">${h.cloud_cover_high ?? '–'}</span>%
+        </div>
+      </td>
+      <td>
+        ${h.temp_corrected === null || h.temp_corrected === undefined
+          ? '<span class="temp">—</span>'
+          : (() => {
+              const correctedClass = h.corrected
+                ? (h.correction_offset_c !== null && h.correction_offset_c > 0 ? 'corrected-warm' : 'corrected-cold')
+                : '';
+              return `<span class="temp ${correctedClass}">${h.temp_corrected.toFixed(1)}°</span>
+                ${h.corrected && h.temp_raw !== null && h.temp_raw !== undefined ? `<span class="raw-strike">modèle brut ${h.temp_raw.toFixed(1)}°</span>` : ''}`;
+            })()}
+      </td>
+      <td>${h.dew_point_c === null || h.dew_point_c === undefined ? '—' : h.dew_point_c.toFixed(1) + '°'}</td>
+      <td>${h.temp_850hpa_c === null || h.temp_850hpa_c === undefined ? '—' : h.temp_850hpa_c.toFixed(1) + '°'}</td>
+      <td>
+        ${Math.round(h.wind_speed)} km/h
+        ${h.wind_gusts ? `<span class="gust">raf. ${Math.round(h.wind_gusts)}</span>` : ''}
+      </td>
+      <td><span class="wind-dir" style="transform:rotate(${h.wind_dir}deg);color:${windColor(h.wind_speed)}">↓</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('legend').innerHTML =
+    '* Température corrigée (à la baisse la nuit, à la hausse ou à la baisse en journée) par rapport au modèle brut, '
+    + 'sur la base des écarts observés à la station les heures dégagées et calmes précédentes (trou à froid la nuit, '
+    + 'biais de Tx le jour). Fiabilité Tn/Tx : écart entre le Tn (ou Tx) réellement prévu la veille (avec le profil '
+    + 'de correction d\'alors) et le Tn/Tx effectivement mesuré à la station — un indicateur de la fiabilité des '
+    + 'prévisions, distinct de l\'apprentissage du profil. T 850 hPa : température à ~1500 m d\'altitude '
+    + '(modèle DWD ICON-EU, indicative - non utilisée pour la correction).';
+
+  const st = STATIONS.find(s => s.slug === currentSlug);
+  document.getElementById('footer').innerHTML = `
+    Station de référence : <a href="${st.datacake}" target="_blank" rel="noopener">${st.name}</a>
+    &nbsp;·&nbsp; Coordonnées ${data.location.lat}, ${data.location.lon}
+    &nbsp;·&nbsp; Données générées automatiquement chaque heure.
+  `;
+
+  drawChart(data.hours || []);
+  renderMinMax(data.hours || []);
+}
+
+function drawChart(hours){
+  const ctx = document.getElementById('chart');
+  const labels = hours.map(h => fmtHour(h.time));
+  const corrected = hours.map(h => h.temp_corrected);
+  const raw = hours.map(h => h.temp_raw);
+  if(window._chart) window._chart.destroy();
+  window._chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Température corrigée', data: corrected, borderColor: '#38bdf8',
+          backgroundColor: 'rgba(56,189,248,0.15)', fill: true, tension: 0.3, pointRadius: 2 },
+        { label: 'Modèle brut (ICON-CH1/CH2)', data: raw, borderColor: '#94a3b8',
+          borderDash: [4,4], pointRadius: 0, tension: 0.3 }
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { labels: { color: '#e2e8f0' } } },
+      scales: {
+        x: { ticks: { color: '#94a3b8', maxRotation: 60, minRotation: 60 }, grid: { color: '#334155' } },
+        y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
+      }
+    }
+  });
+}
+
+renderTabs();
+load();
+</script>
+</body>
+</html>
