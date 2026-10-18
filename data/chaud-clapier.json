@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-18T18:17:14.899702+02:00",
+  "generated_at": "2026-10-18T18:26:39.424683+02:00",
   "run_time": "2026-10-16T00:00:00+02:00",
   "location": {
     "name": "Doline de Chaud Clapier",
@@ -82,10 +82,6 @@
       "temp_c": 2.8
     },
     "recent": [
-      {
-        "time": "2026-10-16T18:21:52+02:00",
-        "temp_c": 10.2
-      },
       {
         "time": "2026-10-16T18:26:52+02:00",
         "temp_c": 9.1
@@ -3072,10 +3068,10 @@
     {
       "time": "2026-10-19T10:00:00+02:00",
       "temp_raw": 11.1,
-      "temp_corrected": 6.9,
+      "temp_corrected": 7.0,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -4.24,
+      "correction_offset_c": -4.13,
       "clarity": 0.56,
       "wind_speed": 12.7,
       "wind_gusts": 30.6,
@@ -3091,10 +3087,10 @@
     {
       "time": "2026-10-19T11:00:00+02:00",
       "temp_raw": 12.6,
-      "temp_corrected": 11.9,
+      "temp_corrected": 11.8,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -0.69,
+      "correction_offset_c": -0.75,
       "clarity": 0.23,
       "wind_speed": 13.9,
       "wind_gusts": 31.7,
@@ -4459,10 +4455,10 @@
     {
       "time": "2026-10-22T11:00:00+02:00",
       "temp_raw": 4.5,
-      "temp_corrected": -3.0,
+      "temp_corrected": -2.8,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -7.51,
+      "correction_offset_c": -7.32,
       "clarity": 1.0,
       "wind_speed": 7.0,
       "wind_gusts": 26.6,
@@ -4478,10 +4474,10 @@
     {
       "time": "2026-10-22T12:00:00+02:00",
       "temp_raw": 5.9,
-      "temp_corrected": 2.9,
+      "temp_corrected": 2.6,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -3.04,
+      "correction_offset_c": -3.31,
       "clarity": 1.0,
       "wind_speed": 7.1,
       "wind_gusts": 26.3,
@@ -4497,10 +4493,10 @@
     {
       "time": "2026-10-22T13:00:00+02:00",
       "temp_raw": 7.1,
-      "temp_corrected": 6.8,
+      "temp_corrected": 6.5,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -0.35,
+      "correction_offset_c": -0.63,
       "clarity": 1.0,
       "wind_speed": 7.1,
       "wind_gusts": 20.2,
@@ -4516,10 +4512,10 @@
     {
       "time": "2026-10-22T14:00:00+02:00",
       "temp_raw": 7.8,
-      "temp_corrected": 8.2,
+      "temp_corrected": 8.1,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": 0.38,
+      "correction_offset_c": 0.29,
       "clarity": 0.75,
       "wind_speed": 7.9,
       "wind_gusts": 22.3,
@@ -4538,7 +4534,7 @@
       "temp_corrected": 8.3,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": 0.16,
+      "correction_offset_c": 0.15,
       "clarity": 0.25,
       "wind_speed": 6.6,
       "wind_gusts": 22.7,

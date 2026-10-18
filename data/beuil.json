@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-18T18:17:14.899702+02:00",
+  "generated_at": "2026-10-18T18:26:39.424683+02:00",
   "run_time": "2026-10-16T00:00:00+02:00",
   "location": {
     "name": "Beuil - Cumba Clava",
@@ -82,14 +82,6 @@
       "temp_c": 13.3
     },
     "recent": [
-      {
-        "time": "2026-10-16T18:21:37+02:00",
-        "temp_c": 12.4
-      },
-      {
-        "time": "2026-10-16T18:26:37+02:00",
-        "temp_c": 12.1
-      },
       {
         "time": "2026-10-16T18:31:37+02:00",
         "temp_c": 11.9
@@ -3100,10 +3092,10 @@
     {
       "time": "2026-10-21T10:00:00+02:00",
       "temp_raw": 9.5,
-      "temp_corrected": 3.3,
+      "temp_corrected": 3.4,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -6.19,
+      "correction_offset_c": -6.06,
       "clarity": 0.94,
       "wind_speed": 5.0,
       "wind_gusts": 9.4,
@@ -3119,10 +3111,10 @@
     {
       "time": "2026-10-21T11:00:00+02:00",
       "temp_raw": 10.1,
-      "temp_corrected": 7.3,
+      "temp_corrected": 7.2,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -2.81,
+      "correction_offset_c": -2.95,
       "clarity": 0.64,
       "wind_speed": 12.7,
       "wind_gusts": 23.4,
@@ -3141,7 +3133,7 @@
       "temp_corrected": 10.8,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -0.71,
+      "correction_offset_c": -0.68,
       "clarity": 0.19,
       "wind_speed": 19.1,
       "wind_gusts": 34.6,
@@ -3556,10 +3548,10 @@
     {
       "time": "2026-10-22T10:00:00+02:00",
       "temp_raw": 6.6,
-      "temp_corrected": 0.0,
+      "temp_corrected": 0.2,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -6.56,
+      "correction_offset_c": -6.42,
       "clarity": 1.0,
       "wind_speed": 0.7,
       "wind_gusts": 5.8,
@@ -3575,10 +3567,10 @@
     {
       "time": "2026-10-22T11:00:00+02:00",
       "temp_raw": 9.3,
-      "temp_corrected": 4.9,
+      "temp_corrected": 4.7,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -4.4,
+      "correction_offset_c": -4.62,
       "clarity": 1.0,
       "wind_speed": 1.3,
       "wind_gusts": 5.0,
@@ -3594,10 +3586,10 @@
     {
       "time": "2026-10-22T12:00:00+02:00",
       "temp_raw": 10.7,
-      "temp_corrected": 7.0,
+      "temp_corrected": 7.2,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -3.66,
+      "correction_offset_c": -3.51,
       "clarity": 1.0,
       "wind_speed": 6.2,
       "wind_gusts": 13.7,
@@ -3616,7 +3608,7 @@
       "temp_corrected": 9.6,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -1.78,
+      "correction_offset_c": -1.81,
       "clarity": 0.95,
       "wind_speed": 10.2,
       "wind_gusts": 19.4,
@@ -3635,7 +3627,7 @@
       "temp_corrected": 11.3,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -0.26,
+      "correction_offset_c": -0.31,
       "clarity": 0.83,
       "wind_speed": 12.0,
       "wind_gusts": 22.0,
@@ -3651,10 +3643,10 @@
     {
       "time": "2026-10-22T15:00:00+02:00",
       "temp_raw": 11.3,
-      "temp_corrected": 11.9,
+      "temp_corrected": 11.8,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": 0.64,
+      "correction_offset_c": 0.54,
       "clarity": 0.76,
       "wind_speed": 14.0,
       "wind_gusts": 25.9,
@@ -3670,10 +3662,10 @@
     {
       "time": "2026-10-22T16:00:00+02:00",
       "temp_raw": 10.4,
-      "temp_corrected": 11.2,
+      "temp_corrected": 11.1,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": 0.8,
+      "correction_offset_c": 0.74,
       "clarity": 0.73,
       "wind_speed": 11.6,
       "wind_gusts": 26.6,
@@ -3689,10 +3681,10 @@
     {
       "time": "2026-10-22T17:00:00+02:00",
       "temp_raw": 9.5,
-      "temp_corrected": 10.0,
+      "temp_corrected": 10.1,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": 0.55,
+      "correction_offset_c": 0.6,
       "clarity": 0.64,
       "wind_speed": 9.5,
       "wind_gusts": 21.6,
