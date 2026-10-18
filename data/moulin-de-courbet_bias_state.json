@@ -1,26 +1,26 @@
 {
   "offset_profile": {
     "0": 0.53,
-    "1": -2.97,
-    "2": -5.45,
-    "3": -7.04,
-    "4": -7.96,
-    "5": -8.67,
-    "6": -9.31,
-    "7": -9.77,
-    "8": -9.99,
-    "9": -9.95,
+    "1": -2.82,
+    "2": -5.32,
+    "3": -6.94,
+    "4": -7.93,
+    "5": -8.66,
+    "6": -9.28,
+    "7": -9.73,
+    "8": -9.95,
+    "9": -9.94,
     "10": -9.81,
-    "11": -9.64,
-    "12": -9.69,
+    "11": -9.67,
+    "12": -9.7,
     "13": -9.82,
-    "14": -9.96,
+    "14": -9.94,
     "15": -9.99
   },
   "alpha": 0.25,
-  "last_processed_night": "2026-10-16",
-  "last_night_error_c": -5.36,
-  "last_night_samples": 5,
+  "last_processed_night": "2026-10-17",
+  "last_night_error_c": null,
+  "last_night_samples": 0,
   "history": [
     {
       "night": "2026-10-03",
@@ -379,22 +379,26 @@
           "offset_after": -7.98
         }
       ]
+    },
+    {
+      "night": "2026-10-17",
+      "buckets_learned": []
     }
   ],
   "day_offset_profile": {
     "0": -3.55,
-    "1": -2.19,
-    "2": -0.71,
-    "3": 0.09,
-    "4": 0.27,
+    "1": -2.17,
+    "2": -0.81,
+    "3": -0.0,
+    "4": 0.26,
     "5": 0.36,
-    "6": 0.46,
-    "7": 0.61,
+    "6": 0.47,
+    "7": 0.62,
     "8": 0.85,
     "9": 1.06
   },
   "day_alpha": 0.25,
-  "last_processed_day": "2026-10-17",
+  "last_processed_day": "2026-10-18",
   "last_day_error_c": null,
   "last_day_samples": 0,
   "day_history": [
@@ -539,18 +543,22 @@
     {
       "day": "2026-10-17",
       "buckets_learned": []
+    },
+    {
+      "day": "2026-10-18",
+      "buckets_learned": []
     }
   ],
   "last_night_verif": {
-    "night": "2026-10-16",
-    "forecast_tn_c": 2.6,
-    "observed_tn_c": -4.0,
-    "diff_c": 6.6
+    "night": "2026-10-17",
+    "forecast_tn_c": 3.5,
+    "observed_tn_c": 4.2,
+    "diff_c": -0.7
   },
   "last_day_verif": {
-    "day": "2026-10-17",
-    "forecast_tx_c": 10.5,
-    "observed_tx_c": 11.9,
-    "diff_c": -1.4
+    "day": "2026-10-18",
+    "forecast_tx_c": 5.5,
+    "observed_tx_c": 5.7,
+    "diff_c": -0.2
   }
 }
