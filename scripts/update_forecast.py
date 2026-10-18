@@ -174,6 +174,7 @@ HIGH_CLOUD_ATTENUATION = 0.1
 SUNSET_LEAD_MINUTES = 15
 DEFAULT_ALPHA = 0.25
 MAX_HISTORY = 90
+MAX_COND_LOG = 60   # nuits / journées conservées dans le journal des conditions
 MAX_BUCKET_HOURS = 20
 DAY_MAX_BUCKET_HOURS = 16
 LEARN_CLARITY_MIN = 0.6
@@ -221,7 +222,7 @@ def fetch_openmeteo(lat, lon, elevation_m=None, past_days=2, forecast_days=3, mo
 TEMP_850HPA_MODEL = "dwd_icon_eu"
 
 
-def fetch_850hpa_temp(lat, lon, forecast_days):
+def fetch_850hpa_temp(lat, lon, forecast_days, past_days=2):
     params = {
         "latitude": lat,
         "longitude": lon,
@@ -229,7 +230,7 @@ def fetch_850hpa_temp(lat, lon, forecast_days):
         "models": TEMP_850HPA_MODEL,
         "timezone": "Europe/Berlin",
         "forecast_days": forecast_days,
-        "past_days": 0,
+        "past_days": past_days,
     }
     url = "https://api.open-meteo.com/v1/forecast?" + urllib.parse.urlencode(params)
     try:
@@ -382,6 +383,10 @@ def load_bias_state(path):
         # affiché sur la page, indépendant du mécanisme d'apprentissage.
         state.setdefault("last_night_verif", None)
         state.setdefault("last_day_verif", None)
+        state.setdefault("cond_log", {"columns": COND_COLUMNS, "night": [], "day": []})
+        state["cond_log"]["columns"] = COND_COLUMNS
+        state["cond_log"].setdefault("night", [])
+        state["cond_log"].setdefault("day", [])
         return state
     return {
         "offset_profile": {},
@@ -398,6 +403,7 @@ def load_bias_state(path):
         "day_history": [],
         "last_night_verif": None,
         "last_day_verif": None,
+        "cond_log": {"columns": COND_COLUMNS, "night": [], "day": []},
     }
 
 
@@ -669,6 +675,53 @@ def fetch_recent_observations(station, now, hours=LIVE_OBS_HOURS):
     recent = [{"time": t.isoformat(), "temp_c": round(v, 1)} for t, v in series]
     latest = recent[-1] if recent else None
     return {"latest": latest, "recent": recent}
+
+
+COND_COLUMNS = [
+    "bucket", "heure_loc", "obs_c", "modele_c", "erreur_c", "prevu_corrige_c",
+    "clarte", "nebul_eff_pct", "vent_kmh", "t_moins_td_c", "t_moins_t850_c", "hr_pct", "appris",
+]
+
+
+def build_condition_rows(
+    w_start, w_end, idx_by_time, temp, cloud_low, cloud_mid, cloud_high, wind_speed,
+    dew_point, humidity, temp850_by_time, obs_series, max_bucket, profile_snapshot,
+    default_fn=None,
+):
+    """Journal des conditions prévues et de l'erreur obs-modèle, pour TOUTES
+    les heures de la fenêtre (y compris nuageuses/ventées, que l'apprentissage
+    ignore) - pour pouvoir analyser a posteriori comment l'erreur dépend du
+    potentiel radiatif (clarté, vent, écart T-Td, T-T850). Chaque ligne suit
+    COND_COLUMNS. 'appris' = 1 si l'heure a alimenté le profil."""
+    rows = []
+    t = w_start.replace(minute=0, second=0, microsecond=0)
+    if t < w_start:
+        t += timedelta(hours=1)
+    while t <= w_end:
+        if t in idx_by_time:
+            i = idx_by_time[t]
+            obs_v = nearest_value(obs_series, t)
+            if obs_v is not None and temp[i] is not None:
+                eff_cloud = effective_cloud(cloud_low[i], cloud_mid[i], cloud_high[i])
+                ws_ = wind_speed[i] or 0
+                clarity_ = clarity_factor(eff_cloud, ws_)
+                bucket = min(int((t - w_start).total_seconds() // 3600), max_bucket)
+                off = profile_snapshot.get(str(bucket), default_fn(bucket) if default_fn else 0.0)
+                td = dew_point[i]
+                t850 = temp850_by_time.get(t)
+
+                def r1(v):
+                    return round(v, 1) if v is not None else None
+
+                rows.append([
+                    bucket, t.hour, r1(obs_v), r1(temp[i]), r1(obs_v - temp[i]),
+                    r1(temp[i] + off * clarity_), round(clarity_, 2), round(eff_cloud),
+                    r1(ws_), r1(temp[i] - td) if td is not None else None,
+                    r1(temp[i] - t850) if t850 is not None else None,
+                    r1(humidity[i]), 1 if clarity_ >= LEARN_CLARITY_MIN else 0,
+                ])
+        t += timedelta(hours=1)
+    return rows
 
 
 def corrected_series_over_window(
@@ -1105,6 +1158,16 @@ def process_station(station, now):
             else:
                 bias["last_night_verif"] = None
 
+            # --- Journal des conditions (toutes les heures observées) -------
+            cond_rows = build_condition_rows(
+                cand_start, cand_end, idx_by_time, temp, cloud_low, cloud_mid, cloud_high,
+                wind_speed, dew_point, humidity, temp850_by_time, obs_series,
+                MAX_BUCKET_HOURS, night_profile_snapshot, default_fn=default_offset,
+            )
+            if cond_rows:
+                bias["cond_log"]["night"].append({"night": night_key, "rows": cond_rows})
+                bias["cond_log"]["night"] = bias["cond_log"]["night"][-MAX_COND_LOG:]
+
     # --- Apprentissage rétrospectif de la correction de journée (Tx) -------
     # Même principe que la nuit : on cherche la journée la plus récente déjà
     # terminée (aujourd'hui si son créneau diurne est fini, sinon hier) et on
@@ -1183,6 +1246,15 @@ def process_station(station, now):
                 }
             else:
                 bias["last_day_verif"] = None
+
+            cond_rows_day = build_condition_rows(
+                d_start, d_end, idx_by_time, temp, cloud_low, cloud_mid, cloud_high,
+                wind_speed, dew_point, humidity, temp850_by_time, obs_series_day,
+                DAY_MAX_BUCKET_HOURS, day_profile_snapshot, default_fn=lambda b: 0.0,
+            )
+            if cond_rows_day:
+                bias["cond_log"]["day"].append({"day": day_key, "rows": cond_rows_day})
+                bias["cond_log"]["day"] = bias["cond_log"]["day"][-MAX_COND_LOG:]
 
     save_bias_state(bias_path, bias)
 
