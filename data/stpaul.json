@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-19T17:41:28.840411+02:00",
+  "generated_at": "2026-10-19T17:54:45.338615+02:00",
   "run_time": "2026-10-17T00:00:00+02:00",
   "location": {
     "name": "Saint-Paul-le-Froid",
@@ -60,7 +60,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 9.5,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 9.1,
       "rain_mm": 1.3,
       "snow_cm": 0,
       "picto": "pluie-faible"
@@ -81,7 +81,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 9.3,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 8.9,
       "rain_mm": 4.5,
       "snow_cm": 0,
       "picto": "pluie-forte"
@@ -102,7 +102,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 9.5,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 9.5,
       "rain_mm": 4.7,
       "snow_cm": 0,
       "picto": "pluie-forte"
@@ -123,7 +123,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 10.1,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 9.4,
       "rain_mm": 5.3,
       "snow_cm": 0,
       "picto": "pluie-forte"
@@ -144,7 +144,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 10.2,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 9.2,
       "rain_mm": 4.1,
       "snow_cm": 0,
       "picto": "pluie-forte"
@@ -165,7 +165,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 10.3,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 9.7,
       "rain_mm": 9.5,
       "snow_cm": 0,
       "picto": "pluie-forte"
@@ -186,7 +186,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 10.3,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 9.8,
       "rain_mm": 8.3,
       "snow_cm": 0,
       "picto": "pluie-forte"
@@ -207,7 +207,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 10.3,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 9.8,
       "rain_mm": 4.6,
       "snow_cm": 0,
       "picto": "pluie-forte"
@@ -228,7 +228,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 10.2,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 9.9,
       "rain_mm": 4.4,
       "snow_cm": 0,
       "picto": "pluie-forte"
@@ -249,7 +249,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 10.4,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 10.3,
       "rain_mm": 6.0,
       "snow_cm": 0,
       "picto": "pluie-forte"
@@ -270,7 +270,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 10.6,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 10.1,
       "rain_mm": 10.7,
       "snow_cm": 0,
       "picto": "pluie-forte"
@@ -291,7 +291,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 10.2,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 10.3,
       "rain_mm": 6.7,
       "snow_cm": 0,
       "picto": "pluie-forte"
@@ -312,7 +312,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 24,
       "dew_point_c": 10.1,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 10.3,
       "rain_mm": 0.4,
       "snow_cm": 0,
       "picto": "pluie-faible"
@@ -333,7 +333,7 @@
       "cloud_cover_mid": 85,
       "cloud_cover_high": 100,
       "dew_point_c": 10.2,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 10.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -354,7 +354,7 @@
       "cloud_cover_mid": 97,
       "cloud_cover_high": 100,
       "dew_point_c": 10.0,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 10.1,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -375,7 +375,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 9.7,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 9.2,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -396,7 +396,7 @@
       "cloud_cover_mid": 82,
       "cloud_cover_high": 100,
       "dew_point_c": 9.9,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 8.2,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -417,7 +417,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 10.0,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 7.8,
       "rain_mm": 0.1,
       "snow_cm": 0,
       "picto": "couvert"
@@ -438,7 +438,7 @@
       "cloud_cover_mid": 84,
       "cloud_cover_high": 100,
       "dew_point_c": 9.9,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 7.6,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -459,7 +459,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 9.6,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 7.5,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -480,7 +480,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 9.7,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 7.5,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -501,7 +501,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 9.4,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 7.4,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -522,7 +522,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 8.4,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 7.4,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -543,7 +543,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 7.6,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 7.5,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -564,7 +564,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 7.0,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 7.2,
       "rain_mm": 0.7,
       "snow_cm": 0,
       "picto": "pluie-faible"
@@ -585,7 +585,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 6.6,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 6.8,
       "rain_mm": 1.3,
       "snow_cm": 0,
       "picto": "pluie-faible"
@@ -606,7 +606,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 6.1,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 6.3,
       "rain_mm": 0.6,
       "snow_cm": 0,
       "picto": "pluie-faible"
@@ -627,7 +627,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 4.8,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 5.7,
       "rain_mm": 0.5,
       "snow_cm": 0,
       "picto": "pluie-faible"
@@ -648,7 +648,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 4.4,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 4.8,
       "rain_mm": 0.1,
       "snow_cm": 0,
       "picto": "couvert"
@@ -669,7 +669,7 @@
       "cloud_cover_mid": 95,
       "cloud_cover_high": 36,
       "dew_point_c": 4.2,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 3.9,
       "rain_mm": 0.1,
       "snow_cm": 0,
       "picto": "couvert"
@@ -690,7 +690,7 @@
       "cloud_cover_mid": 76,
       "cloud_cover_high": 0,
       "dew_point_c": 4.6,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 3.1,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -711,7 +711,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 3.6,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 2.8,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -732,7 +732,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 2.7,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 2.4,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -753,7 +753,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 2.5,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 1.9,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -774,7 +774,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 2.6,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 1.7,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -795,7 +795,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 2.1,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 2.2,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "tres-nuageux"
@@ -816,7 +816,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": -0.0,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 2.7,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -837,7 +837,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 0.2,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 2.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -858,7 +858,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 7,
       "dew_point_c": 2.0,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 2.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "tres-nuageux"
@@ -879,7 +879,7 @@
       "cloud_cover_mid": 86,
       "cloud_cover_high": 0,
       "dew_point_c": 2.8,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 2.9,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -900,7 +900,7 @@
       "cloud_cover_mid": 96,
       "cloud_cover_high": 0,
       "dew_point_c": 3.6,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 3.0,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -921,7 +921,7 @@
       "cloud_cover_mid": 91,
       "cloud_cover_high": 0,
       "dew_point_c": 4.5,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 3.0,
       "rain_mm": 0.4,
       "snow_cm": 0,
       "picto": "pluie-faible"
@@ -942,7 +942,7 @@
       "cloud_cover_mid": 32,
       "cloud_cover_high": 0,
       "dew_point_c": 5.1,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 3.3,
       "rain_mm": 0.3,
       "snow_cm": 0,
       "picto": "pluie-faible"
@@ -963,7 +963,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 4.9,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 3.1,
       "rain_mm": 0.1,
       "snow_cm": 0,
       "picto": "couvert"
@@ -984,7 +984,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 4.5,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 3.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1005,7 +1005,7 @@
       "cloud_cover_mid": 24,
       "cloud_cover_high": 0,
       "dew_point_c": 4.6,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 3.5,
       "rain_mm": 0.1,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1026,7 +1026,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 4.3,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 3.1,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "tres-nuageux"
@@ -1047,7 +1047,7 @@
       "cloud_cover_mid": 81,
       "cloud_cover_high": 0,
       "dew_point_c": 3.7,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 2.9,
       "rain_mm": 0.3,
       "snow_cm": 0,
       "picto": "pluie-faible"
@@ -1068,7 +1068,7 @@
       "cloud_cover_mid": 55,
       "cloud_cover_high": 0,
       "dew_point_c": 3.4,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 2.1,
       "rain_mm": 0.2,
       "snow_cm": 0,
       "picto": "pluie-faible"
@@ -1089,7 +1089,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 2.5,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 1.2,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "peu-nuageux"
@@ -1110,7 +1110,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 1.9,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 0.8,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "peu-nuageux"
@@ -1131,7 +1131,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 2.3,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 0.5,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "tres-nuageux"
@@ -1152,7 +1152,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 1.8,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 0.5,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1173,7 +1173,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 1.9,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 0.5,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1194,7 +1194,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 1.7,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 0.1,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1215,7 +1215,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 1.6,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 0.0,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1236,7 +1236,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 1.5,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 0.0,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1257,7 +1257,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 1.5,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 0.0,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1278,7 +1278,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 1.5,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 0.0,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1299,7 +1299,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 1.6,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 0.0,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1320,7 +1320,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 2,
       "dew_point_c": 1.7,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 0.1,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1341,7 +1341,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 61,
       "dew_point_c": 1.8,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 0.4,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1362,7 +1362,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 2.2,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 0.6,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1383,7 +1383,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 2.1,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 0.6,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "tres-nuageux"
@@ -1404,7 +1404,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 2.5,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 1.1,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1425,7 +1425,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 2.6,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 1.6,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1446,7 +1446,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 3.1,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 2.2,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1467,7 +1467,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 1,
       "dew_point_c": 3.1,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 3.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1488,7 +1488,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 19,
       "dew_point_c": 3.6,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 3.7,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1509,7 +1509,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 16,
       "dew_point_c": 3.8,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 4.5,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1530,7 +1530,7 @@
       "cloud_cover_mid": 6,
       "cloud_cover_high": 0,
       "dew_point_c": 4.0,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 4.8,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1551,7 +1551,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 4.1,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 4.9,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1572,7 +1572,7 @@
       "cloud_cover_mid": 63,
       "cloud_cover_high": 0,
       "dew_point_c": 4.0,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 4.9,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1593,7 +1593,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 84,
       "dew_point_c": 4.4,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 5.2,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1614,7 +1614,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 4.6,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 5.8,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1635,7 +1635,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 4.7,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 6.0,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1656,7 +1656,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 4.4,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 6.4,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1677,7 +1677,7 @@
       "cloud_cover_mid": 92,
       "cloud_cover_high": 100,
       "dew_point_c": 4.5,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 6.6,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1698,7 +1698,7 @@
       "cloud_cover_mid": 87,
       "cloud_cover_high": 100,
       "dew_point_c": 3.3,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 6.9,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1719,7 +1719,7 @@
       "cloud_cover_mid": 98,
       "cloud_cover_high": 100,
       "dew_point_c": 2.8,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 7.0,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1740,7 +1740,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 89,
       "dew_point_c": 2.5,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 7.0,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "voile"
@@ -1761,7 +1761,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 100,
       "dew_point_c": 2.4,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 6.8,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "voile"
@@ -1782,7 +1782,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 63,
       "dew_point_c": 3.0,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 6.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "voile"
@@ -1803,7 +1803,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 2.9,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 5.9,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -1824,7 +1824,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 2.3,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 5.9,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -1845,7 +1845,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 3.0,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 6.0,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "peu-nuageux"
@@ -1866,7 +1866,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 3.7,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 6.0,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "peu-nuageux"
@@ -1887,7 +1887,7 @@
       "cloud_cover_mid": 45,
       "cloud_cover_high": 0,
       "dew_point_c": 4.3,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 5.7,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1908,7 +1908,7 @@
       "cloud_cover_mid": 51,
       "cloud_cover_high": 0,
       "dew_point_c": 4.3,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 5.1,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "tres-nuageux"
@@ -1929,7 +1929,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 3.7,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 4.7,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -1950,7 +1950,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 3.3,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 4.6,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "peu-nuageux"
@@ -1971,7 +1971,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 2.8,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 4.7,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "peu-nuageux"
@@ -1992,7 +1992,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 2.9,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 4.6,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "tres-nuageux"
@@ -2013,7 +2013,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 2.1,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 4.2,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "peu-nuageux"
@@ -2034,7 +2034,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 22,
       "dew_point_c": 2.2,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 3.9,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -2055,7 +2055,7 @@
       "cloud_cover_mid": 87,
       "cloud_cover_high": 23,
       "dew_point_c": 2.7,
-      "temp_850hpa_c": null,
+      "temp_850hpa_c": 3.4,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
