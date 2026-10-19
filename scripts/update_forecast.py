@@ -1067,6 +1067,8 @@ def process_station(station, now):
             "cloud_cover_high": round(row["ch"]) if row["ch"] is not None else None,
             "dew_point_c": round(row["dp"], 1) if row["dp"] is not None else None,
             "temp_850hpa_c": round(row["t850"], 1) if row["t850"] is not None else None,
+            "rain_mm": round(row["rn"], 1),
+            "snow_cm": round(row["sn"], 1),
             "picto": picto,
         })
 
