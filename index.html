@@ -127,6 +127,7 @@
             <th>Température</th>
             <th>Point de rosée</th>
             <th>T 850 hPa</th>
+            <th>Précip.</th>
             <th>Vent</th>
             <th>Direction</th>
           </tr>
@@ -571,6 +572,44 @@ function fmtVerifSpan(label, verif, forecastKey, observedKey){
     ` <span style="color:var(--muted);">(prévu ${verif[forecastKey].toFixed(1)}° / mesuré ${verif[observedKey].toFixed(1)}°)</span></span>`;
 }
 
+// Rampe de couleurs continue pour les températures (point de rosée, T850) :
+// bleu foncé très froid -> bleu clair -> blanc autour de 0 -> jaune -> orange -> rouge.
+const TEMP_RAMP = [
+  [-20, [37, 99, 235]], [-8, [56, 189, 248]], [-2, [165, 243, 252]], [0, [226, 232, 240]],
+  [3, [253, 230, 138]], [8, [251, 191, 36]], [14, [251, 146, 60]], [20, [248, 113, 113]]
+];
+function tempColor(v){
+  if (v <= TEMP_RAMP[0][0]) return `rgb(${TEMP_RAMP[0][1].join(',')})`;
+  const last = TEMP_RAMP[TEMP_RAMP.length - 1];
+  if (v >= last[0]) return `rgb(${last[1].join(',')})`;
+  for (let i = 1; i < TEMP_RAMP.length; i++){
+    const [v1, c1] = TEMP_RAMP[i];
+    if (v <= v1){
+      const [v0, c0] = TEMP_RAMP[i - 1];
+      const f = (v - v0) / (v1 - v0);
+      return `rgb(${c0.map((c, k) => Math.round(c + (c1[k] - c) * f)).join(',')})`;
+    }
+  }
+  return 'inherit';
+}
+function fmtColoredTemp(v){
+  if (v === null || v === undefined) return '—';
+  return `<span style="color:${tempColor(v)};font-weight:600;">${v.toFixed(1)}°</span>`;
+}
+// Pluie (mm/h) en bleu, neige (cm/h) en violet clair ; l'intensité augmente avec la quantité.
+function fmtPrecip(rainMm, snowCm){
+  const parts = [];
+  if (rainMm !== null && rainMm !== undefined && rainMm >= 0.1){
+    const c = rainMm < 1 ? '#7dd3fc' : (rainMm < 4 ? '#38bdf8' : '#3b82f6');
+    parts.push(`<span style="color:${c};font-weight:${rainMm >= 1 ? 700 : 500};">💧 ${rainMm.toFixed(1)} mm</span>`);
+  }
+  if (snowCm !== null && snowCm !== undefined && snowCm >= 0.1){
+    const c = snowCm < 1 ? '#ddd6fe' : (snowCm < 3 ? '#c4b5fd' : '#a78bfa');
+    parts.push(`<span style="color:${c};font-weight:${snowCm >= 1 ? 700 : 500};">❄ ${snowCm.toFixed(1)} cm</span>`);
+  }
+  return parts.length ? parts.join('<br>') : '<span style="color:var(--muted);">—</span>';
+}
+
 function render(data){
   const meta = document.getElementById('meta');
   const genDate = data.generated_at ? new Date(data.generated_at).toLocaleString('fr-FR') : '—';
@@ -598,7 +637,7 @@ function render(data){
       const sep = document.createElement('tr');
       sep.className = 'day-sep';
       const label = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
-      sep.innerHTML = `<td colspan="7">${label}</td>`;
+      sep.innerHTML = `<td colspan="8">${label}</td>`;
       tbody.appendChild(sep);
     }
     const hourNum = d.getHours();
@@ -626,8 +665,9 @@ function render(data){
                 ${h.corrected && h.temp_raw !== null && h.temp_raw !== undefined ? `<span class="raw-strike">modèle brut ${h.temp_raw.toFixed(1)}°</span>` : ''}`;
             })()}
       </td>
-      <td>${h.dew_point_c === null || h.dew_point_c === undefined ? '—' : h.dew_point_c.toFixed(1) + '°'}</td>
-      <td>${h.temp_850hpa_c === null || h.temp_850hpa_c === undefined ? '—' : h.temp_850hpa_c.toFixed(1) + '°'}</td>
+      <td>${fmtColoredTemp(h.dew_point_c)}</td>
+      <td>${fmtColoredTemp(h.temp_850hpa_c)}</td>
+      <td>${fmtPrecip(h.rain_mm, h.snow_cm)}</td>
       <td>
         ${Math.round(h.wind_speed)} km/h
         ${h.wind_gusts ? `<span class="gust">raf. ${Math.round(h.wind_gusts)}</span>` : ''}
@@ -643,7 +683,9 @@ function render(data){
     + 'biais de Tx le jour). Fiabilité Tn/Tx : écart entre le Tn (ou Tx) réellement prévu la veille (avec le profil '
     + 'de correction d\'alors) et le Tn/Tx effectivement mesuré à la station — un indicateur de la fiabilité des '
     + 'prévisions, distinct de l\'apprentissage du profil. T 850 hPa : température à ~1500 m d\'altitude '
-    + '(modèle DWD ICON-EU, indicative - non utilisée pour la correction).';
+    + '(modèle DWD ICON-EU, indicative - non utilisée pour la correction). '
+    + 'Point de rosée et T 850 hPa sont colorés selon leur valeur (bleu = froid, blanc ≈ 0 °C, jaune à rouge = doux). '
+    + 'Précip. : pluie (mm/h) et neige (cm/h) prévues, plus foncé = plus intense.';
 
   const st = STATIONS.find(s => s.slug === currentSlug);
   document.getElementById('footer').innerHTML = `
