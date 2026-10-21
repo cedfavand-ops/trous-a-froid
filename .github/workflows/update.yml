@@ -42,6 +42,14 @@ jobs:
           DATACAKE_DEVICE_ID_BEUIL: ${{ secrets.DATACAKE_DEVICE_ID_BEUIL }}
           DATACAKE_TEMP_FIELD_BEUIL: ${{ secrets.DATACAKE_TEMP_FIELD_BEUIL }}
 
+          DATACAKE_TOKEN_PAUL: ${{ secrets.DATACAKE_TOKEN_PAUL }}
+          DATACAKE_DEVICE_ID_PAUL: ${{ secrets.DATACAKE_DEVICE_ID_PAUL }}
+          DATACAKE_TEMP_FIELD_PAUL: ${{ secrets.DATACAKE_TEMP_FIELD_PAUL }}
+   
+          DATACAKE_TOKEN_RANDON: ${{ secrets.DATACAKE_TOKEN_RANDON }}
+          DATACAKE_DEVICE_ID_RANDON: ${{ secrets.DATACAKE_DEVICE_ID_RANDON }}
+          DATACAKE_TEMP_FIELD_RANDON: ${{ secrets.DATACAKE_TEMP_FIELD_RANDON }}
+
           # Ajouter ici les secrets des prochaines stations Datacake au même
           # format, + une entrée dans STATIONS (scripts/update_forecast.py et
           # index.html).
