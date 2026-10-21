@@ -610,6 +610,17 @@ function fmtPrecip(rainMm, snowCm){
   return parts.length ? parts.join('<br>') : '<span style="color:var(--muted);">—</span>';
 }
 
+function fmtSnowSpans(sn){
+  const f = v => (v === null || v === undefined) ? 'n/a' : v.toFixed(1) + ' cm';
+  let end = '';
+  if (sn.forecast_end){
+    end = ' (jusqu\'au ' + new Date(sn.forecast_end).toLocaleString('fr-FR', {weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'}) + ')';
+  }
+  return `<span>❄️ Neige fraîche (24h passées) : ${f(sn.fresh_24h_cm)}</span>`
+    + `<span>❄️ Neige prévue (24 prochaines h) : ${f(sn.forecast_24h_cm)}</span>`
+    + `<span>❄️ Neige prévue (toute l'échéance) : ${f(sn.forecast_total_cm)}${end}</span>`;
+}
+
 function render(data){
   const meta = document.getElementById('meta');
   const genDate = data.generated_at ? new Date(data.generated_at).toLocaleString('fr-FR') : '—';
@@ -623,7 +634,7 @@ function render(data){
     ${data.day_correction ? `<span>Dernière journée apprise : ${data.day_correction.last_day_error_c !== null && data.day_correction.last_day_error_c !== undefined ? data.day_correction.last_day_error_c.toFixed(1) + ' °C (écart obs.−modèle, Tx)' : 'n/a'}</span>` : ''}
     ${fmtVerifSpan('Fiabilité Tn (nuit dernière)', data.verification && data.verification.night, 'forecast_tn_c', 'observed_tn_c')}
     ${fmtVerifSpan("Fiabilité Tx (journée d'hier)", data.verification && data.verification.day, 'forecast_tx_c', 'observed_tx_c')}
-    ${data.snow && data.snow.show ? `<span>❄️ Neige fraîche (24h) : ${data.snow.fresh_24h_cm !== null && data.snow.fresh_24h_cm !== undefined ? data.snow.fresh_24h_cm.toFixed(1) + ' cm' : 'n/a'}</span>` : ''}
+    ${data.snow && data.snow.show ? fmtSnowSpans(data.snow) : ''}
   `;
 
   const tbody = document.getElementById('rows');
