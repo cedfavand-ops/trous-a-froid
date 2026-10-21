@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-21T13:11:08.174721+02:00",
+  "generated_at": "2026-10-21T15:32:26.823838+02:00",
   "run_time": "2026-10-19T00:00:00+02:00",
   "location": {
     "name": "Doline de Chaud Clapier",
@@ -81,142 +81,10 @@
   "live": {
     "available": true,
     "latest": {
-      "time": "2026-10-21T13:08:19+02:00",
-      "temp_c": 6.1
+      "time": "2026-10-21T15:08:18+02:00",
+      "temp_c": 5.1
     },
     "recent": [
-      {
-        "time": "2026-10-19T13:11:52+02:00",
-        "temp_c": 10.4
-      },
-      {
-        "time": "2026-10-19T13:16:52+02:00",
-        "temp_c": 10.1
-      },
-      {
-        "time": "2026-10-19T13:21:52+02:00",
-        "temp_c": 9.9
-      },
-      {
-        "time": "2026-10-19T13:26:52+02:00",
-        "temp_c": 9.6
-      },
-      {
-        "time": "2026-10-19T13:31:52+02:00",
-        "temp_c": 9.6
-      },
-      {
-        "time": "2026-10-19T13:36:52+02:00",
-        "temp_c": 9.7
-      },
-      {
-        "time": "2026-10-19T13:38:13+02:00",
-        "temp_c": 10.4
-      },
-      {
-        "time": "2026-10-19T13:41:52+02:00",
-        "temp_c": 10.0
-      },
-      {
-        "time": "2026-10-19T13:46:52+02:00",
-        "temp_c": 10.4
-      },
-      {
-        "time": "2026-10-19T13:51:52+02:00",
-        "temp_c": 11.4
-      },
-      {
-        "time": "2026-10-19T13:56:52+02:00",
-        "temp_c": 11.5
-      },
-      {
-        "time": "2026-10-19T14:01:52+02:00",
-        "temp_c": 11.6
-      },
-      {
-        "time": "2026-10-19T14:06:52+02:00",
-        "temp_c": 12.1
-      },
-      {
-        "time": "2026-10-19T14:08:13+02:00",
-        "temp_c": 10.0
-      },
-      {
-        "time": "2026-10-19T14:11:52+02:00",
-        "temp_c": 11.5
-      },
-      {
-        "time": "2026-10-19T14:16:52+02:00",
-        "temp_c": 11.7
-      },
-      {
-        "time": "2026-10-19T14:21:52+02:00",
-        "temp_c": 11.5
-      },
-      {
-        "time": "2026-10-19T14:26:52+02:00",
-        "temp_c": 11.5
-      },
-      {
-        "time": "2026-10-19T14:31:52+02:00",
-        "temp_c": 11.7
-      },
-      {
-        "time": "2026-10-19T14:36:52+02:00",
-        "temp_c": 12.2
-      },
-      {
-        "time": "2026-10-19T14:38:14+02:00",
-        "temp_c": 11.5
-      },
-      {
-        "time": "2026-10-19T14:41:52+02:00",
-        "temp_c": 12.0
-      },
-      {
-        "time": "2026-10-19T14:46:52+02:00",
-        "temp_c": 11.9
-      },
-      {
-        "time": "2026-10-19T14:51:52+02:00",
-        "temp_c": 11.7
-      },
-      {
-        "time": "2026-10-19T14:56:52+02:00",
-        "temp_c": 11.9
-      },
-      {
-        "time": "2026-10-19T15:01:52+02:00",
-        "temp_c": 11.5
-      },
-      {
-        "time": "2026-10-19T15:06:52+02:00",
-        "temp_c": 11.5
-      },
-      {
-        "time": "2026-10-19T15:08:13+02:00",
-        "temp_c": 12.0
-      },
-      {
-        "time": "2026-10-19T15:11:52+02:00",
-        "temp_c": 11.3
-      },
-      {
-        "time": "2026-10-19T15:16:52+02:00",
-        "temp_c": 11.8
-      },
-      {
-        "time": "2026-10-19T15:21:52+02:00",
-        "temp_c": 11.8
-      },
-      {
-        "time": "2026-10-19T15:26:52+02:00",
-        "temp_c": 11.6
-      },
-      {
-        "time": "2026-10-19T15:31:52+02:00",
-        "temp_c": 11.2
-      },
       {
         "time": "2026-10-19T15:36:52+02:00",
         "temp_c": 11.0
@@ -2744,6 +2612,118 @@
       {
         "time": "2026-10-21T13:08:19+02:00",
         "temp_c": 6.1
+      },
+      {
+        "time": "2026-10-21T13:11:52+02:00",
+        "temp_c": 5.1
+      },
+      {
+        "time": "2026-10-21T13:16:52+02:00",
+        "temp_c": 5.1
+      },
+      {
+        "time": "2026-10-21T13:21:52+02:00",
+        "temp_c": 5.0
+      },
+      {
+        "time": "2026-10-21T13:26:52+02:00",
+        "temp_c": 5.1
+      },
+      {
+        "time": "2026-10-21T13:31:52+02:00",
+        "temp_c": 5.1
+      },
+      {
+        "time": "2026-10-21T13:36:52+02:00",
+        "temp_c": 5.0
+      },
+      {
+        "time": "2026-10-21T13:38:19+02:00",
+        "temp_c": 5.1
+      },
+      {
+        "time": "2026-10-21T13:41:52+02:00",
+        "temp_c": 4.9
+      },
+      {
+        "time": "2026-10-21T13:46:52+02:00",
+        "temp_c": 4.9
+      },
+      {
+        "time": "2026-10-21T13:51:52+02:00",
+        "temp_c": 4.9
+      },
+      {
+        "time": "2026-10-21T13:56:52+02:00",
+        "temp_c": 4.8
+      },
+      {
+        "time": "2026-10-21T14:01:52+02:00",
+        "temp_c": 4.8
+      },
+      {
+        "time": "2026-10-21T14:06:52+02:00",
+        "temp_c": 4.8
+      },
+      {
+        "time": "2026-10-21T14:08:18+02:00",
+        "temp_c": 4.9
+      },
+      {
+        "time": "2026-10-21T14:11:52+02:00",
+        "temp_c": 4.7
+      },
+      {
+        "time": "2026-10-21T14:16:52+02:00",
+        "temp_c": 5.0
+      },
+      {
+        "time": "2026-10-21T14:21:52+02:00",
+        "temp_c": 5.0
+      },
+      {
+        "time": "2026-10-21T14:26:52+02:00",
+        "temp_c": 5.0
+      },
+      {
+        "time": "2026-10-21T14:31:52+02:00",
+        "temp_c": 5.1
+      },
+      {
+        "time": "2026-10-21T14:36:52+02:00",
+        "temp_c": 5.2
+      },
+      {
+        "time": "2026-10-21T14:38:19+02:00",
+        "temp_c": 4.7
+      },
+      {
+        "time": "2026-10-21T14:41:52+02:00",
+        "temp_c": 5.1
+      },
+      {
+        "time": "2026-10-21T14:46:52+02:00",
+        "temp_c": 5.2
+      },
+      {
+        "time": "2026-10-21T14:51:52+02:00",
+        "temp_c": 5.0
+      },
+      {
+        "time": "2026-10-21T14:56:52+02:00",
+        "temp_c": 4.9
+      },
+      {
+        "time": "2026-10-21T15:01:52+02:00",
+        "temp_c": 4.9
+      },
+      {
+        "time": "2026-10-21T15:06:52+02:00",
+        "temp_c": 4.9
+      },
+      {
+        "time": "2026-10-21T15:08:18+02:00",
+        "temp_c": 5.1
       }
     ]
   },
@@ -2806,7 +2786,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 0,
       "dew_point_c": 3.4,
-      "temp_850hpa_c": 2.7,
+      "temp_850hpa_c": 2.5,
       "rain_mm": 1.8,
       "snow_cm": 0,
       "picto": "pluie-faible"
@@ -2827,7 +2807,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 2.5,
-      "temp_850hpa_c": 2.1,
+      "temp_850hpa_c": 2.2,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "tres-nuageux"
@@ -2869,7 +2849,7 @@
       "cloud_cover_mid": 56,
       "cloud_cover_high": 86,
       "dew_point_c": 1.0,
-      "temp_850hpa_c": 1.4,
+      "temp_850hpa_c": 1.6,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -2890,7 +2870,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 0.4,
-      "temp_850hpa_c": 1.6,
+      "temp_850hpa_c": 1.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "tres-nuageux"
@@ -2911,7 +2891,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 0.3,
-      "temp_850hpa_c": 1.4,
+      "temp_850hpa_c": 1.2,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -2932,7 +2912,7 @@
       "cloud_cover_mid": 55,
       "cloud_cover_high": 0,
       "dew_point_c": 0.2,
-      "temp_850hpa_c": 1.3,
+      "temp_850hpa_c": 1.1,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -2953,7 +2933,7 @@
       "cloud_cover_mid": 70,
       "cloud_cover_high": 0,
       "dew_point_c": 0.4,
-      "temp_850hpa_c": 1.2,
+      "temp_850hpa_c": 1.1,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -2974,7 +2954,7 @@
       "cloud_cover_mid": 3,
       "cloud_cover_high": 61,
       "dew_point_c": 0.2,
-      "temp_850hpa_c": 1.2,
+      "temp_850hpa_c": 1.0,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -2995,7 +2975,7 @@
       "cloud_cover_mid": 70,
       "cloud_cover_high": 17,
       "dew_point_c": 0.1,
-      "temp_850hpa_c": 1.3,
+      "temp_850hpa_c": 1.0,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -3016,7 +2996,7 @@
       "cloud_cover_mid": 55,
       "cloud_cover_high": 4,
       "dew_point_c": -0.0,
-      "temp_850hpa_c": 1.3,
+      "temp_850hpa_c": 1.1,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "tres-nuageux"
@@ -3037,7 +3017,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": -0.2,
-      "temp_850hpa_c": 1.6,
+      "temp_850hpa_c": 1.4,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -3079,7 +3059,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 55,
       "dew_point_c": -0.9,
-      "temp_850hpa_c": 2.1,
+      "temp_850hpa_c": 1.9,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "voile"
@@ -3121,7 +3101,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 30,
       "dew_point_c": -1.7,
-      "temp_850hpa_c": 2.4,
+      "temp_850hpa_c": 2.5,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "peu-nuageux"
@@ -3142,7 +3122,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 12,
       "dew_point_c": -1.8,
-      "temp_850hpa_c": 3.0,
+      "temp_850hpa_c": 3.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -3163,7 +3143,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 100,
       "dew_point_c": -2.1,
-      "temp_850hpa_c": 3.7,
+      "temp_850hpa_c": 4.0,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "voile"
@@ -3184,7 +3164,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 100,
       "dew_point_c": -1.3,
-      "temp_850hpa_c": 4.2,
+      "temp_850hpa_c": 4.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "voile"
@@ -3205,7 +3185,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 100,
       "dew_point_c": 0.0,
-      "temp_850hpa_c": 4.5,
+      "temp_850hpa_c": 4.7,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "voile"
@@ -3226,7 +3206,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 94,
       "dew_point_c": 0.8,
-      "temp_850hpa_c": 4.8,
+      "temp_850hpa_c": 5.1,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "voile"
@@ -3247,7 +3227,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 63,
       "dew_point_c": 0.8,
-      "temp_850hpa_c": 4.9,
+      "temp_850hpa_c": 5.4,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "voile"
