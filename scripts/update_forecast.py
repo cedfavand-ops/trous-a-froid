@@ -724,9 +724,20 @@ def build_condition_rows(
     return rows
 
 
+def interp_offset(get_offset, eff_hours, max_bucket):
+    """Offset du profil à une 'durée radiative effective' fractionnaire
+    (interpolation linéaire entre cases entières voisines)."""
+    e = max(0.0, min(eff_hours, float(max_bucket)))
+    lo = int(e)
+    frac = e - lo
+    if frac < 1e-9:
+        return get_offset(lo)
+    return get_offset(lo) * (1 - frac) + get_offset(min(lo + 1, max_bucket)) * frac
+
+
 def corrected_series_over_window(
     w_start, w_end, idx_by_time, temp, cloud_low, cloud_mid, cloud_high, wind_speed,
-    max_bucket, profile_snapshot, default_fn=None,
+    max_bucket, profile_snapshot, default_fn=None, effective_clock=False,
 ):
     """Reconstitue, heure par heure sur [w_start, w_end], la température
     "telle que prévue" en appliquant un profil de correction figé (celui
@@ -741,9 +752,14 @@ def corrected_series_over_window(
     de la case horaire (bucket) reste basé sur w_start non arrondi, exactement
     comme dans la boucle d'apprentissage correspondante."""
     vals = []
+    cum_clear = 0.0   # heures de ciel clair/calme accumulées depuis le début de la fenêtre
     t = w_start.replace(minute=0, second=0, microsecond=0)
     if t < w_start:
         t += timedelta(hours=1)
+
+    def snap_offset(b):
+        return profile_snapshot.get(str(b), default_fn(b) if default_fn else 0.0)
+
     while t <= w_end:
         if t in idx_by_time:
             i = idx_by_time[t]
@@ -751,10 +767,13 @@ def corrected_series_over_window(
                 eff_cloud = effective_cloud(cloud_low[i], cloud_mid[i], cloud_high[i])
                 ws_ = wind_speed[i] or 0
                 clarity_ = clarity_factor(eff_cloud, ws_)
-                bucket = min(int((t - w_start).total_seconds() // 3600), max_bucket)
-                key = str(bucket)
-                offset = profile_snapshot.get(key, default_fn(bucket) if default_fn else 0.0)
+                if effective_clock:
+                    offset = interp_offset(snap_offset, cum_clear, max_bucket)
+                else:
+                    bucket = min(int((t - w_start).total_seconds() // 3600), max_bucket)
+                    offset = snap_offset(bucket)
                 vals.append(temp[i] + offset * clarity_)
+                cum_clear += clarity_
         t += timedelta(hours=1)
     return vals
 
@@ -1021,6 +1040,21 @@ def process_station(station, now):
         clarity_smoothed.append(total_v / total_w if total_w > 0 else row["clarity_raw"])
 
     # --- Passe 3 : application de la correction (clarté lissée) ------------
+    # Durée radiative effective (nuit) : somme des clartés des heures précédentes
+    # de la même fenêtre. Le profil appris (case n = n-ième heure d'une nuit
+    # dégagée) ne doit s'appliquer qu'à hauteur du refroidissement réellement
+    # accumulé : une nuit couverte qui ne se dégage qu'à l'aube ne doit pas
+    # recevoir l'offset de fin de nuit d'une nuit claire.
+    cum_before = []
+    cum, prev_key = 0.0, None
+    for idx, row in enumerate(rows):
+        key = (row["period"], row["w_start"])
+        if row["period"] is None or key != prev_key:
+            cum = 0.0
+        prev_key = key
+        cum_before.append(cum)
+        cum += clarity_smoothed[idx]
+
     current_offset_c = None
     hours_out = []
     for idx, row in enumerate(rows):
@@ -1034,8 +1068,12 @@ def process_station(station, now):
 
         applied_offset = None
         if apply_corr:
-            bucket = min(int((t - row["w_start"]).total_seconds() // 3600), row["max_bucket"])
-            applied_offset = row["get_offset"](bucket) * clarity
+            if period == "night":
+                base_offset = interp_offset(row["get_offset"], cum_before[idx], row["max_bucket"])
+            else:
+                bucket = min(int((t - row["w_start"]).total_seconds() // 3600), row["max_bucket"])
+                base_offset = row["get_offset"](bucket)
+            applied_offset = base_offset * clarity
             corrected_t = raw_t + applied_offset
             if t.replace(minute=0, second=0, microsecond=0) == now.replace(minute=0, second=0, microsecond=0):
                 current_offset_c = applied_offset
@@ -1158,6 +1196,7 @@ def process_station(station, now):
             forecast_vals = corrected_series_over_window(
                 cand_start, cand_end, idx_by_time, temp, cloud_low, cloud_mid, cloud_high,
                 wind_speed, MAX_BUCKET_HOURS, night_profile_snapshot, default_fn=default_offset,
+                effective_clock=True,
             )
             observed_vals = [v for _, v in obs_series]
             if forecast_vals and observed_vals:
