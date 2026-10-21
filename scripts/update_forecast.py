@@ -1072,17 +1072,29 @@ def process_station(station, now):
             "picto": picto,
         })
 
-    fresh_snow_24h_cm = None
-    if station.get("show_snow"):
-        now_floor = now.replace(minute=0, second=0, microsecond=0)
-        window_24h_start = now_floor - timedelta(hours=23)
-        total_snow = 0.0
-        found_any = False
-        for tt, i in idx_by_time.items():
-            if window_24h_start <= tt <= now_floor and snowfall[i] is not None:
-                total_snow += snowfall[i]
-                found_any = True
-        fresh_snow_24h_cm = round(total_snow, 1) if found_any else None
+    # Neige : cumul des 24 dernières heures (modèle) + prévue 24 h + prévue sur toute l'échéance,
+    # pour toutes les stations.
+    now_floor = now.replace(minute=0, second=0, microsecond=0)
+    window_24h_start = now_floor - timedelta(hours=23)
+    next_24h_end = now_floor + timedelta(hours=24)
+    past_snow, next24_snow, total_snow_fc = 0.0, 0.0, 0.0
+    found_past = found_fc = False
+    for tt, i in idx_by_time.items():
+        v = snowfall[i]
+        if v is None:
+            continue
+        if window_24h_start <= tt <= now_floor:
+            past_snow += v
+            found_past = True
+        elif tt > now_floor:
+            total_snow_fc += v
+            found_fc = True
+            if tt <= next_24h_end:
+                next24_snow += v
+    fresh_snow_24h_cm = round(past_snow, 1) if found_past else None
+    forecast_snow_24h_cm = round(next24_snow, 1) if found_fc else None
+    forecast_snow_total_cm = round(total_snow_fc, 1) if found_fc else None
+    forecast_snow_end = max((tt for tt in idx_by_time if tt > now_floor), default=None)
 
     candidate_evening = window_start.date() - timedelta(days=1)
     cand_start, cand_end = corr_window_for_evening(candidate_evening, sunset_by_date, sunrise_by_date)
@@ -1304,8 +1316,11 @@ def process_station(station, now):
             "last_day_samples": bias.get("last_day_samples", 0),
         },
         "snow": {
-            "show": bool(station.get("show_snow", False)),
+            "show": True,
             "fresh_24h_cm": fresh_snow_24h_cm,
+            "forecast_24h_cm": forecast_snow_24h_cm,
+            "forecast_total_cm": forecast_snow_total_cm,
+            "forecast_end": forecast_snow_end.isoformat() if forecast_snow_end else None,
         },
         "verification": {
             "night": bias.get("last_night_verif"),
