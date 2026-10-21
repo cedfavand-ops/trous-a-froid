@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-21T12:59:52.166302+02:00",
+  "generated_at": "2026-10-21T13:11:08.174721+02:00",
   "run_time": "2026-10-19T00:00:00+02:00",
   "location": {
     "name": "Saint-Paul-le-Froid",
@@ -60,14 +60,6 @@
       "temp_c": 6.9
     },
     "recent": [
-      {
-        "time": "2026-10-19T13:02:16+02:00",
-        "temp_c": 10.2
-      },
-      {
-        "time": "2026-10-19T13:07:16+02:00",
-        "temp_c": 10.4
-      },
       {
         "time": "2026-10-19T13:12:16+02:00",
         "temp_c": 10.5
@@ -3296,10 +3288,10 @@
     {
       "time": "2026-10-22T20:00:00+02:00",
       "temp_raw": 6.2,
-      "temp_corrected": 5.5,
+      "temp_corrected": 6.0,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -0.7,
+      "correction_offset_c": -0.22,
       "clarity": 0.11,
       "wind_speed": 6.6,
       "wind_gusts": 10.8,
@@ -3317,10 +3309,10 @@
     {
       "time": "2026-10-22T21:00:00+02:00",
       "temp_raw": 5.2,
-      "temp_corrected": 3.5,
+      "temp_corrected": 4.7,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -1.67,
+      "correction_offset_c": -0.5,
       "clarity": 0.22,
       "wind_speed": 5.6,
       "wind_gusts": 11.2,
@@ -3338,10 +3330,10 @@
     {
       "time": "2026-10-22T22:00:00+02:00",
       "temp_raw": 5.0,
-      "temp_corrected": 4.1,
+      "temp_corrected": 4.7,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -0.92,
+      "correction_offset_c": -0.32,
       "clarity": 0.11,
       "wind_speed": 6.6,
       "wind_gusts": 13.3,
@@ -3464,10 +3456,10 @@
     {
       "time": "2026-10-23T04:00:00+02:00",
       "temp_raw": 7.6,
-      "temp_corrected": 5.9,
+      "temp_corrected": 7.1,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -1.7,
+      "correction_offset_c": -0.55,
       "clarity": 0.17,
       "wind_speed": 17.3,
       "wind_gusts": 38.9,
@@ -3485,10 +3477,10 @@
     {
       "time": "2026-10-23T05:00:00+02:00",
       "temp_raw": 7.1,
-      "temp_corrected": 2.0,
+      "temp_corrected": 5.3,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -5.05,
+      "correction_offset_c": -1.85,
       "clarity": 0.51,
       "wind_speed": 13.7,
       "wind_gusts": 33.5,
@@ -3506,10 +3498,10 @@
     {
       "time": "2026-10-23T06:00:00+02:00",
       "temp_raw": 6.5,
-      "temp_corrected": 0.5,
+      "temp_corrected": 3.6,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -6.0,
+      "correction_offset_c": -2.93,
       "clarity": 0.6,
       "wind_speed": 14.1,
       "wind_gusts": 27.0,
@@ -3527,10 +3519,10 @@
     {
       "time": "2026-10-23T07:00:00+02:00",
       "temp_raw": 7.0,
-      "temp_corrected": 3.3,
+      "temp_corrected": 4.8,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -3.67,
+      "correction_offset_c": -2.18,
       "clarity": 0.37,
       "wind_speed": 17.1,
       "wind_gusts": 32.4,
@@ -3548,10 +3540,10 @@
     {
       "time": "2026-10-23T08:00:00+02:00",
       "temp_raw": 8.0,
-      "temp_corrected": 7.0,
+      "temp_corrected": 7.3,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -1.02,
+      "correction_offset_c": -0.67,
       "clarity": 0.1,
       "wind_speed": 23.6,
       "wind_gusts": 45.7,
@@ -3887,7 +3879,7 @@
       "temp_corrected": 3.6,
       "corrected": false,
       "correction_period": "night",
-      "correction_offset_c": -0.04,
+      "correction_offset_c": -0.01,
       "clarity": 0.0,
       "wind_speed": 20.8,
       "wind_gusts": 45.0,
@@ -3905,10 +3897,10 @@
     {
       "time": "2026-10-24T01:00:00+02:00",
       "temp_raw": 2.9,
-      "temp_corrected": 2.8,
-      "corrected": true,
+      "temp_corrected": 2.9,
+      "corrected": false,
       "correction_period": "night",
-      "correction_offset_c": -0.08,
+      "correction_offset_c": -0.02,
       "clarity": 0.01,
       "wind_speed": 20.7,
       "wind_gusts": 40.7,
@@ -3929,7 +3921,7 @@
       "temp_corrected": 2.6,
       "corrected": false,
       "correction_period": "night",
-      "correction_offset_c": -0.04,
+      "correction_offset_c": -0.01,
       "clarity": 0.0,
       "wind_speed": 19.6,
       "wind_gusts": 40.0,

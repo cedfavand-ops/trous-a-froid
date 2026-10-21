@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-21T12:59:52.166302+02:00",
+  "generated_at": "2026-10-21T13:11:08.174721+02:00",
   "run_time": "2026-10-19T00:00:00+02:00",
   "location": {
     "name": "Tignes - Pramécou",
@@ -59,9 +59,9 @@
   },
   "snow": {
     "show": true,
-    "fresh_24h_cm": 7.9,
-    "forecast_24h_cm": 5.1,
-    "forecast_total_cm": 37.0,
+    "fresh_24h_cm": 7.0,
+    "forecast_24h_cm": 4.8,
+    "forecast_total_cm": 36.7,
     "forecast_end": "2026-10-25T23:00:00+01:00"
   },
   "verification": {
@@ -81,22 +81,10 @@
   "live": {
     "available": true,
     "latest": {
-      "time": "2026-10-21T12:02:32+02:00",
-      "temp_c": 0.4
+      "time": "2026-10-21T13:02:32+02:00",
+      "temp_c": -0.3
     },
     "recent": [
-      {
-        "time": "2026-10-19T13:02:31+02:00",
-        "temp_c": 4.1
-      },
-      {
-        "time": "2026-10-19T13:02:54+02:00",
-        "temp_c": 4.6
-      },
-      {
-        "time": "2026-10-19T13:07:54+02:00",
-        "temp_c": 4.5
-      },
       {
         "time": "2026-10-19T13:12:54+02:00",
         "temp_c": 4.7
@@ -2720,6 +2708,34 @@
       {
         "time": "2026-10-21T12:02:32+02:00",
         "temp_c": 0.4
+      },
+      {
+        "time": "2026-10-21T12:33:02+02:00",
+        "temp_c": -0.3
+      },
+      {
+        "time": "2026-10-21T12:37:54+02:00",
+        "temp_c": -0.6
+      },
+      {
+        "time": "2026-10-21T12:42:54+02:00",
+        "temp_c": -0.5
+      },
+      {
+        "time": "2026-10-21T12:47:54+02:00",
+        "temp_c": -0.3
+      },
+      {
+        "time": "2026-10-21T12:52:54+02:00",
+        "temp_c": -0.3
+      },
+      {
+        "time": "2026-10-21T12:57:54+02:00",
+        "temp_c": -0.3
+      },
+      {
+        "time": "2026-10-21T13:02:32+02:00",
+        "temp_c": -0.3
       }
     ]
   },
@@ -3252,10 +3268,10 @@
     {
       "time": "2026-10-22T19:00:00+02:00",
       "temp_raw": -3.5,
-      "temp_corrected": -6.5,
+      "temp_corrected": -6.4,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -2.95,
+      "correction_offset_c": -2.88,
       "clarity": 0.78,
       "wind_speed": 13.0,
       "wind_gusts": 22.0,
@@ -3273,10 +3289,10 @@
     {
       "time": "2026-10-22T20:00:00+02:00",
       "temp_raw": -3.5,
-      "temp_corrected": -7.7,
+      "temp_corrected": -7.3,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -4.15,
+      "correction_offset_c": -3.77,
       "clarity": 0.89,
       "wind_speed": 11.2,
       "wind_gusts": 20.5,
@@ -3294,10 +3310,10 @@
     {
       "time": "2026-10-22T21:00:00+02:00",
       "temp_raw": -3.3,
-      "temp_corrected": -8.2,
+      "temp_corrected": -8.0,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -4.88,
+      "correction_offset_c": -4.69,
       "clarity": 0.97,
       "wind_speed": 4.7,
       "wind_gusts": 14.4,
@@ -3315,10 +3331,10 @@
     {
       "time": "2026-10-22T22:00:00+02:00",
       "temp_raw": -3.0,
-      "temp_corrected": -7.1,
+      "temp_corrected": -7.2,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -4.09,
+      "correction_offset_c": -4.21,
       "clarity": 0.86,
       "wind_speed": 8.7,
       "wind_gusts": 16.6,
@@ -3336,10 +3352,10 @@
     {
       "time": "2026-10-22T23:00:00+02:00",
       "temp_raw": -2.8,
-      "temp_corrected": -4.8,
+      "temp_corrected": -5.0,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -2.04,
+      "correction_offset_c": -2.17,
       "clarity": 0.46,
       "wind_speed": 10.1,
       "wind_gusts": 16.9,
@@ -3360,7 +3376,7 @@
       "temp_corrected": -2.8,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -0.46,
+      "correction_offset_c": -0.48,
       "clarity": 0.11,
       "wind_speed": 11.5,
       "wind_gusts": 19.1,
