@@ -178,6 +178,20 @@ MAX_COND_LOG = 60   # nuits / journées conservées dans le journal des conditio
 MAX_BUCKET_HOURS = 20
 DAY_MAX_BUCKET_HOURS = 16
 LEARN_CLARITY_MIN = 0.6
+# Plancher « point de rosée » (nuit uniquement) : quand l'air est proche de la
+# saturation, la condensation/givrage freine le refroidissement radiatif. La
+# température corrigée ne descend pas sous (point de rosée modèle - marge), sauf
+# si le modèle brut est déjà plus froid. Valeur provisoire (1 nuit d'observation :
+# Chaud-Clapier 22/10/2026, Td ~0, Tn observée -3.6) à ajuster avec le journal
+# des conditions. Mettre une valeur très grande (ex: 99) pour désactiver.
+DEW_FLOOR_MARGIN_C = 4.0
+
+
+def dew_floor(raw_t, dew_point_c):
+    """Plancher de température corrigée de nuit, ou None si non applicable."""
+    if raw_t is None or dew_point_c is None:
+        return None
+    return min(raw_t, dew_point_c - DEW_FLOOR_MARGIN_C)
 FORECAST_NIGHTS = 4
 CH1_FORECAST_DAYS = 2
 CH2_FORECAST_DAYS = 5
@@ -737,7 +751,7 @@ def interp_offset(get_offset, eff_hours, max_bucket):
 
 def corrected_series_over_window(
     w_start, w_end, idx_by_time, temp, cloud_low, cloud_mid, cloud_high, wind_speed,
-    max_bucket, profile_snapshot, default_fn=None, effective_clock=False,
+    max_bucket, profile_snapshot, default_fn=None, effective_clock=False, dew_point=None,
 ):
     """Reconstitue, heure par heure sur [w_start, w_end], la température
     "telle que prévue" en appliquant un profil de correction figé (celui
@@ -772,7 +786,12 @@ def corrected_series_over_window(
                 else:
                     bucket = min(int((t - w_start).total_seconds() // 3600), max_bucket)
                     offset = snap_offset(bucket)
-                vals.append(temp[i] + offset * clarity_)
+                v_corr = temp[i] + offset * clarity_
+                if effective_clock and dew_point is not None:
+                    fl = dew_floor(temp[i], dew_point[i])
+                    if fl is not None and v_corr < fl:
+                        v_corr = fl
+                vals.append(v_corr)
                 cum_clear += clarity_
         t += timedelta(hours=1)
     return vals
@@ -1075,6 +1094,11 @@ def process_station(station, now):
                 base_offset = row["get_offset"](bucket)
             applied_offset = base_offset * clarity
             corrected_t = raw_t + applied_offset
+            if period == "night":
+                fl = dew_floor(raw_t, row["dp"])
+                if fl is not None and corrected_t < fl:
+                    corrected_t = fl
+                    applied_offset = fl - raw_t
             if t.replace(minute=0, second=0, microsecond=0) == now.replace(minute=0, second=0, microsecond=0):
                 current_offset_c = applied_offset
         else:
@@ -1196,7 +1220,7 @@ def process_station(station, now):
             forecast_vals = corrected_series_over_window(
                 cand_start, cand_end, idx_by_time, temp, cloud_low, cloud_mid, cloud_high,
                 wind_speed, MAX_BUCKET_HOURS, night_profile_snapshot, default_fn=default_offset,
-                effective_clock=True,
+                effective_clock=True, dew_point=dew_point,
             )
             observed_vals = [v for _, v in obs_series]
             if forecast_vals and observed_vals:
@@ -1346,6 +1370,7 @@ def process_station(station, now):
             "calm_wind_threshold_kmh": CALM_WIND_THRESHOLD,
             "wind_zero_threshold_kmh": WIND_ZERO_THRESHOLD,
             "high_cloud_attenuation": HIGH_CLOUD_ATTENUATION,
+            "dew_floor_margin_c": DEW_FLOOR_MARGIN_C,
             "sunset_lead_minutes": SUNSET_LEAD_MINUTES,
         },
         "day_correction": {
