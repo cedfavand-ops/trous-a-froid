@@ -45,10 +45,26 @@ jobs:
           DATACAKE_TOKEN_PAUL: ${{ secrets.DATACAKE_TOKEN_PAUL }}
           DATACAKE_DEVICE_ID_PAUL: ${{ secrets.DATACAKE_DEVICE_ID_PAUL }}
           DATACAKE_TEMP_FIELD_PAUL: ${{ secrets.DATACAKE_TEMP_FIELD_PAUL }}
-   
+
           DATACAKE_TOKEN_RANDON: ${{ secrets.DATACAKE_TOKEN_RANDON }}
           DATACAKE_DEVICE_ID_RANDON: ${{ secrets.DATACAKE_DEVICE_ID_RANDON }}
           DATACAKE_TEMP_FIELD_RANDON: ${{ secrets.DATACAKE_TEMP_FIELD_RANDON }}
+
+          DATACAKE_TOKEN_DEVOLUY: ${{ secrets.DATACAKE_TOKEN_DEVOLUY }}
+          DATACAKE_DEVICE_ID_DEVOLUY: ${{ secrets.DATACAKE_DEVICE_ID_DEVOLUY }}
+          DATACAKE_TEMP_FIELD_DEVOLUY: ${{ secrets.DATACAKE_TEMP_FIELD_DEVOLUY }}
+
+          DATACAKE_TOKEN_MALBOUZON: ${{ secrets.DATACAKE_TOKEN_MALBOUZON }}
+          DATACAKE_DEVICE_ID_MALBOUZON: ${{ secrets.DATACAKE_DEVICE_ID_MALBOUZON }}
+          DATACAKE_TEMP_FIELD_MALBOUZON: ${{ secrets.DATACAKE_TEMP_FIELD_MALBOUZON }}
+
+          DATACAKE_TOKEN_MEJEAN: ${{ secrets.DATACAKE_TOKEN_MEJEAN }}
+          DATACAKE_DEVICE_ID_MEJEAN: ${{ secrets.DATACAKE_DEVICE_ID_MEJEAN }}
+          DATACAKE_TEMP_FIELD_MEJEAN: ${{ secrets.DATACAKE_TEMP_FIELD_MEJEAN }}
+
+          DATACAKE_TOKEN_PRAZ: ${{ secrets.DATACAKE_TOKEN_PRAZ }}
+          DATACAKE_DEVICE_ID_PRAZ: ${{ secrets.DATACAKE_DEVICE_ID_PRAZ }}
+          DATACAKE_TEMP_FIELD_PRAZ: ${{ secrets.DATACAKE_TEMP_FIELD_PRAZ }}
 
           # Ajouter ici les secrets des prochaines stations Datacake au même
           # format, + une entrée dans STATIONS (scripts/update_forecast.py et
