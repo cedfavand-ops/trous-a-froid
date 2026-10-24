@@ -112,6 +112,16 @@
     box-shadow:none !important;
   }
   .map-tooltip::before{border-top-color:var(--card) !important;}
+  .map-tooltip{padding:3px 7px !important; line-height:1.25;}
+  .mt-name{font-size:.62rem;color:var(--muted);font-weight:600;margin-bottom:2px;text-align:center;max-width:170px;overflow:hidden;text-overflow:ellipsis;}
+  .mt-row{display:flex;align-items:baseline;gap:4px;white-space:nowrap;}
+  .mt-day{font-size:.6rem;color:var(--muted);width:34px;text-transform:capitalize;}
+  .mt-tn{color:#4da3ff;font-weight:800;font-size:.95rem;}
+  .mt-tx{color:#ff2a2a;font-weight:800;font-size:.95rem;}
+  .mt-sep{color:var(--muted);font-size:.8rem;}
+  /* Fond de carte bleu sombre (teinte appliquée aux seules tuiles, pas aux étiquettes) */
+  #leaflet-map{background:#1b2a47;}
+  #leaflet-map .leaflet-tile-pane{filter:grayscale(1) invert(1) sepia(1) hue-rotate(185deg) saturate(2.5) brightness(2.6);}
   .leaflet-popup-content-wrapper{background:var(--card) !important; color:var(--text) !important; border-radius:10px !important;}
   .leaflet-popup-content{font-size:.82rem; line-height:1.5;}
   .leaflet-popup-tip{background:var(--card) !important;}
@@ -160,7 +170,7 @@
 
   <div id="map-view">
     <div id="leaflet-map"></div>
-    <div class="legend">Cliquer sur une station pour le détail jour par jour. Étiquette permanente : Tn / Tx de demain.</div>
+    <div class="legend">Cliquer sur une station pour le détail jour par jour. Étiquette permanente : Tn (bleu) / Tx (rouge) des prochains jours, en °C.</div>
   </div>
 
   <div id="synth-view">
@@ -504,6 +514,9 @@ async function load(){
   }
 }
 
+// Nombre de jours affichés dans l'étiquette permanente de chaque station sur la carte.
+const MAP_DAYS = 4;
+
 async function loadMap(){
   document.getElementById('error').innerHTML = '';
   if (!window._leafletMap) {
@@ -536,10 +549,13 @@ async function loadMap(){
     bounds.push([lat, lon]);
 
     const days = groupExtremesWMO(data.hours || []);
-    const tomorrow = days[0];
-    const tooltipLabel = (tomorrow && tomorrow.min !== null && tomorrow.max !== null)
-      ? `<b>${st.name}</b><br><span class="popup-tn">${Math.round(tomorrow.min)}°C</span> / <span class="popup-tx">${Math.round(tomorrow.max)}°C</span>`
-      : `<b>${st.name}</b><br>—`;
+    const rows = days.slice(0, MAP_DAYS).map(d => {
+      const lbl = d.d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', timeZone: 'UTC' });
+      const tn = d.min !== null ? d.min.toFixed(1) + '°C' : '—';
+      const tx = d.max !== null ? d.max.toFixed(1) + '°C' : '—';
+      return `<div class="mt-row"><span class="mt-day">${lbl}</span><span class="mt-tn">${tn}</span><span class="mt-sep">/</span><span class="mt-tx">${tx}</span></div>`;
+    }).join('');
+    const tooltipLabel = `<div class="mt-name">${st.name}</div>${rows || '<div class="mt-row">—</div>'}`;
 
     let popupHtml = `<b>${st.name}</b>${data.location.elevation_m ? ' · ' + data.location.elevation_m + ' m' : ''}<br><br>`;
     days.forEach(d => {
