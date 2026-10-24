@@ -9,17 +9,19 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   :root{
-    --bg:#0f172a; --card:#1e293b; --card2:#26334a; --text:#e2e8f0; --muted:#94a3b8;
-    --accent:#38bdf8; --cold:#60a5fa; --warm:#f87171; --line:#334155;
+    --bg:#1e2a41; --card:#2b3a55; --card2:#34476a; --text:#eef2f7; --muted:#a8b5c9;
+    --accent:#38bdf8; --cold:#60a5fa; --warm:#f87171; --line:#4a5d7c;
   }
   *{box-sizing:border-box;}
   body{
     margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    background:linear-gradient(180deg,var(--bg),#0b1220); color:var(--text); padding:16px;
+    background:linear-gradient(180deg,var(--bg),#16213a); color:var(--text); padding:16px;
   }
   header{max-width:1100px;margin:0 auto 14px;}
-  .logo{height:60px;margin-bottom:10px;display:block;}
-  h1{font-size:1.4rem;margin:0 0 4px;}
+  .logo{height:170px;max-width:100%;object-fit:contain;margin:0 auto 12px;display:block;}
+  header{text-align:center;}
+  header .meta{justify-content:center;}
+  h1{font-size:1.5rem;margin:0 0 4px;}
   .sub{color:var(--muted);font-size:.9rem;}
   .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;font-size:.82rem;color:var(--muted);}
   .meta span{background:var(--card);padding:4px 10px;border-radius:20px;}
@@ -50,14 +52,16 @@
   .clouds b{color:#93c5fd;font-weight:600;}
   .clouds .m{color:#a5b4fc;}
   .clouds .h{color:#c4b5fd;}
-  .temp{font-weight:700;font-size:1rem;}
+  .temp{font-weight:700;font-size:1.4rem;}
   .temp.corrected-cold{color:var(--cold);}
   .temp.corrected-cold::after{content:" *";color:var(--accent);}
   .temp.corrected-warm{color:var(--warm);}
   .temp.corrected-warm::after{content:" *";color:var(--accent);}
   .raw-strike{font-size:.7rem;color:var(--muted);text-decoration:line-through;display:block;}
-  .gust{color:#f472b6;font-size:.72rem;display:block;margin-top:1px;}
-  .wind-dir{display:inline-block;font-size:1.5rem;line-height:1;transition:transform .2s;}
+  .gust{font-size:.78rem;font-weight:700;display:block;margin-top:1px;}
+  .wspd{font-size:.95rem;font-weight:700;}
+  .wind-dir{display:inline-block;width:30px;height:30px;line-height:0;transition:transform .2s;}
+  .wind-dir svg{width:100%;height:100%;display:block;}
   .legend{font-size:.75rem;color:var(--muted);margin-top:10px;line-height:1.5;}
   .chart-card{background:var(--card);border-radius:14px;padding:16px;margin-top:20px;}
   .chart-card h2{font-size:1rem;margin:0 0 10px;color:var(--muted);font-weight:600;}
@@ -107,8 +111,7 @@
 <body>
 <header>
   <img class="logo" src="icons/logo.png" alt="Étude des trous à froid en France">
-  <h1>❄️ Trous à froid — Prévisions</h1>
-  <div class="sub">ICON-CH1 puis ICON-CH2 (MétéoSuisse via Open-Meteo) · 4 prochaines nuits · Températures nocturnes corrigées pour le trou à froid</div>
+  <h1>Prévisions trous à froid - Modèle ICON-CH1 puis ICON-CH2 corrigé</h1>
   <div class="meta" id="meta"></div>
 </header>
 
@@ -206,6 +209,13 @@ function windColor(speed){
   if(speed < 35) return '#fbbf24';
   return '#f87171';
 }
+function gustColor(g){
+  if(g < 20) return '#60a5fa';
+  if(g < 35) return '#34d399';
+  if(g < 55) return '#fbbf24';
+  return '#f87171';
+}
+const ARROW_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 1.5h6v10.5h4.8L12 22.5 4.2 12H9z"/></svg>';
 function fmtHour(iso){
   const d = new Date(iso);
   return d.toLocaleString('fr-FR', {weekday:'short', hour:'2-digit', minute:'2-digit'});
@@ -684,10 +694,10 @@ function render(data){
       <td>${fmtColoredTemp(h.temp_850hpa_c)}</td>
       <td>${fmtPrecip(h.rain_mm, h.snow_cm)}</td>
       <td>
-        ${Math.round(h.wind_speed)} km/h
-        ${h.wind_gusts ? `<span class="gust">raf. ${Math.round(h.wind_gusts)}</span>` : ''}
+        <span class="wspd" style="color:${windColor(h.wind_speed)}">${Math.round(h.wind_speed)}</span> km/h
+        ${h.wind_gusts ? `<span class="gust" style="color:${gustColor(h.wind_gusts)}">raf. ${Math.round(h.wind_gusts)}</span>` : ''}
       </td>
-      <td><span class="wind-dir" style="transform:rotate(${h.wind_dir}deg);color:${windColor(h.wind_speed)}">↓</span></td>
+      <td><span class="wind-dir" style="transform:rotate(${h.wind_dir}deg);color:${windColor(h.wind_speed)}">${ARROW_SVG}</span></td>
     `;
     tbody.appendChild(tr);
   });
