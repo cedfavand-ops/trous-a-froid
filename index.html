@@ -71,17 +71,29 @@
   .minmax{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
   .minmax-day{
     background:var(--card); border-radius:12px; padding:10px 16px; text-align:center;
-    min-width:100px; flex:1;
+    min-width:185px; flex:1;
   }
   .minmax-day .day-label{font-size:.75rem;color:var(--muted);text-transform:capitalize;margin-bottom:6px;}
-  .minmax-day .tn{color:var(--cold);font-weight:700;font-size:1.05rem;}
-  .minmax-day .tx{color:var(--warm);font-weight:700;font-size:1.05rem;}
-  .minmax-day .sep{color:var(--muted);margin:0 4px;}
+  .minmax-day .tn{color:#4da3ff;font-weight:800;font-size:1.3rem;white-space:nowrap;}
+  .minmax-day .tx{color:#ff2a2a;font-weight:800;font-size:1.3rem;white-space:nowrap;}
+  .minmax-day .sep{color:var(--muted);margin:0 6px;font-size:1.3rem;}
 
   #map-view{display:none;}
   #map-view.active{display:block;}
   #leaflet-map{height:520px; border-radius:14px; overflow:hidden; background:var(--card);}
 
+  #synth-view{display:none;}
+  #synth-view.active{display:block;}
+  .synth-table{min-width:0;}
+  .synth-table th{font-size:.82rem;text-transform:capitalize;}
+  .synth-table td.name{text-align:left;padding-left:12px;}
+  .synth-table td.name a{color:var(--text);text-decoration:none;font-weight:600;cursor:pointer;border-bottom:1px dotted var(--muted);}
+  .synth-table td.name small{display:block;color:var(--muted);font-weight:400;}
+  .synth-table .tn{color:#4da3ff;font-weight:800;font-size:1.05rem;}
+  .synth-table .tx{color:#ff2a2a;font-weight:800;font-size:1.05rem;}
+  .synth-table .sep{color:var(--muted);margin:0 3px;}
+  .synth-table td,.synth-table th{padding:8px 3px;}
+  .synth-table td.coldest{background:rgba(77,163,255,0.18);border-radius:8px;}
   #efento-view{display:none;}
   #efento-view.active{display:block;}
   .efento-cards{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
@@ -104,7 +116,7 @@
   .leaflet-popup-content{font-size:.82rem; line-height:1.5;}
   .leaflet-popup-tip{background:var(--card) !important;}
   .popup-tn{color:var(--cold); font-weight:700;}
-  .popup-tx{color:var(--warm); font-weight:700;}
+  .popup-tx{color:#ff2a2a; font-weight:700;}
   .err{background:#7f1d1d;color:#fecaca;padding:10px 14px;border-radius:10px;margin-bottom:14px;}
 </style>
 </head>
@@ -149,6 +161,16 @@
   <div id="map-view">
     <div id="leaflet-map"></div>
     <div class="legend">Cliquer sur une station pour le détail jour par jour. Étiquette permanente : Tn / Tx de demain.</div>
+  </div>
+
+  <div id="synth-view">
+    <div class="table-scroll">
+      <table class="synth-table">
+        <thead id="synth-head"></thead>
+        <tbody id="synth-rows"></tbody>
+      </table>
+    </div>
+    <div class="legend">Tn / Tx prévues (corrigées) de toutes les stations, par jour météo (Tn : 18h UTC → 18h UTC ; Tx : 6h UTC → 6h UTC). La case surlignée en bleu est la Tn la plus basse du jour parmi les stations. Cliquer sur un nom de station ouvre son détail.</div>
   </div>
 
   <div id="efento-view">
@@ -284,6 +306,12 @@ function renderTabs(){
     btn.onclick = () => { currentSlug = st.slug; renderTabs(); showStationView(); load(); };
     tabs.appendChild(btn);
   });
+  const synthBtn = document.createElement('button');
+  synthBtn.className = 'tab' + (currentSlug === 'SYNTH' ? ' active' : '');
+  synthBtn.textContent = '📋 Synthèse';
+  synthBtn.onclick = () => { currentSlug = 'SYNTH'; renderTabs(); showSynthView(); loadSynth(); };
+  tabs.appendChild(synthBtn);
+
   const mapBtn = document.createElement('button');
   mapBtn.className = 'tab' + (currentSlug === 'MAP' ? ' active' : '');
   mapBtn.textContent = '🗺️ Carte';
@@ -304,12 +332,84 @@ function renderTabs(){
 }
 
 function showStationView(){
+  document.getElementById('synth-view').classList.remove('active');
   document.getElementById('station-view').style.display = 'block';
   document.getElementById('map-view').classList.remove('active');
   document.getElementById('live-view').classList.remove('active');
   document.getElementById('efento-view').classList.remove('active');
 }
+function showSynthView(){
+  document.getElementById('station-view').style.display = 'none';
+  document.getElementById('map-view').classList.remove('active');
+  document.getElementById('live-view').classList.remove('active');
+  document.getElementById('efento-view').classList.remove('active');
+  document.getElementById('synth-view').classList.add('active');
+}
+async function loadSynth(){
+  const errBox = document.getElementById('error');
+  errBox.innerHTML = '';
+  const results = await Promise.allSettled(
+    STATIONS.map(st => fetch(`data/${st.slug}.json?_=` + Date.now()).then(r => {
+      if (!r.ok) throw new Error('introuvable');
+      return r.json();
+    }))
+  );
+  const perStation = [];
+  const dayKeys = new Set();
+  results.forEach((res, i) => {
+    const st = STATIONS[i];
+    if (res.status !== 'fulfilled') { perStation.push({ st, data: null, days: {} }); return; }
+    const data = res.value;
+    const days = {};
+    groupExtremesWMO(data.hours || []).forEach(d => { days[d.d.getTime()] = d; dayKeys.add(d.d.getTime()); });
+    perStation.push({ st, data, days });
+  });
+  const cols = Array.from(dayKeys).sort((a, b) => a - b);
+  const head = document.getElementById('synth-head');
+  head.innerHTML = '<tr><th style="text-align:left;padding-left:12px;">Station</th>' + cols.map(k =>
+    '<th>' + new Date(k).toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' }) + '</th>').join('') + '</tr>';
+
+  // Tn la plus basse de chaque jour (repère visuel)
+  const coldest = {};
+  cols.forEach(k => {
+    let best = null;
+    perStation.forEach(p => {
+      const d = p.days[k];
+      if (d && d.min !== null && (best === null || d.min < best)) best = d.min;
+    });
+    coldest[k] = best;
+  });
+
+  const body = document.getElementById('synth-rows');
+  body.innerHTML = '';
+  perStation.forEach(p => {
+    const tr = document.createElement('tr');
+    const alt = p.data && p.data.location && p.data.location.elevation_m ? p.data.location.elevation_m + ' m' : '';
+    const nameTd = document.createElement('td');
+    nameTd.className = 'name';
+    nameTd.innerHTML = `<a>${p.st.name}</a>${alt ? `<small>${alt}</small>` : ''}`;
+    nameTd.querySelector('a').onclick = () => { currentSlug = p.st.slug; renderTabs(); showStationView(); load(); };
+    tr.appendChild(nameTd);
+    cols.forEach(k => {
+      const d = p.days[k];
+      const td = document.createElement('td');
+      if (!d) { td.innerHTML = '<span style="color:var(--muted);">—</span>'; }
+      else {
+        const tn = d.min !== null ? d.min.toFixed(1) + '°C' : '—';
+        const tx = d.max !== null ? d.max.toFixed(1) + '°C' : '—';
+        td.innerHTML = `<span class="tn">${tn}</span><span class="sep">/</span><span class="tx">${tx}</span>`;
+        if (d.min !== null && coldest[k] !== null && d.min === coldest[k]) td.classList.add('coldest');
+      }
+      tr.appendChild(td);
+    });
+    body.appendChild(tr);
+  });
+  if (!perStation.some(p => p.data)) {
+    errBox.innerHTML = '<div class="err">Impossible de charger les prévisions des stations.</div>';
+  }
+}
 function showMapView(){
+  document.getElementById('synth-view').classList.remove('active');
   document.getElementById('station-view').style.display = 'none';
   document.getElementById('map-view').classList.add('active');
   document.getElementById('live-view').classList.remove('active');
@@ -317,6 +417,7 @@ function showMapView(){
   if (window._leafletMap) setTimeout(() => window._leafletMap.invalidateSize(), 50);
 }
 function showEfentoView(){
+  document.getElementById('synth-view').classList.remove('active');
   document.getElementById('station-view').style.display = 'none';
   document.getElementById('map-view').classList.remove('active');
   document.getElementById('live-view').classList.remove('active');
@@ -343,10 +444,10 @@ async function loadEfento(){
     const last = all.length ? all[all.length-1] : null;
     const fmt = (v, u) => (v === null || v === undefined) ? '—' : v.toFixed(1) + u;
     cards.innerHTML = `
-      <div class="efento-card"><div class="lbl">Tn du jour</div><div class="val" style="color:var(--cold)">${temps.length ? fmt(Math.min(...temps),'°') : '—'}</div></div>
-      <div class="efento-card"><div class="lbl">Tx du jour</div><div class="val" style="color:var(--warm)">${temps.length ? fmt(Math.max(...temps),'°') : '—'}</div></div>
+      <div class="efento-card"><div class="lbl">Tn du jour</div><div class="val" style="color:var(--cold)">${temps.length ? fmt(Math.min(...temps),'°C') : '—'}</div></div>
+      <div class="efento-card"><div class="lbl">Tx du jour</div><div class="val" style="color:var(--warm)">${temps.length ? fmt(Math.max(...temps),'°C') : '—'}</div></div>
       <div class="efento-card"><div class="lbl">Dernière mesure${last ? ' (' + last.t.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}) + ')' : ''}</div>
-        <div class="val">${last ? fmt(last.temp,'°') + ' · ' + fmt(last.hum,' %') : '—'}</div></div>`;
+        <div class="val">${last ? fmt(last.temp,'°C') + ' · ' + fmt(last.hum,' %') : '—'}</div></div>`;
     document.getElementById('efento-title').textContent = (data.name || 'Station Efento') + ' — aujourd\'hui';
 
     if(window._efChart) window._efChart.destroy();
@@ -379,6 +480,7 @@ async function loadEfento(){
 }
 
 function showLiveView(){
+  document.getElementById('synth-view').classList.remove('active');
   document.getElementById('station-view').style.display = 'none';
   document.getElementById('map-view').classList.remove('active');
   document.getElementById('live-view').classList.add('active');
@@ -436,14 +538,14 @@ async function loadMap(){
     const days = groupExtremesWMO(data.hours || []);
     const tomorrow = days[0];
     const tooltipLabel = (tomorrow && tomorrow.min !== null && tomorrow.max !== null)
-      ? `<b>${st.name}</b><br><span class="popup-tn">${Math.round(tomorrow.min)}°</span> / <span class="popup-tx">${Math.round(tomorrow.max)}°</span>`
+      ? `<b>${st.name}</b><br><span class="popup-tn">${Math.round(tomorrow.min)}°C</span> / <span class="popup-tx">${Math.round(tomorrow.max)}°C</span>`
       : `<b>${st.name}</b><br>—`;
 
     let popupHtml = `<b>${st.name}</b>${data.location.elevation_m ? ' · ' + data.location.elevation_m + ' m' : ''}<br><br>`;
     days.forEach(d => {
       const lbl = d.d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
-      const tnTxt = d.min !== null ? d.min.toFixed(1) + '°' : '—';
-      const txTxt = d.max !== null ? d.max.toFixed(1) + '°' : '—';
+      const tnTxt = d.min !== null ? d.min.toFixed(1) + '°C' : '—';
+      const txTxt = d.max !== null ? d.max.toFixed(1) + '°C' : '—';
       popupHtml += `${lbl} : <span class="popup-tn">${tnTxt}</span> / <span class="popup-tx">${txTxt}</span><br>`;
     });
 
@@ -500,7 +602,7 @@ async function loadLiveMap(){
     bounds.push([lat, lon]);
 
     const latest = data.live.latest;
-    const tooltipLabel = `<b>${st.name}</b><br><span class="live-tooltip-temp">${latest.temp_c.toFixed(1)}°</span>`;
+    const tooltipLabel = `<b>${st.name}</b><br><span class="live-tooltip-temp">${latest.temp_c.toFixed(1)}°C</span>`;
 
     const marker = L.marker([lat, lon]).addTo(window._leafletLiveMap);
     marker.bindTooltip(tooltipLabel, { permanent: true, direction: 'top', className: 'map-tooltip', offset: [0, -8] });
@@ -526,7 +628,7 @@ function showLiveDetail(st, data){
 
   let html = `<div class="chart-card">
     <h2>${st.name}${data.location.elevation_m ? ' · ' + data.location.elevation_m + ' m' : ''}
-      &nbsp;—&nbsp; dernière valeur : <span style="color:var(--accent);">${latest ? latest.temp_c.toFixed(1) + '°' : '—'}</span>
+      &nbsp;—&nbsp; dernière valeur : <span style="color:var(--accent);">${latest ? latest.temp_c.toFixed(1) + '°C' : '—'}</span>
       ${latestDate ? `<span style="color:var(--muted);font-weight:400;font-size:.78rem;"> (${latestDate.toLocaleString('fr-FR')})</span>` : ''}
     </h2>`;
 
@@ -538,7 +640,7 @@ function showLiveDetail(st, data){
         <thead><tr><th>Heure</th><th>Température mesurée</th></tr></thead>
         <tbody>`;
     recent.forEach(r => {
-      html += `<tr><td>${fmtHour(r.time)}</td><td class="temp">${r.temp_c.toFixed(1)}°</td></tr>`;
+      html += `<tr><td>${fmtHour(r.time)}</td><td class="temp">${r.temp_c.toFixed(1)}°C</td></tr>`;
     });
     html += `</tbody></table></div>`;
   }
@@ -555,8 +657,8 @@ function renderMinMax(hours){
   const box = document.getElementById('minmax');
   box.innerHTML = days.map(({ d, min, max }) => {
     const label = d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
-    const tnTxt = min !== null ? min.toFixed(1) + '°' : '—';
-    const txTxt = max !== null ? max.toFixed(1) + '°' : '—';
+    const tnTxt = min !== null ? min.toFixed(1) + '°C' : '—';
+    const txTxt = max !== null ? max.toFixed(1) + '°C' : '—';
     return `<div class="minmax-day">
       <div class="day-label">${label}</div>
       <span class="tn">${tnTxt}</span><span class="sep">/</span><span class="tx">${txTxt}</span>
@@ -583,7 +685,7 @@ function fmtVerifSpan(label, verif, forecastKey, observedKey){
   }
   const sign = verif.diff_c >= 0 ? '+' : '';
   return `<span>${label} : <b style="color:${verifColor(verif.diff_c)}">${sign}${verif.diff_c.toFixed(1)} °C</b>` +
-    ` <span style="color:var(--muted);">(prévu ${verif[forecastKey].toFixed(1)}° / mesuré ${verif[observedKey].toFixed(1)}°)</span></span>`;
+    ` <span style="color:var(--muted);">(prévu ${verif[forecastKey].toFixed(1)}°C / mesuré ${verif[observedKey].toFixed(1)}°C)</span></span>`;
 }
 
 // Rampe de couleurs continue pour les températures (point de rosée, T850) :
@@ -608,7 +710,7 @@ function tempColor(v){
 }
 function fmtColoredTemp(v){
   if (v === null || v === undefined) return '—';
-  return `<span style="color:${tempColor(v)};font-weight:600;">${v.toFixed(1)}°</span>`;
+  return `<span style="color:${tempColor(v)};font-weight:600;">${v.toFixed(1)}°C</span>`;
 }
 // Pluie (mm/h) en bleu, neige (cm/h) en violet clair ; l'intensité augmente avec la quantité.
 function fmtPrecip(rainMm, snowCm){
@@ -686,8 +788,8 @@ function render(data){
               const correctedClass = h.corrected
                 ? (h.correction_offset_c !== null && h.correction_offset_c > 0 ? 'corrected-warm' : 'corrected-cold')
                 : '';
-              return `<span class="temp ${correctedClass}">${h.temp_corrected.toFixed(1)}°</span>
-                ${h.corrected && h.temp_raw !== null && h.temp_raw !== undefined ? `<span class="raw-strike">modèle brut ${h.temp_raw.toFixed(1)}°</span>` : ''}`;
+              return `<span class="temp ${correctedClass}">${h.temp_corrected.toFixed(1)}°C</span>
+                ${h.corrected && h.temp_raw !== null && h.temp_raw !== undefined ? `<span class="raw-strike">modèle brut ${h.temp_raw.toFixed(1)}°C</span>` : ''}`;
             })()}
       </td>
       <td>${fmtColoredTemp(h.dew_point_c)}</td>
