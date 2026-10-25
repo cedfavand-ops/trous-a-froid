@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-25T15:53:13.222422+01:00",
+  "generated_at": "2026-10-25T19:13:20.076974+01:00",
   "run_time": "2026-10-23T00:00:00+02:00",
   "location": {
     "name": "Vallon d'Âne - Le Dévoluy",
@@ -32,8 +32,8 @@
       "8": 0.18
     },
     "alpha": 0.25,
-    "last_day_error_c": 0.7,
-    "last_day_samples": 1
+    "last_day_error_c": null,
+    "last_day_samples": 0
   },
   "snow": {
     "show": true,
@@ -50,151 +50,19 @@
       "diff_c": -1.2
     },
     "day": {
-      "day": "2026-10-24",
-      "forecast_tx_c": 1.9,
-      "observed_tx_c": 2.6,
+      "day": "2026-10-25",
+      "forecast_tx_c": 8.1,
+      "observed_tx_c": 8.8,
       "diff_c": -0.7
     }
   },
   "live": {
     "available": true,
     "latest": {
-      "time": "2026-10-25T15:52:41+01:00",
-      "temp_c": 8.3
+      "time": "2026-10-25T18:52:41+01:00",
+      "temp_c": 7.2
     },
     "recent": [
-      {
-        "time": "2026-10-23T15:53:45+02:00",
-        "temp_c": 5.1
-      },
-      {
-        "time": "2026-10-23T15:57:02+02:00",
-        "temp_c": 5.3
-      },
-      {
-        "time": "2026-10-23T16:02:02+02:00",
-        "temp_c": 5.6
-      },
-      {
-        "time": "2026-10-23T16:07:02+02:00",
-        "temp_c": 5.6
-      },
-      {
-        "time": "2026-10-23T16:12:02+02:00",
-        "temp_c": 5.4
-      },
-      {
-        "time": "2026-10-23T16:17:02+02:00",
-        "temp_c": 5.5
-      },
-      {
-        "time": "2026-10-23T16:22:02+02:00",
-        "temp_c": 5.3
-      },
-      {
-        "time": "2026-10-23T16:23:56+02:00",
-        "temp_c": 5.3
-      },
-      {
-        "time": "2026-10-23T16:27:02+02:00",
-        "temp_c": 5.2
-      },
-      {
-        "time": "2026-10-23T16:32:02+02:00",
-        "temp_c": 5.1
-      },
-      {
-        "time": "2026-10-23T16:37:02+02:00",
-        "temp_c": 5.0
-      },
-      {
-        "time": "2026-10-23T16:42:02+02:00",
-        "temp_c": 5.0
-      },
-      {
-        "time": "2026-10-23T16:47:02+02:00",
-        "temp_c": 4.9
-      },
-      {
-        "time": "2026-10-23T16:52:02+02:00",
-        "temp_c": 4.8
-      },
-      {
-        "time": "2026-10-23T16:53:44+02:00",
-        "temp_c": 5.2
-      },
-      {
-        "time": "2026-10-23T17:57:02+02:00",
-        "temp_c": 4.3
-      },
-      {
-        "time": "2026-10-23T18:02:02+02:00",
-        "temp_c": 4.4
-      },
-      {
-        "time": "2026-10-23T18:07:02+02:00",
-        "temp_c": 4.5
-      },
-      {
-        "time": "2026-10-23T18:12:02+02:00",
-        "temp_c": 4.3
-      },
-      {
-        "time": "2026-10-23T18:17:02+02:00",
-        "temp_c": 4.1
-      },
-      {
-        "time": "2026-10-23T18:22:02+02:00",
-        "temp_c": 4.3
-      },
-      {
-        "time": "2026-10-23T18:23:32+02:00",
-        "temp_c": 4.3
-      },
-      {
-        "time": "2026-10-23T18:27:02+02:00",
-        "temp_c": 4.2
-      },
-      {
-        "time": "2026-10-23T18:32:02+02:00",
-        "temp_c": 4.1
-      },
-      {
-        "time": "2026-10-23T18:37:02+02:00",
-        "temp_c": 3.9
-      },
-      {
-        "time": "2026-10-23T18:42:02+02:00",
-        "temp_c": 4.0
-      },
-      {
-        "time": "2026-10-23T18:47:02+02:00",
-        "temp_c": 3.9
-      },
-      {
-        "time": "2026-10-23T18:52:02+02:00",
-        "temp_c": 3.9
-      },
-      {
-        "time": "2026-10-23T18:52:42+02:00",
-        "temp_c": 4.2
-      },
-      {
-        "time": "2026-10-23T18:57:02+02:00",
-        "temp_c": 4.1
-      },
-      {
-        "time": "2026-10-23T19:02:02+02:00",
-        "temp_c": 4.2
-      },
-      {
-        "time": "2026-10-23T19:07:02+02:00",
-        "temp_c": 4.1
-      },
-      {
-        "time": "2026-10-23T19:12:02+02:00",
-        "temp_c": 4.0
-      },
       {
         "time": "2026-10-23T19:17:02+02:00",
         "temp_c": 4.1
@@ -2670,132 +2538,300 @@
       {
         "time": "2026-10-25T15:52:41+01:00",
         "temp_c": 8.3
+      },
+      {
+        "time": "2026-10-25T15:57:02+01:00",
+        "temp_c": 8.7
+      },
+      {
+        "time": "2026-10-25T16:02:02+01:00",
+        "temp_c": 8.8
+      },
+      {
+        "time": "2026-10-25T16:07:02+01:00",
+        "temp_c": 8.6
+      },
+      {
+        "time": "2026-10-25T16:12:02+01:00",
+        "temp_c": 8.1
+      },
+      {
+        "time": "2026-10-25T16:17:02+01:00",
+        "temp_c": 8.7
+      },
+      {
+        "time": "2026-10-25T16:22:02+01:00",
+        "temp_c": 8.7
+      },
+      {
+        "time": "2026-10-25T16:22:40+01:00",
+        "temp_c": 8.7
+      },
+      {
+        "time": "2026-10-25T16:27:02+01:00",
+        "temp_c": 8.6
+      },
+      {
+        "time": "2026-10-25T16:32:02+01:00",
+        "temp_c": 8.6
+      },
+      {
+        "time": "2026-10-25T16:37:02+01:00",
+        "temp_c": 8.5
+      },
+      {
+        "time": "2026-10-25T16:42:02+01:00",
+        "temp_c": 8.5
+      },
+      {
+        "time": "2026-10-25T16:47:02+01:00",
+        "temp_c": 8.0
+      },
+      {
+        "time": "2026-10-25T16:52:02+01:00",
+        "temp_c": 7.7
+      },
+      {
+        "time": "2026-10-25T16:52:41+01:00",
+        "temp_c": 8.6
+      },
+      {
+        "time": "2026-10-25T16:57:02+01:00",
+        "temp_c": 7.6
+      },
+      {
+        "time": "2026-10-25T17:02:02+01:00",
+        "temp_c": 7.5
+      },
+      {
+        "time": "2026-10-25T17:07:02+01:00",
+        "temp_c": 7.5
+      },
+      {
+        "time": "2026-10-25T17:12:02+01:00",
+        "temp_c": 7.6
+      },
+      {
+        "time": "2026-10-25T17:17:02+01:00",
+        "temp_c": 7.7
+      },
+      {
+        "time": "2026-10-25T17:22:02+01:00",
+        "temp_c": 7.4
+      },
+      {
+        "time": "2026-10-25T17:22:41+01:00",
+        "temp_c": 7.6
+      },
+      {
+        "time": "2026-10-25T17:27:02+01:00",
+        "temp_c": 7.5
+      },
+      {
+        "time": "2026-10-25T17:32:02+01:00",
+        "temp_c": 7.4
+      },
+      {
+        "time": "2026-10-25T17:37:02+01:00",
+        "temp_c": 7.5
+      },
+      {
+        "time": "2026-10-25T17:42:02+01:00",
+        "temp_c": 7.4
+      },
+      {
+        "time": "2026-10-25T17:47:02+01:00",
+        "temp_c": 7.4
+      },
+      {
+        "time": "2026-10-25T17:52:02+01:00",
+        "temp_c": 7.3
+      },
+      {
+        "time": "2026-10-25T17:52:40+01:00",
+        "temp_c": 7.5
+      },
+      {
+        "time": "2026-10-25T17:57:02+01:00",
+        "temp_c": 7.3
+      },
+      {
+        "time": "2026-10-25T18:02:02+01:00",
+        "temp_c": 7.3
+      },
+      {
+        "time": "2026-10-25T18:07:02+01:00",
+        "temp_c": 7.3
+      },
+      {
+        "time": "2026-10-25T18:12:02+01:00",
+        "temp_c": 7.3
+      },
+      {
+        "time": "2026-10-25T18:17:02+01:00",
+        "temp_c": 7.2
+      },
+      {
+        "time": "2026-10-25T18:22:02+01:00",
+        "temp_c": 7.2
+      },
+      {
+        "time": "2026-10-25T18:22:40+01:00",
+        "temp_c": 7.3
+      },
+      {
+        "time": "2026-10-25T18:27:02+01:00",
+        "temp_c": 7.2
+      },
+      {
+        "time": "2026-10-25T18:32:02+01:00",
+        "temp_c": 7.2
+      },
+      {
+        "time": "2026-10-25T18:37:02+01:00",
+        "temp_c": 7.4
+      },
+      {
+        "time": "2026-10-25T18:42:02+01:00",
+        "temp_c": 7.3
+      },
+      {
+        "time": "2026-10-25T18:47:02+01:00",
+        "temp_c": 7.2
+      },
+      {
+        "time": "2026-10-25T18:52:02+01:00",
+        "temp_c": 7.2
+      },
+      {
+        "time": "2026-10-25T18:52:41+01:00",
+        "temp_c": 7.2
       }
     ]
   },
   "hours": [
     {
       "time": "2026-10-25T18:00:00+01:00",
-      "temp_raw": 6.5,
-      "temp_corrected": 6.5,
+      "temp_raw": 5.9,
+      "temp_corrected": 5.9,
       "corrected": false,
       "correction_period": "night",
       "correction_offset_c": null,
       "clarity": 0.0,
-      "wind_speed": 23.0,
-      "wind_gusts": 45.7,
-      "wind_dir": 328,
+      "wind_speed": 12.8,
+      "wind_gusts": 25.6,
+      "wind_dir": 350,
       "cloud_cover": 100,
       "cloud_cover_low": 100,
-      "cloud_cover_mid": 66,
+      "cloud_cover_mid": 93,
       "cloud_cover_high": 0,
-      "dew_point_c": 6.5,
-      "temp_850hpa_c": 9.4,
-      "rain_mm": 0.1,
-      "snow_cm": 0,
-      "picto": "couvert"
-    },
-    {
-      "time": "2026-10-25T19:00:00+01:00",
-      "temp_raw": 6.2,
-      "temp_corrected": 6.2,
-      "corrected": false,
-      "correction_period": "night",
-      "correction_offset_c": null,
-      "clarity": 0.0,
-      "wind_speed": 17.9,
-      "wind_gusts": 43.9,
-      "wind_dir": 335,
-      "cloud_cover": 97,
-      "cloud_cover_low": 94,
-      "cloud_cover_mid": 32,
-      "cloud_cover_high": 0,
-      "dew_point_c": 6.2,
-      "temp_850hpa_c": 9.3,
+      "dew_point_c": 5.2,
+      "temp_850hpa_c": 9.5,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
     },
     {
-      "time": "2026-10-25T20:00:00+01:00",
+      "time": "2026-10-25T19:00:00+01:00",
       "temp_raw": 5.7,
       "temp_corrected": 5.7,
       "corrected": false,
       "correction_period": "night",
       "correction_offset_c": null,
       "clarity": 0.0,
-      "wind_speed": 25.6,
-      "wind_gusts": 48.6,
-      "wind_dir": 340,
-      "cloud_cover": 85,
-      "cloud_cover_low": 85,
+      "wind_speed": 15.2,
+      "wind_gusts": 28.8,
+      "wind_dir": 346,
+      "cloud_cover": 94,
+      "cloud_cover_low": 89,
+      "cloud_cover_mid": 34,
+      "cloud_cover_high": 0,
+      "dew_point_c": 5.6,
+      "temp_850hpa_c": 9.4,
+      "rain_mm": 0,
+      "snow_cm": 0,
+      "picto": "couvert"
+    },
+    {
+      "time": "2026-10-25T20:00:00+01:00",
+      "temp_raw": 5.6,
+      "temp_corrected": 5.6,
+      "corrected": false,
+      "correction_period": "night",
+      "correction_offset_c": null,
+      "clarity": 0.0,
+      "wind_speed": 21.2,
+      "wind_gusts": 40.3,
+      "wind_dir": 339,
+      "cloud_cover": 99,
+      "cloud_cover_low": 99,
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
-      "dew_point_c": 5.7,
-      "temp_850hpa_c": 8.8,
+      "dew_point_c": 5.6,
+      "temp_850hpa_c": 9.1,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
     },
     {
       "time": "2026-10-25T21:00:00+01:00",
-      "temp_raw": 4.6,
-      "temp_corrected": 4.6,
+      "temp_raw": 4.9,
+      "temp_corrected": 4.9,
       "corrected": false,
       "correction_period": "night",
       "correction_offset_c": null,
       "clarity": 0.0,
-      "wind_speed": 24.6,
-      "wind_gusts": 54.7,
-      "wind_dir": 345,
+      "wind_speed": 24.1,
+      "wind_gusts": 50.0,
+      "wind_dir": 343,
       "cloud_cover": 100,
       "cloud_cover_low": 100,
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
-      "dew_point_c": 4.6,
-      "temp_850hpa_c": 8.1,
+      "dew_point_c": 4.9,
+      "temp_850hpa_c": 8.4,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
     },
     {
       "time": "2026-10-25T22:00:00+01:00",
-      "temp_raw": 3.5,
-      "temp_corrected": 3.2,
+      "temp_raw": 3.9,
+      "temp_corrected": 3.6,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -0.27,
-      "clarity": 0.24,
-      "wind_speed": 13.4,
+      "correction_offset_c": -0.28,
+      "clarity": 0.25,
+      "wind_speed": 16.0,
       "wind_gusts": 46.4,
-      "wind_dir": 329,
-      "cloud_cover": 63,
-      "cloud_cover_low": 63,
+      "wind_dir": 337,
+      "cloud_cover": 88,
+      "cloud_cover_low": 88,
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
-      "dew_point_c": 2.6,
-      "temp_850hpa_c": 7.6,
+      "dew_point_c": 3.8,
+      "temp_850hpa_c": 7.7,
       "rain_mm": 0,
       "snow_cm": 0,
-      "picto": "tres-nuageux"
+      "picto": "couvert"
     },
     {
       "time": "2026-10-25T23:00:00+01:00",
-      "temp_raw": 2.6,
-      "temp_corrected": 1.2,
+      "temp_raw": 3.2,
+      "temp_corrected": 1.7,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -1.43,
-      "clarity": 0.73,
-      "wind_speed": 10.4,
-      "wind_gusts": 25.2,
-      "wind_dir": 314,
-      "cloud_cover": 6,
+      "correction_offset_c": -1.49,
+      "clarity": 0.75,
+      "wind_speed": 9.4,
+      "wind_gusts": 30.6,
+      "wind_dir": 317,
+      "cloud_cover": 11,
       "cloud_cover_low": 0,
       "cloud_cover_mid": 0,
-      "cloud_cover_high": 6,
-      "dew_point_c": 0.2,
-      "temp_850hpa_c": 7.0,
+      "cloud_cover_high": 11,
+      "dew_point_c": 1.3,
+      "temp_850hpa_c": 7.2,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -2803,83 +2839,83 @@
     {
       "time": "2026-10-26T00:00:00+01:00",
       "temp_raw": 2.6,
-      "temp_corrected": -1.9,
+      "temp_corrected": -2.0,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -4.51,
-      "clarity": 0.99,
-      "wind_speed": 8.4,
-      "wind_gusts": 19.1,
-      "wind_dir": 310,
+      "correction_offset_c": -4.64,
+      "clarity": 1.0,
+      "wind_speed": 6.9,
+      "wind_gusts": 17.3,
+      "wind_dir": 317,
       "cloud_cover": 100,
       "cloud_cover_low": 0,
       "cloud_cover_mid": 0,
       "cloud_cover_high": 100,
-      "dew_point_c": -2.1,
-      "temp_850hpa_c": 7.0,
+      "dew_point_c": -2.0,
+      "temp_850hpa_c": 7.1,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "voile"
     },
     {
       "time": "2026-10-26T01:00:00+01:00",
-      "temp_raw": 2.8,
-      "temp_corrected": -3.5,
+      "temp_raw": 2.7,
+      "temp_corrected": -3.7,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -6.35,
+      "correction_offset_c": -6.41,
       "clarity": 1.0,
-      "wind_speed": 7.6,
-      "wind_gusts": 15.8,
-      "wind_dir": 315,
-      "cloud_cover": 100,
+      "wind_speed": 6.9,
+      "wind_gusts": 13.0,
+      "wind_dir": 317,
+      "cloud_cover": 4,
       "cloud_cover_low": 0,
       "cloud_cover_mid": 0,
-      "cloud_cover_high": 100,
-      "dew_point_c": -4.5,
-      "temp_850hpa_c": 7.6,
+      "cloud_cover_high": 4,
+      "dew_point_c": -4.4,
+      "temp_850hpa_c": 7.5,
       "rain_mm": 0,
       "snow_cm": 0,
-      "picto": "voile"
+      "picto": "clair"
     },
     {
       "time": "2026-10-26T02:00:00+01:00",
-      "temp_raw": 2.6,
-      "temp_corrected": -5.0,
+      "temp_raw": 2.5,
+      "temp_corrected": -5.1,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -7.55,
+      "correction_offset_c": -7.59,
       "clarity": 1.0,
-      "wind_speed": 7.2,
-      "wind_gusts": 13.7,
-      "wind_dir": 307,
+      "wind_speed": 6.4,
+      "wind_gusts": 11.9,
+      "wind_dir": 308,
       "cloud_cover": 0,
       "cloud_cover_low": 0,
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
-      "dew_point_c": -6.9,
-      "temp_850hpa_c": 8.2,
+      "dew_point_c": -6.4,
+      "temp_850hpa_c": 7.8,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
     },
     {
       "time": "2026-10-26T03:00:00+01:00",
-      "temp_raw": 2.8,
-      "temp_corrected": -5.6,
+      "temp_raw": 2.6,
+      "temp_corrected": -5.8,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -8.36,
+      "correction_offset_c": -8.38,
       "clarity": 1.0,
-      "wind_speed": 7.2,
-      "wind_gusts": 12.6,
-      "wind_dir": 297,
+      "wind_speed": 6.9,
+      "wind_gusts": 11.5,
+      "wind_dir": 298,
       "cloud_cover": 0,
       "cloud_cover_low": 0,
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
-      "dew_point_c": -9.4,
-      "temp_850hpa_c": 8.4,
+      "dew_point_c": -8.9,
+      "temp_850hpa_c": 8.1,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -2890,28 +2926,28 @@
       "temp_corrected": -5.8,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -8.9,
+      "correction_offset_c": -8.92,
       "clarity": 1.0,
-      "wind_speed": 5.6,
-      "wind_gusts": 12.2,
-      "wind_dir": 297,
+      "wind_speed": 6.0,
+      "wind_gusts": 11.5,
+      "wind_dir": 295,
       "cloud_cover": 0,
       "cloud_cover_low": 0,
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
-      "dew_point_c": -10.6,
-      "temp_850hpa_c": 8.7,
+      "dew_point_c": -10.8,
+      "temp_850hpa_c": 8.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
     },
     {
       "time": "2026-10-26T05:00:00+01:00",
-      "temp_raw": 3.8,
-      "temp_corrected": -5.5,
+      "temp_raw": 3.7,
+      "temp_corrected": -5.6,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -9.26,
+      "correction_offset_c": -9.27,
       "clarity": 1.0,
       "wind_speed": 3.8,
       "wind_gusts": 8.6,
@@ -2920,7 +2956,7 @@
       "cloud_cover_low": 0,
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
-      "dew_point_c": -11.1,
+      "dew_point_c": -11.3,
       "temp_850hpa_c": 8.8,
       "rain_mm": 0,
       "snow_cm": 0,
@@ -2928,21 +2964,21 @@
     },
     {
       "time": "2026-10-26T06:00:00+01:00",
-      "temp_raw": 3.5,
-      "temp_corrected": -6.0,
+      "temp_raw": 3.6,
+      "temp_corrected": -5.9,
       "corrected": true,
       "correction_period": "night",
       "correction_offset_c": -9.51,
       "clarity": 1.0,
-      "wind_speed": 1.8,
-      "wind_gusts": 4.7,
-      "wind_dir": 323,
+      "wind_speed": 1.5,
+      "wind_gusts": 5.0,
+      "wind_dir": 315,
       "cloud_cover": 20,
       "cloud_cover_low": 0,
       "cloud_cover_mid": 0,
       "cloud_cover_high": 20,
-      "dew_point_c": -10.2,
-      "temp_850hpa_c": 8.8,
+      "dew_point_c": -10.7,
+      "temp_850hpa_c": 9.1,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -2956,14 +2992,14 @@
       "correction_offset_c": -9.67,
       "clarity": 1.0,
       "wind_speed": 1.3,
-      "wind_gusts": 2.2,
+      "wind_gusts": 1.8,
       "wind_dir": 236,
       "cloud_cover": 0,
       "cloud_cover_low": 0,
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
-      "dew_point_c": -11.0,
-      "temp_850hpa_c": 8.8,
+      "dew_point_c": -11.6,
+      "temp_850hpa_c": 8.9,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -2983,16 +3019,16 @@
       "cloud_cover_low": 0,
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
-      "dew_point_c": -12.4,
-      "temp_850hpa_c": 9.5,
+      "dew_point_c": -12.9,
+      "temp_850hpa_c": 9.7,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
     },
     {
       "time": "2026-10-26T09:00:00+01:00",
-      "temp_raw": 5.1,
-      "temp_corrected": 5.1,
+      "temp_raw": 4.9,
+      "temp_corrected": 4.9,
       "corrected": false,
       "correction_period": "day",
       "correction_offset_c": 0.0,
@@ -3004,7 +3040,7 @@
       "cloud_cover_low": 0,
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
-      "dew_point_c": -10.6,
+      "dew_point_c": -9.5,
       "temp_850hpa_c": 10.3,
       "rain_mm": 0,
       "snow_cm": 0,
@@ -3012,8 +3048,8 @@
     },
     {
       "time": "2026-10-26T10:00:00+01:00",
-      "temp_raw": 6.5,
-      "temp_corrected": 6.5,
+      "temp_raw": 6.3,
+      "temp_corrected": 6.3,
       "corrected": false,
       "correction_period": "day",
       "correction_offset_c": 0.0,
@@ -3021,32 +3057,32 @@
       "wind_speed": 5.1,
       "wind_gusts": 9.4,
       "wind_dir": 98,
-      "cloud_cover": 16,
+      "cloud_cover": 0,
       "cloud_cover_low": 0,
-      "cloud_cover_mid": 16,
+      "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
-      "dew_point_c": -8.2,
-      "temp_850hpa_c": 10.6,
+      "dew_point_c": -7.7,
+      "temp_850hpa_c": 10.5,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
     },
     {
       "time": "2026-10-26T11:00:00+01:00",
-      "temp_raw": 8.0,
-      "temp_corrected": 8.0,
+      "temp_raw": 7.8,
+      "temp_corrected": 7.8,
       "corrected": false,
       "correction_period": "day",
       "correction_offset_c": 0.0,
       "clarity": 0.51,
-      "wind_speed": 5.1,
+      "wind_speed": 4.7,
       "wind_gusts": 10.4,
-      "wind_dir": 98,
+      "wind_dir": 99,
       "cloud_cover": 36,
       "cloud_cover_low": 0,
       "cloud_cover_mid": 36,
       "cloud_cover_high": 0,
-      "dew_point_c": -5.5,
+      "dew_point_c": -5.0,
       "temp_850hpa_c": 10.9,
       "rain_mm": 0,
       "snow_cm": 0,
@@ -3054,168 +3090,168 @@
     },
     {
       "time": "2026-10-26T12:00:00+01:00",
-      "temp_raw": 9.4,
-      "temp_corrected": 9.4,
+      "temp_raw": 9.0,
+      "temp_corrected": 9.0,
       "corrected": false,
       "correction_period": "day",
       "correction_offset_c": 0.0,
-      "clarity": 0.42,
+      "clarity": 0.4,
       "wind_speed": 4.4,
-      "wind_gusts": 9.4,
+      "wind_gusts": 9.0,
       "wind_dir": 81,
       "cloud_cover": 37,
       "cloud_cover_low": 0,
       "cloud_cover_mid": 37,
       "cloud_cover_high": 0,
-      "dew_point_c": -7.4,
-      "temp_850hpa_c": 11.5,
+      "dew_point_c": -2.4,
+      "temp_850hpa_c": 11.6,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "peu-nuageux"
     },
     {
       "time": "2026-10-26T13:00:00+01:00",
-      "temp_raw": 9.8,
-      "temp_corrected": 9.8,
+      "temp_raw": 9.6,
+      "temp_corrected": 9.6,
       "corrected": false,
       "correction_period": "day",
       "correction_offset_c": 0.0,
-      "clarity": 0.42,
+      "clarity": 0.38,
       "wind_speed": 4.5,
       "wind_gusts": 9.4,
       "wind_dir": 61,
-      "cloud_cover": 32,
+      "cloud_cover": 34,
       "cloud_cover_low": 0,
-      "cloud_cover_mid": 27,
+      "cloud_cover_mid": 29,
       "cloud_cover_high": 8,
-      "dew_point_c": -3.9,
-      "temp_850hpa_c": 11.9,
+      "dew_point_c": -3.7,
+      "temp_850hpa_c": 12.2,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "peu-nuageux"
     },
     {
       "time": "2026-10-26T14:00:00+01:00",
-      "temp_raw": 10.0,
-      "temp_corrected": 10.0,
+      "temp_raw": 9.8,
+      "temp_corrected": 9.8,
       "corrected": false,
       "correction_period": "day",
       "correction_offset_c": 0.0,
-      "clarity": 0.19,
-      "wind_speed": 4.3,
+      "clarity": 0.15,
+      "wind_speed": 4.8,
       "wind_gusts": 10.1,
-      "wind_dir": 66,
+      "wind_dir": 63,
       "cloud_cover": 71,
       "cloud_cover_low": 0,
       "cloud_cover_mid": 67,
-      "cloud_cover_high": 18,
+      "cloud_cover_high": 20,
       "dew_point_c": -3.6,
-      "temp_850hpa_c": 12.3,
+      "temp_850hpa_c": 12.7,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "tres-nuageux"
     },
     {
       "time": "2026-10-26T15:00:00+01:00",
-      "temp_raw": 9.6,
-      "temp_corrected": 9.6,
+      "temp_raw": 9.5,
+      "temp_corrected": 9.5,
       "corrected": false,
       "correction_period": "day",
-      "correction_offset_c": 0.0,
-      "clarity": 0.04,
-      "wind_speed": 3.6,
-      "wind_gusts": 9.7,
-      "wind_dir": 84,
-      "cloud_cover": 44,
+      "correction_offset_c": null,
+      "clarity": 0.0,
+      "wind_speed": 3.3,
+      "wind_gusts": 9.4,
+      "wind_dir": 77,
+      "cloud_cover": 48,
       "cloud_cover_low": 0,
-      "cloud_cover_mid": 42,
-      "cloud_cover_high": 8,
-      "dew_point_c": -0.8,
-      "temp_850hpa_c": 12.6,
+      "cloud_cover_mid": 49,
+      "cloud_cover_high": 9,
+      "dew_point_c": -0.1,
+      "temp_850hpa_c": 12.9,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "peu-nuageux"
     },
     {
       "time": "2026-10-26T16:00:00+01:00",
-      "temp_raw": 8.7,
-      "temp_corrected": 8.7,
+      "temp_raw": 8.6,
+      "temp_corrected": 8.6,
       "corrected": false,
       "correction_period": "day",
-      "correction_offset_c": 0.0,
-      "clarity": 0.03,
-      "wind_speed": 5.4,
+      "correction_offset_c": null,
+      "clarity": 0.0,
+      "wind_speed": 5.2,
       "wind_gusts": 9.4,
-      "wind_dir": 110,
-      "cloud_cover": 77,
+      "wind_dir": 115,
+      "cloud_cover": 75,
       "cloud_cover_low": 0,
-      "cloud_cover_mid": 68,
-      "cloud_cover_high": 43,
-      "dew_point_c": 0.2,
-      "temp_850hpa_c": 12.3,
+      "cloud_cover_mid": 67,
+      "cloud_cover_high": 41,
+      "dew_point_c": 0.4,
+      "temp_850hpa_c": 12.7,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "tres-nuageux"
     },
     {
       "time": "2026-10-26T17:00:00+01:00",
-      "temp_raw": 8.3,
-      "temp_corrected": 7.2,
+      "temp_raw": 8.1,
+      "temp_corrected": 7.0,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -1.05,
-      "clarity": 0.96,
+      "correction_offset_c": -1.1,
+      "clarity": 1.0,
       "wind_speed": 5.4,
       "wind_gusts": 9.7,
-      "wind_dir": 132,
-      "cloud_cover": 23,
+      "wind_dir": 127,
+      "cloud_cover": 5,
       "cloud_cover_low": 0,
-      "cloud_cover_mid": 21,
-      "cloud_cover_high": 6,
-      "dew_point_c": -6.3,
-      "temp_850hpa_c": 12.1,
-      "rain_mm": 0,
-      "snow_cm": 0,
-      "picto": "peu-nuageux"
-    },
-    {
-      "time": "2026-10-26T18:00:00+01:00",
-      "temp_raw": 7.3,
-      "temp_corrected": 2.9,
-      "corrected": true,
-      "correction_period": "night",
-      "correction_offset_c": -4.41,
-      "clarity": 0.98,
-      "wind_speed": 5.0,
-      "wind_gusts": 8.3,
-      "wind_dir": 150,
-      "cloud_cover": 16,
-      "cloud_cover_low": 0,
-      "cloud_cover_mid": 14,
-      "cloud_cover_high": 2,
-      "dew_point_c": -11.4,
-      "temp_850hpa_c": 11.9,
+      "cloud_cover_mid": 0,
+      "cloud_cover_high": 5,
+      "dew_point_c": -6.0,
+      "temp_850hpa_c": 12.2,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
     },
     {
-      "time": "2026-10-26T19:00:00+01:00",
-      "temp_raw": 8.0,
-      "temp_corrected": 1.7,
+      "time": "2026-10-26T18:00:00+01:00",
+      "temp_raw": 7.0,
+      "temp_corrected": 2.4,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -6.3,
+      "correction_offset_c": -4.64,
       "clarity": 1.0,
-      "wind_speed": 3.6,
-      "wind_gusts": 7.2,
-      "wind_dir": 186,
+      "wind_speed": 5.1,
+      "wind_gusts": 8.6,
+      "wind_dir": 135,
+      "cloud_cover": 28,
+      "cloud_cover_low": 0,
+      "cloud_cover_mid": 0,
+      "cloud_cover_high": 28,
+      "dew_point_c": -10.5,
+      "temp_850hpa_c": 12.2,
+      "rain_mm": 0,
+      "snow_cm": 0,
+      "picto": "peu-nuageux"
+    },
+    {
+      "time": "2026-10-26T19:00:00+01:00",
+      "temp_raw": 7.8,
+      "temp_corrected": 1.4,
+      "corrected": true,
+      "correction_period": "night",
+      "correction_offset_c": -6.41,
+      "clarity": 1.0,
+      "wind_speed": 4.7,
+      "wind_gusts": 7.9,
+      "wind_dir": 180,
       "cloud_cover": 0,
       "cloud_cover_low": 0,
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
-      "dew_point_c": -11.0,
-      "temp_850hpa_c": 12.1,
+      "dew_point_c": -10.9,
+      "temp_850hpa_c": 12.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -3223,41 +3259,41 @@
     {
       "time": "2026-10-26T20:00:00+01:00",
       "temp_raw": 7.4,
-      "temp_corrected": -0.1,
+      "temp_corrected": -0.2,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -7.52,
+      "correction_offset_c": -7.59,
       "clarity": 1.0,
-      "wind_speed": 1.1,
-      "wind_gusts": 5.8,
-      "wind_dir": 180,
+      "wind_speed": 2.9,
+      "wind_gusts": 6.1,
+      "wind_dir": 187,
       "cloud_cover": 0,
       "cloud_cover_low": 0,
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
-      "dew_point_c": -8.9,
-      "temp_850hpa_c": 11.9,
+      "dew_point_c": -7.8,
+      "temp_850hpa_c": 12.2,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
     },
     {
       "time": "2026-10-26T21:00:00+01:00",
-      "temp_raw": 7.2,
+      "temp_raw": 7.3,
       "temp_corrected": -1.1,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -8.34,
+      "correction_offset_c": -8.38,
       "clarity": 1.0,
-      "wind_speed": 2.2,
-      "wind_gusts": 3.6,
-      "wind_dir": 180,
+      "wind_speed": 3.6,
+      "wind_gusts": 4.3,
+      "wind_dir": 186,
       "cloud_cover": 0,
       "cloud_cover_low": 0,
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
-      "dew_point_c": -5.1,
-      "temp_850hpa_c": 11.9,
+      "dew_point_c": -4.6,
+      "temp_850hpa_c": 12.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -3268,38 +3304,38 @@
       "temp_corrected": -1.5,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -8.89,
+      "correction_offset_c": -8.92,
       "clarity": 1.0,
       "wind_speed": 3.3,
       "wind_gusts": 5.0,
       "wind_dir": 186,
-      "cloud_cover": 18,
+      "cloud_cover": 20,
       "cloud_cover_low": 0,
       "cloud_cover_mid": 0,
-      "cloud_cover_high": 18,
-      "dew_point_c": -1.8,
-      "temp_850hpa_c": 12.1,
+      "cloud_cover_high": 20,
+      "dew_point_c": -1.7,
+      "temp_850hpa_c": 12.6,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
     },
     {
       "time": "2026-10-26T23:00:00+01:00",
-      "temp_raw": 8.0,
-      "temp_corrected": -1.3,
+      "temp_raw": 7.3,
+      "temp_corrected": -2.0,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -9.25,
+      "correction_offset_c": -9.27,
       "clarity": 1.0,
-      "wind_speed": 4.3,
-      "wind_gusts": 11.2,
-      "wind_dir": 270,
-      "cloud_cover": 61,
+      "wind_speed": 3.1,
+      "wind_gusts": 4.3,
+      "wind_dir": 201,
+      "cloud_cover": 62,
       "cloud_cover_low": 0,
       "cloud_cover_mid": 0,
-      "cloud_cover_high": 61,
-      "dew_point_c": -4.1,
-      "temp_850hpa_c": 12.2,
+      "cloud_cover_high": 62,
+      "dew_point_c": -0.3,
+      "temp_850hpa_c": 12.7,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "voile"
@@ -3310,7 +3346,7 @@
       "temp_corrected": -1.4,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -9.5,
+      "correction_offset_c": -9.51,
       "clarity": 1.0,
       "wind_speed": 4.0,
       "wind_gusts": 11.2,
@@ -3320,7 +3356,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 88,
       "dew_point_c": -2.9,
-      "temp_850hpa_c": 11.9,
+      "temp_850hpa_c": 12.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "voile"
@@ -3331,7 +3367,7 @@
       "temp_corrected": -2.0,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -9.66,
+      "correction_offset_c": -9.67,
       "clarity": 1.0,
       "wind_speed": 4.0,
       "wind_gusts": 11.2,
@@ -3341,7 +3377,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 56,
       "dew_point_c": -2.5,
-      "temp_850hpa_c": 11.8,
+      "temp_850hpa_c": 12.1,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "voile"
@@ -3362,7 +3398,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 6,
       "dew_point_c": -2.3,
-      "temp_850hpa_c": 11.5,
+      "temp_850hpa_c": 11.7,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -3370,7 +3406,7 @@
     {
       "time": "2026-10-27T03:00:00+01:00",
       "temp_raw": 7.4,
-      "temp_corrected": -2.4,
+      "temp_corrected": -2.5,
       "corrected": true,
       "correction_period": "night",
       "correction_offset_c": -9.85,
@@ -3383,7 +3419,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 7,
       "dew_point_c": -2.3,
-      "temp_850hpa_c": 11.2,
+      "temp_850hpa_c": 11.7,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -3404,7 +3440,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 5,
       "dew_point_c": -2.0,
-      "temp_850hpa_c": 11.1,
+      "temp_850hpa_c": 11.7,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -3425,7 +3461,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": -1.5,
-      "temp_850hpa_c": 11.2,
+      "temp_850hpa_c": 11.8,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -3436,7 +3472,7 @@
       "temp_corrected": -2.0,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -9.95,
+      "correction_offset_c": -9.96,
       "clarity": 1.0,
       "wind_speed": 4.0,
       "wind_gusts": 10.8,
@@ -3446,7 +3482,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 2,
       "dew_point_c": -1.7,
-      "temp_850hpa_c": 11.5,
+      "temp_850hpa_c": 12.1,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -3467,7 +3503,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 1,
       "dew_point_c": -1.7,
-      "temp_850hpa_c": 11.8,
+      "temp_850hpa_c": 12.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -3488,7 +3524,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": -1.3,
-      "temp_850hpa_c": 11.8,
+      "temp_850hpa_c": 12.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -3509,7 +3545,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 0.5,
-      "temp_850hpa_c": 11.6,
+      "temp_850hpa_c": 12.1,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -3530,7 +3566,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 8,
       "dew_point_c": 4.0,
-      "temp_850hpa_c": 11.6,
+      "temp_850hpa_c": 11.8,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -3551,7 +3587,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 100,
       "dew_point_c": 3.6,
-      "temp_850hpa_c": 11.9,
+      "temp_850hpa_c": 12.1,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "voile"
@@ -3572,7 +3608,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 17,
       "dew_point_c": 4.4,
-      "temp_850hpa_c": 12.6,
+      "temp_850hpa_c": 12.4,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -3614,7 +3650,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 4.8,
-      "temp_850hpa_c": 12.4,
+      "temp_850hpa_c": 12.8,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -3635,7 +3671,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 2,
       "dew_point_c": 4.4,
-      "temp_850hpa_c": 12.2,
+      "temp_850hpa_c": 12.7,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -3656,7 +3692,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 8,
       "dew_point_c": 5.5,
-      "temp_850hpa_c": 11.8,
+      "temp_850hpa_c": 12.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -3677,7 +3713,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 1,
       "dew_point_c": 6.2,
-      "temp_850hpa_c": 11.3,
+      "temp_850hpa_c": 11.7,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -3698,7 +3734,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 17,
       "dew_point_c": 4.7,
-      "temp_850hpa_c": 11.0,
+      "temp_850hpa_c": 11.5,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -3719,7 +3755,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 100,
       "dew_point_c": 4.5,
-      "temp_850hpa_c": 10.7,
+      "temp_850hpa_c": 11.5,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "voile"
@@ -3740,7 +3776,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 100,
       "dew_point_c": 4.0,
-      "temp_850hpa_c": 10.7,
+      "temp_850hpa_c": 11.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "voile"
@@ -3761,7 +3797,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 100,
       "dew_point_c": 2.0,
-      "temp_850hpa_c": 10.6,
+      "temp_850hpa_c": 11.0,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "voile"
@@ -3782,7 +3818,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 100,
       "dew_point_c": -0.1,
-      "temp_850hpa_c": 10.4,
+      "temp_850hpa_c": 10.7,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "voile"
@@ -3803,7 +3839,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 0.6,
-      "temp_850hpa_c": 10.3,
+      "temp_850hpa_c": 10.5,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -3824,7 +3860,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 0.2,
-      "temp_850hpa_c": 10.1,
+      "temp_850hpa_c": 10.4,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -3845,7 +3881,7 @@
       "cloud_cover_mid": 100,
       "cloud_cover_high": 100,
       "dew_point_c": 0.7,
-      "temp_850hpa_c": 9.9,
+      "temp_850hpa_c": 10.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -3866,7 +3902,7 @@
       "cloud_cover_mid": 96,
       "cloud_cover_high": 100,
       "dew_point_c": 1.3,
-      "temp_850hpa_c": 9.7,
+      "temp_850hpa_c": 10.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -3887,7 +3923,7 @@
       "cloud_cover_mid": 29,
       "cloud_cover_high": 100,
       "dew_point_c": 1.9,
-      "temp_850hpa_c": 9.5,
+      "temp_850hpa_c": 10.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "voile"
@@ -3908,7 +3944,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 31,
       "dew_point_c": 3.2,
-      "temp_850hpa_c": 9.5,
+      "temp_850hpa_c": 10.0,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "peu-nuageux"
@@ -3929,7 +3965,7 @@
       "cloud_cover_mid": 5,
       "cloud_cover_high": 58,
       "dew_point_c": 4.2,
-      "temp_850hpa_c": 9.4,
+      "temp_850hpa_c": 9.5,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "voile"
@@ -3992,7 +4028,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 4.9,
-      "temp_850hpa_c": 8.6,
+      "temp_850hpa_c": 8.8,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "tres-nuageux"
@@ -4076,7 +4112,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 5.5,
-      "temp_850hpa_c": 9.4,
+      "temp_850hpa_c": 9.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -4097,7 +4133,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 5.6,
-      "temp_850hpa_c": 9.7,
+      "temp_850hpa_c": 9.5,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -4118,7 +4154,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 6.0,
-      "temp_850hpa_c": 9.5,
+      "temp_850hpa_c": 9.2,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -4139,7 +4175,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 6.3,
-      "temp_850hpa_c": 9.2,
+      "temp_850hpa_c": 8.8,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "peu-nuageux"
@@ -4160,7 +4196,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 6.2,
-      "temp_850hpa_c": 8.8,
+      "temp_850hpa_c": 8.4,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "tres-nuageux"
@@ -4181,7 +4217,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 5.9,
-      "temp_850hpa_c": 8.4,
+      "temp_850hpa_c": 8.0,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -4202,7 +4238,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 5.8,
-      "temp_850hpa_c": 8.0,
+      "temp_850hpa_c": 7.6,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -4223,7 +4259,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 5.4,
-      "temp_850hpa_c": 7.8,
+      "temp_850hpa_c": 7.4,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "couvert"
@@ -4244,7 +4280,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 4.1,
-      "temp_850hpa_c": 8.1,
+      "temp_850hpa_c": 7.2,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "peu-nuageux"
@@ -4265,7 +4301,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 4.0,
-      "temp_850hpa_c": 8.6,
+      "temp_850hpa_c": 7.2,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "tres-nuageux"
@@ -4286,7 +4322,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 3.2,
-      "temp_850hpa_c": 8.9,
+      "temp_850hpa_c": 7.5,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -4307,7 +4343,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 1.5,
-      "temp_850hpa_c": 9.3,
+      "temp_850hpa_c": 8.0,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -4328,7 +4364,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 1.9,
-      "temp_850hpa_c": 9.5,
+      "temp_850hpa_c": 8.4,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -4349,7 +4385,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 2.4,
-      "temp_850hpa_c": 9.8,
+      "temp_850hpa_c": 8.9,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -4370,7 +4406,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 2.2,
-      "temp_850hpa_c": 9.8,
+      "temp_850hpa_c": 9.2,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -4391,7 +4427,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 2.2,
-      "temp_850hpa_c": 9.8,
+      "temp_850hpa_c": 9.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -4412,7 +4448,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 2.5,
-      "temp_850hpa_c": 9.7,
+      "temp_850hpa_c": 9.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -4433,7 +4469,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 2.4,
-      "temp_850hpa_c": 9.7,
+      "temp_850hpa_c": 9.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -4454,7 +4490,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 2.4,
-      "temp_850hpa_c": 9.7,
+      "temp_850hpa_c": 9.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -4475,7 +4511,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 1.7,
-      "temp_850hpa_c": 9.7,
+      "temp_850hpa_c": 9.3,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -4496,7 +4532,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 1.4,
-      "temp_850hpa_c": 9.7,
+      "temp_850hpa_c": 9.4,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -4517,7 +4553,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 3.0,
-      "temp_850hpa_c": 9.7,
+      "temp_850hpa_c": 9.5,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -4559,7 +4595,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 5.5,
-      "temp_850hpa_c": 10.3,
+      "temp_850hpa_c": 10.1,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -4580,7 +4616,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 5.6,
-      "temp_850hpa_c": 10.9,
+      "temp_850hpa_c": 10.6,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "clair"
@@ -4601,7 +4637,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 5.9,
-      "temp_850hpa_c": 11.2,
+      "temp_850hpa_c": 11.0,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "tres-nuageux"
@@ -4622,7 +4658,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 6.5,
-      "temp_850hpa_c": 11.3,
+      "temp_850hpa_c": 11.2,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "tres-nuageux"
@@ -4643,7 +4679,7 @@
       "cloud_cover_mid": 0,
       "cloud_cover_high": 0,
       "dew_point_c": 6.6,
-      "temp_850hpa_c": 11.3,
+      "temp_850hpa_c": 11.2,
       "rain_mm": 0,
       "snow_cm": 0,
       "picto": "tres-nuageux"
