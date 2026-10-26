@@ -52,7 +52,7 @@
   ],
   "day_offset_profile": {},
   "day_alpha": 0.25,
-  "last_processed_day": "2026-10-25",
+  "last_processed_day": "2026-10-26",
   "last_day_error_c": null,
   "last_day_samples": 0,
   "day_history": [
@@ -67,6 +67,10 @@
     {
       "day": "2026-10-25",
       "buckets_learned": []
+    },
+    {
+      "day": "2026-10-26",
+      "buckets_learned": []
     }
   ],
   "last_night_verif": {
@@ -76,10 +80,10 @@
     "diff_c": -2.0
   },
   "last_day_verif": {
-    "day": "2026-10-25",
-    "forecast_tx_c": 5.5,
-    "observed_tx_c": 6.3,
-    "diff_c": -0.8
+    "day": "2026-10-26",
+    "forecast_tx_c": 8.0,
+    "observed_tx_c": 8.0,
+    "diff_c": 0.0
   },
   "cond_log": {
     "columns": [
@@ -1191,6 +1195,56 @@
             0.1,
             -2.2,
             100,
+            0
+          ]
+        ]
+      },
+      {
+        "day": "2026-10-26",
+        "rows": [
+          [
+            0,
+            9,
+            -1.0,
+            4.0,
+            -5.0,
+            4.0,
+            0.0,
+            73,
+            4.7,
+            7.2,
+            -3.4,
+            60,
+            0
+          ],
+          [
+            7,
+            16,
+            8.0,
+            7.8,
+            0.2,
+            7.8,
+            0.0,
+            100,
+            4.5,
+            12.8,
+            -1.5,
+            40,
+            0
+          ],
+          [
+            8,
+            17,
+            6.6,
+            7.5,
+            -0.9,
+            7.5,
+            0.0,
+            100,
+            3.8,
+            18.2,
+            -2.0,
+            26,
             0
           ]
         ]
