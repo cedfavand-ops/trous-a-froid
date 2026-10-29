@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-29T17:04:42.441207+01:00",
+  "generated_at": "2026-10-29T17:41:28.207277+01:00",
   "run_time": "2026-10-27T00:00:00+01:00",
   "location": {
     "name": "Beuil - Cumba Clava",
@@ -83,38 +83,10 @@
   "live": {
     "available": true,
     "latest": {
-      "time": "2026-10-29T17:01:37+01:00",
-      "temp_c": 9.5
+      "time": "2026-10-29T17:11:37+01:00",
+      "temp_c": 8.9
     },
     "recent": [
-      {
-        "time": "2026-10-27T17:06:37+01:00",
-        "temp_c": 10.5
-      },
-      {
-        "time": "2026-10-27T17:11:37+01:00",
-        "temp_c": 9.8
-      },
-      {
-        "time": "2026-10-27T17:16:37+01:00",
-        "temp_c": 9.5
-      },
-      {
-        "time": "2026-10-27T17:21:37+01:00",
-        "temp_c": 9.1
-      },
-      {
-        "time": "2026-10-27T17:26:37+01:00",
-        "temp_c": 8.7
-      },
-      {
-        "time": "2026-10-27T17:31:37+01:00",
-        "temp_c": 8.5
-      },
-      {
-        "time": "2026-10-27T17:36:37+01:00",
-        "temp_c": 8.6
-      },
       {
         "time": "2026-10-27T17:41:37+01:00",
         "temp_c": 7.9
@@ -2386,6 +2358,14 @@
       {
         "time": "2026-10-29T17:01:37+01:00",
         "temp_c": 9.5
+      },
+      {
+        "time": "2026-10-29T17:06:37+01:00",
+        "temp_c": 9.2
+      },
+      {
+        "time": "2026-10-29T17:11:37+01:00",
+        "temp_c": 8.9
       }
     ]
   },
@@ -2708,10 +2688,10 @@
     {
       "time": "2026-10-30T09:00:00+01:00",
       "temp_raw": 7.0,
-      "temp_corrected": 6.1,
+      "temp_corrected": 5.9,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -0.95,
+      "correction_offset_c": -1.05,
       "clarity": 0.09,
       "wind_speed": 1.3,
       "wind_gusts": 3.2,
@@ -2729,10 +2709,10 @@
     {
       "time": "2026-10-30T10:00:00+01:00",
       "temp_raw": 9.1,
-      "temp_corrected": 8.2,
+      "temp_corrected": 8.1,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -0.88,
+      "correction_offset_c": -1.0,
       "clarity": 0.14,
       "wind_speed": 3.4,
       "wind_gusts": 7.9,
@@ -2750,10 +2730,10 @@
     {
       "time": "2026-10-30T11:00:00+01:00",
       "temp_raw": 10.4,
-      "temp_corrected": 10.0,
+      "temp_corrected": 9.9,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -0.37,
+      "correction_offset_c": -0.46,
       "clarity": 0.07,
       "wind_speed": 4.7,
       "wind_gusts": 10.4,
@@ -3212,10 +3192,10 @@
     {
       "time": "2026-10-31T09:00:00+01:00",
       "temp_raw": 5.0,
-      "temp_corrected": -5.1,
+      "temp_corrected": -6.3,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -10.13,
+      "correction_offset_c": -11.3,
       "clarity": 1.0,
       "wind_speed": 2.0,
       "wind_gusts": 6.8,
@@ -3233,10 +3213,10 @@
     {
       "time": "2026-10-31T10:00:00+01:00",
       "temp_raw": 8.6,
-      "temp_corrected": 2.3,
+      "temp_corrected": 1.4,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -6.29,
+      "correction_offset_c": -7.15,
       "clarity": 1.0,
       "wind_speed": 1.8,
       "wind_gusts": 5.8,
@@ -3254,10 +3234,10 @@
     {
       "time": "2026-10-31T11:00:00+01:00",
       "temp_raw": 9.7,
-      "temp_corrected": 4.4,
+      "temp_corrected": 3.1,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -5.34,
+      "correction_offset_c": -6.57,
       "clarity": 1.0,
       "wind_speed": 3.9,
       "wind_gusts": 10.1,
@@ -3275,10 +3255,10 @@
     {
       "time": "2026-10-31T12:00:00+01:00",
       "temp_raw": 10.0,
-      "temp_corrected": 7.7,
+      "temp_corrected": 7.6,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -2.26,
+      "correction_offset_c": -2.41,
       "clarity": 1.0,
       "wind_speed": 7.4,
       "wind_gusts": 14.8,
@@ -3296,10 +3276,10 @@
     {
       "time": "2026-10-31T13:00:00+01:00",
       "temp_raw": 10.4,
-      "temp_corrected": 9.4,
+      "temp_corrected": 9.6,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -1.03,
+      "correction_offset_c": -0.83,
       "clarity": 1.0,
       "wind_speed": 7.5,
       "wind_gusts": 15.5,
@@ -3317,10 +3297,10 @@
     {
       "time": "2026-10-31T14:00:00+01:00",
       "temp_raw": 10.5,
-      "temp_corrected": 11.0,
+      "temp_corrected": 11.1,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": 0.52,
+      "correction_offset_c": 0.6,
       "clarity": 1.0,
       "wind_speed": 7.3,
       "wind_gusts": 15.5,
@@ -3341,7 +3321,7 @@
       "temp_corrected": 11.2,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": 1.02,
+      "correction_offset_c": 0.98,
       "clarity": 1.0,
       "wind_speed": 8.1,
       "wind_gusts": 15.1,
@@ -3359,10 +3339,10 @@
     {
       "time": "2026-10-31T16:00:00+01:00",
       "temp_raw": 9.4,
-      "temp_corrected": 10.3,
+      "temp_corrected": 10.4,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": 0.89,
+      "correction_offset_c": 0.97,
       "clarity": 1.0,
       "wind_speed": 7.1,
       "wind_gusts": 15.1,
@@ -4220,10 +4200,10 @@
     {
       "time": "2026-11-02T09:00:00+01:00",
       "temp_raw": 4.6,
-      "temp_corrected": 2.2,
+      "temp_corrected": 1.9,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -2.45,
+      "correction_offset_c": -2.73,
       "clarity": 0.24,
       "wind_speed": 17.7,
       "wind_gusts": 31.0,
@@ -4241,10 +4221,10 @@
     {
       "time": "2026-11-02T10:00:00+01:00",
       "temp_raw": 6.2,
-      "temp_corrected": 5.6,
+      "temp_corrected": 5.5,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -0.64,
+      "correction_offset_c": -0.73,
       "clarity": 0.1,
       "wind_speed": 21.9,
       "wind_gusts": 38.9,
@@ -4262,10 +4242,10 @@
     {
       "time": "2026-11-02T11:00:00+01:00",
       "temp_raw": 7.7,
-      "temp_corrected": 7.6,
+      "temp_corrected": 7.5,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": -0.13,
+      "correction_offset_c": -0.16,
       "clarity": 0.02,
       "wind_speed": 21.6,
       "wind_gusts": 40.0,
@@ -4283,8 +4263,8 @@
     {
       "time": "2026-11-02T12:00:00+01:00",
       "temp_raw": 8.4,
-      "temp_corrected": 8.4,
-      "corrected": false,
+      "temp_corrected": 8.3,
+      "corrected": true,
       "correction_period": "day",
       "correction_offset_c": -0.05,
       "clarity": 0.02,
@@ -4304,10 +4284,10 @@
     {
       "time": "2026-11-02T13:00:00+01:00",
       "temp_raw": 8.6,
-      "temp_corrected": 8.5,
-      "corrected": true,
+      "temp_corrected": 8.6,
+      "corrected": false,
       "correction_period": "day",
-      "correction_offset_c": -0.05,
+      "correction_offset_c": -0.04,
       "clarity": 0.05,
       "wind_speed": 23.2,
       "wind_gusts": 41.0,
@@ -4328,7 +4308,7 @@
       "temp_corrected": 8.8,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": 0.08,
+      "correction_offset_c": 0.09,
       "clarity": 0.15,
       "wind_speed": 19.9,
       "wind_gusts": 41.0,
@@ -4349,7 +4329,7 @@
       "temp_corrected": 8.7,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": 0.27,
+      "correction_offset_c": 0.26,
       "clarity": 0.26,
       "wind_speed": 19.1,
       "wind_gusts": 36.4,
@@ -4367,10 +4347,10 @@
     {
       "time": "2026-11-02T16:00:00+01:00",
       "temp_raw": 7.6,
-      "temp_corrected": 8.0,
+      "temp_corrected": 8.1,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": 0.44,
+      "correction_offset_c": 0.48,
       "clarity": 0.5,
       "wind_speed": 17.4,
       "wind_gusts": 34.6,
@@ -4391,7 +4371,7 @@
       "temp_corrected": 7.1,
       "corrected": true,
       "correction_period": "day",
-      "correction_offset_c": 1.03,
+      "correction_offset_c": 0.96,
       "clarity": 0.78,
       "wind_speed": 10.2,
       "wind_gusts": 31.0,
