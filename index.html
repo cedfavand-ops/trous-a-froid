@@ -180,7 +180,7 @@
         <tbody id="synth-rows"></tbody>
       </table>
     </div>
-    <div class="legend">Tn / Tx prévues (corrigées) de toutes les stations, par jour météo (Tn : 18h UTC → 18h UTC ; Tx : 6h UTC → 6h UTC). La case surlignée en bleu est la Tn la plus basse du jour parmi les stations. Cliquer sur un nom de station ouvre son détail.</div>
+    <div class="legend">Tn / Tx prévues (corrigées) de toutes les stations, par jour météo (Tn : 18h UTC → 18h UTC ; Tx : 6h UTC → 6h UTC). « Neige au sol » : hauteur modélisée par ICON-CH1 à l'heure actuelle. La case surlignée en bleu est la Tn la plus basse du jour parmi les stations. Cliquer sur un nom de station ouvre son détail.</div>
   </div>
 
   <div id="efento-view">
@@ -376,7 +376,7 @@ async function loadSynth(){
   });
   const cols = Array.from(dayKeys).sort((a, b) => a - b);
   const head = document.getElementById('synth-head');
-  head.innerHTML = '<tr><th style="text-align:left;padding-left:12px;">Station</th>' + cols.map(k =>
+  head.innerHTML = '<tr><th style="text-align:left;padding-left:12px;">Station</th><th>Neige au sol</th>' + cols.map(k =>
     '<th>' + new Date(k).toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' }) + '</th>').join('') + '</tr>';
 
   // Tn la plus basse de chaque jour (repère visuel)
@@ -400,6 +400,12 @@ async function loadSynth(){
     nameTd.innerHTML = `<a>${p.st.name}</a>${alt ? `<small>${alt}</small>` : ''}`;
     nameTd.querySelector('a').onclick = () => { currentSlug = p.st.slug; renderTabs(); showStationView(); load(); };
     tr.appendChild(nameTd);
+    const snowTd = document.createElement('td');
+    const dcm = p.data && p.data.snow ? p.data.snow.depth_cm : null;
+    snowTd.innerHTML = (dcm === null || dcm === undefined)
+      ? '<span style="color:var(--muted);">—</span>'
+      : `<span style="color:${dcm > 0 ? '#c4b5fd' : 'var(--muted)'};font-weight:700;">${dcm} cm</span>`;
+    tr.appendChild(snowTd);
     cols.forEach(k => {
       const d = p.days[k];
       const td = document.createElement('td');
@@ -748,7 +754,8 @@ function fmtSnowSpans(sn){
   if (sn.forecast_end){
     end = ' (jusqu\'au ' + new Date(sn.forecast_end).toLocaleString('fr-FR', {weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'}) + ')';
   }
-  return `<span>❄️ Neige fraîche (24h passées) : ${f(sn.fresh_24h_cm)}</span>`
+  return `<span>❄️ Neige au sol : ${(sn.depth_cm === null || sn.depth_cm === undefined) ? 'n/a' : sn.depth_cm + ' cm'}</span>`
+    + `<span>❄️ Neige fraîche (24h passées) : ${f(sn.fresh_24h_cm)}</span>`
     + `<span>❄️ Neige prévue (24 prochaines h) : ${f(sn.forecast_24h_cm)}</span>`
     + `<span>❄️ Neige prévue (toute l'échéance) : ${f(sn.forecast_total_cm)}${end}</span>`;
 }
