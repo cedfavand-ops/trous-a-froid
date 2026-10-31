@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-31T12:36:29.555876+01:00",
+  "generated_at": "2026-10-31T12:38:56.482253+01:00",
   "run_time": "2026-10-29T00:00:00+01:00",
   "location": {
     "name": "Châteauneuf-de-Randon",
@@ -69,6 +69,7 @@
     "fresh_24h_cm": 0.0,
     "forecast_24h_cm": 0.0,
     "forecast_total_cm": 0.7,
+    "depth_now_cm": 0.0,
     "forecast_end": "2026-11-04T23:00:00+01:00"
   },
   "verification": {
@@ -2391,6 +2392,7 @@
       "temp_850hpa_c": 5.7,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "clair"
     },
     {
@@ -2413,6 +2415,7 @@
       "temp_850hpa_c": 5.4,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "tres-nuageux"
     },
     {
@@ -2435,6 +2438,7 @@
       "temp_850hpa_c": 4.7,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -2457,6 +2461,7 @@
       "temp_850hpa_c": 3.9,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -2479,6 +2484,7 @@
       "temp_850hpa_c": 3.4,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -2501,6 +2507,7 @@
       "temp_850hpa_c": 3.1,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -2523,6 +2530,7 @@
       "temp_850hpa_c": 3.0,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -2545,6 +2553,7 @@
       "temp_850hpa_c": 3.4,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "tres-nuageux"
     },
     {
@@ -2567,6 +2576,7 @@
       "temp_850hpa_c": 3.0,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -2589,6 +2599,7 @@
       "temp_850hpa_c": 2.8,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "tres-nuageux"
     },
     {
@@ -2611,6 +2622,7 @@
       "temp_850hpa_c": 2.5,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "tres-nuageux"
     },
     {
@@ -2633,6 +2645,7 @@
       "temp_850hpa_c": 2.3,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "tres-nuageux"
     },
     {
@@ -2655,6 +2668,7 @@
       "temp_850hpa_c": 2.3,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "tres-nuageux"
     },
     {
@@ -2677,6 +2691,7 @@
       "temp_850hpa_c": 2.3,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "peu-nuageux"
     },
     {
@@ -2699,6 +2714,7 @@
       "temp_850hpa_c": 2.1,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "clair"
     },
     {
@@ -2721,6 +2737,7 @@
       "temp_850hpa_c": 1.8,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "clair"
     },
     {
@@ -2743,6 +2760,7 @@
       "temp_850hpa_c": 2.3,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "voile"
     },
     {
@@ -2765,6 +2783,7 @@
       "temp_850hpa_c": 2.7,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "voile"
     },
     {
@@ -2787,6 +2806,7 @@
       "temp_850hpa_c": 3.0,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "clair"
     },
     {
@@ -2809,6 +2829,7 @@
       "temp_850hpa_c": 3.1,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "clair"
     },
     {
@@ -2831,6 +2852,7 @@
       "temp_850hpa_c": 3.1,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "clair"
     },
     {
@@ -2853,6 +2875,7 @@
       "temp_850hpa_c": 3.0,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "clair"
     },
     {
@@ -2875,6 +2898,7 @@
       "temp_850hpa_c": 2.8,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "clair"
     },
     {
@@ -2897,6 +2921,7 @@
       "temp_850hpa_c": 1.6,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "clair"
     },
     {
@@ -2919,6 +2944,7 @@
       "temp_850hpa_c": 0.8,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "clair"
     },
     {
@@ -2941,6 +2967,7 @@
       "temp_850hpa_c": 0.2,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "clair"
     },
     {
@@ -2963,6 +2990,7 @@
       "temp_850hpa_c": -0.4,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "tres-nuageux"
     },
     {
@@ -2985,6 +3013,7 @@
       "temp_850hpa_c": -1.0,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "clair"
     },
     {
@@ -3007,6 +3036,7 @@
       "temp_850hpa_c": -1.4,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "clair"
     },
     {
@@ -3029,6 +3059,7 @@
       "temp_850hpa_c": -1.8,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "clair"
     },
     {
@@ -3051,6 +3082,7 @@
       "temp_850hpa_c": -1.9,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "clair"
     },
     {
@@ -3073,6 +3105,7 @@
       "temp_850hpa_c": -1.9,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "clair"
     },
     {
@@ -3095,6 +3128,7 @@
       "temp_850hpa_c": -1.9,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "peu-nuageux"
     },
     {
@@ -3117,6 +3151,7 @@
       "temp_850hpa_c": -1.9,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "tres-nuageux"
     },
     {
@@ -3139,6 +3174,7 @@
       "temp_850hpa_c": -2.1,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "tres-nuageux"
     },
     {
@@ -3161,6 +3197,7 @@
       "temp_850hpa_c": -2.1,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3183,6 +3220,7 @@
       "temp_850hpa_c": -2.1,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3205,6 +3243,7 @@
       "temp_850hpa_c": -2.2,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3227,6 +3266,7 @@
       "temp_850hpa_c": -2.4,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3249,6 +3289,7 @@
       "temp_850hpa_c": -2.4,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3271,6 +3312,7 @@
       "temp_850hpa_c": -2.2,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3293,6 +3335,7 @@
       "temp_850hpa_c": -1.7,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3315,6 +3358,7 @@
       "temp_850hpa_c": -1.0,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3337,6 +3381,7 @@
       "temp_850hpa_c": -0.4,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3359,6 +3404,7 @@
       "temp_850hpa_c": 0.0,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "tres-nuageux"
     },
     {
@@ -3381,6 +3427,7 @@
       "temp_850hpa_c": 0.2,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3403,6 +3450,7 @@
       "temp_850hpa_c": 0.4,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3425,6 +3473,7 @@
       "temp_850hpa_c": -0.5,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3447,6 +3496,7 @@
       "temp_850hpa_c": -1.6,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3469,6 +3519,7 @@
       "temp_850hpa_c": -2.2,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3491,6 +3542,7 @@
       "temp_850hpa_c": -2.3,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3513,6 +3565,7 @@
       "temp_850hpa_c": -2.3,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3535,6 +3588,7 @@
       "temp_850hpa_c": -2.3,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3557,6 +3611,7 @@
       "temp_850hpa_c": -2.4,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3579,6 +3634,7 @@
       "temp_850hpa_c": -2.4,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3601,6 +3657,7 @@
       "temp_850hpa_c": -2.4,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3623,6 +3680,7 @@
       "temp_850hpa_c": -2.5,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3645,6 +3703,7 @@
       "temp_850hpa_c": -2.5,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3667,6 +3726,7 @@
       "temp_850hpa_c": -2.7,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3689,6 +3749,7 @@
       "temp_850hpa_c": -2.7,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3711,6 +3772,7 @@
       "temp_850hpa_c": -2.4,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3733,6 +3795,7 @@
       "temp_850hpa_c": -1.8,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3755,6 +3818,7 @@
       "temp_850hpa_c": -0.4,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3777,6 +3841,7 @@
       "temp_850hpa_c": 1.0,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3799,6 +3864,7 @@
       "temp_850hpa_c": 1.6,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3821,6 +3887,7 @@
       "temp_850hpa_c": 2.3,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3843,6 +3910,7 @@
       "temp_850hpa_c": 3.9,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3865,6 +3933,7 @@
       "temp_850hpa_c": 4.8,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -3887,6 +3956,7 @@
       "temp_850hpa_c": 4.9,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "tres-nuageux"
     },
     {
@@ -3909,6 +3979,7 @@
       "temp_850hpa_c": 4.7,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "clair"
     },
     {
@@ -3931,6 +4002,7 @@
       "temp_850hpa_c": 4.5,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "peu-nuageux"
     },
     {
@@ -3953,6 +4025,7 @@
       "temp_850hpa_c": 4.2,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "tres-nuageux"
     },
     {
@@ -3975,6 +4048,7 @@
       "temp_850hpa_c": 3.9,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "peu-nuageux"
     },
     {
@@ -3997,6 +4071,7 @@
       "temp_850hpa_c": 3.6,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "tres-nuageux"
     },
     {
@@ -4019,6 +4094,7 @@
       "temp_850hpa_c": 3.4,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -4041,6 +4117,7 @@
       "temp_850hpa_c": 3.1,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "brouillard"
     },
     {
@@ -4063,6 +4140,7 @@
       "temp_850hpa_c": 3.0,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "brouillard"
     },
     {
@@ -4085,6 +4163,7 @@
       "temp_850hpa_c": 2.9,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "brouillard"
     },
     {
@@ -4107,6 +4186,7 @@
       "temp_850hpa_c": 2.8,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "brouillard"
     },
     {
@@ -4129,6 +4209,7 @@
       "temp_850hpa_c": 2.7,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -4151,6 +4232,7 @@
       "temp_850hpa_c": 2.5,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -4173,6 +4255,7 @@
       "temp_850hpa_c": 2.5,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -4195,6 +4278,7 @@
       "temp_850hpa_c": 2.5,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -4217,6 +4301,7 @@
       "temp_850hpa_c": 2.5,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -4239,6 +4324,7 @@
       "temp_850hpa_c": 2.7,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -4261,6 +4347,7 @@
       "temp_850hpa_c": 2.8,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -4283,6 +4370,7 @@
       "temp_850hpa_c": 2.8,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -4305,6 +4393,7 @@
       "temp_850hpa_c": 2.9,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -4327,6 +4416,7 @@
       "temp_850hpa_c": 2.9,
       "rain_mm": 0.4,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "pluie-faible"
     },
     {
@@ -4349,6 +4439,7 @@
       "temp_850hpa_c": 2.9,
       "rain_mm": 0.5,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "pluie-faible"
     },
     {
@@ -4371,6 +4462,7 @@
       "temp_850hpa_c": 2.9,
       "rain_mm": 0.5,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "pluie-faible"
     },
     {
@@ -4393,6 +4485,7 @@
       "temp_850hpa_c": 3.0,
       "rain_mm": 0,
       "snow_cm": 0.5,
+      "snow_depth_cm": 0.0,
       "picto": "neige"
     },
     {
@@ -4415,6 +4508,7 @@
       "temp_850hpa_c": 3.3,
       "rain_mm": 0,
       "snow_cm": 0.2,
+      "snow_depth_cm": 0.0,
       "picto": "neige"
     },
     {
@@ -4437,6 +4531,7 @@
       "temp_850hpa_c": 3.7,
       "rain_mm": 0.1,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -4459,6 +4554,7 @@
       "temp_850hpa_c": 4.0,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     },
     {
@@ -4481,6 +4577,7 @@
       "temp_850hpa_c": 4.0,
       "rain_mm": 0,
       "snow_cm": 0,
+      "snow_depth_cm": 0.0,
       "picto": "couvert"
     }
   ]
