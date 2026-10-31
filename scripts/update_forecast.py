@@ -232,6 +232,79 @@ def dew_floor(raw_t, dew_point_c):
     if raw_t is None or dew_point_c is None:
         return None
     return min(raw_t, dew_point_c - DEW_FLOOR_MARGIN_C)
+
+# --- Ancrage sur les observations récentes (« nowcast ») -----------------------
+# Quand le modèle est très en décalage avec ce que la station mesure en ce moment
+# (ex. Tignes fin octobre 2026 : -17°C mesurés pour ~0°C modélisés), le profil
+# appris (lent) ne suffit pas. On calcule l'écart obs-modèle des dernières heures
+# et on le propage sur les heures à venir avec une décroissance exponentielle.
+# Il ne s'applique que si l'écart est net (>= NOWCAST_MIN_ABS_ERR_C), de même
+# signe sur la quasi-totalité des heures récentes, et ne remplace la correction
+# apprise que si elle est plus forte dans le même sens.
+NOWCAST_WINDOW_H = 6            # heures récentes utilisées pour mesurer l'écart
+NOWCAST_MIN_SAMPLES = 4         # nombre minimal d'heures avec obs + modèle
+NOWCAST_MIN_ABS_ERR_C = 4.0     # écart moyen minimal pour activer l'ancrage
+NOWCAST_SAME_SIGN_SHARE = 0.8   # part minimale d'heures de même signe
+NOWCAST_TAU_H = 30.0            # constante de décroissance (heures)
+NOWCAST_MAX_HORIZON_H = 48      # au-delà, plus d'ancrage
+
+# --- Apprentissage adaptatif ----------------------------------------------------
+# Si, sur une nuit/journée, l'écart entre l'erreur observée et le décalage déjà
+# appris dépasse ADAPT_GAP_C de façon cohérente, on apprend plus vite (changement
+# de régime) au lieu de l'EWMA lent habituel.
+ADAPT_GAP_C = 5.0
+ADAPT_SAME_SIGN_SHARE = 0.8
+ADAPT_ALPHA = 0.6
+
+
+def adaptive_alpha(base_alpha, errors, offsets):
+    """errors : erreurs obs-modèle des heures apprises ; offsets : décalages
+    actuellement appris pour les mêmes cases. Retourne le alpha à utiliser."""
+    if len(errors) < 4:
+        return base_alpha
+    gaps = [e - o for e, o in zip(errors, offsets)]
+    mean_gap = sum(gaps) / len(gaps)
+    if abs(mean_gap) < ADAPT_GAP_C:
+        return base_alpha
+    same = sum(1 for g in gaps if g * mean_gap > 0) / len(gaps)
+    return max(base_alpha, ADAPT_ALPHA) if same >= ADAPT_SAME_SIGN_SHARE else base_alpha
+
+
+def compute_nowcast_anchor(live, idx_by_time, temp, now):
+    """Écart moyen obs-modèle sur les NOWCAST_WINDOW_H dernières heures
+    (stations Datacake uniquement : `live` = résultat de fetch_recent_observations).
+    Retourne (écart_c, nb_heures) ou (None, 0) si non applicable."""
+    if not live or not live.get("recent"):
+        return None, 0
+    series = []
+    for r in live["recent"]:
+        try:
+            series.append((datetime.fromisoformat(r["time"]).astimezone(TZ), r["temp_c"]))
+        except Exception:
+            continue
+    if not series:
+        return None, 0
+    now_h = now.replace(minute=0, second=0, microsecond=0)
+    errs = []
+    for k in range(NOWCAST_WINDOW_H):
+        t = now_h - timedelta(hours=k)
+        if t not in idx_by_time:
+            continue
+        m = temp[idx_by_time[t]]
+        o = nearest_value(series, t)
+        if m is not None and o is not None:
+            errs.append(o - m)
+    if len(errs) < NOWCAST_MIN_SAMPLES:
+        return None, len(errs)
+    mean_err = sum(errs) / len(errs)
+    if abs(mean_err) < NOWCAST_MIN_ABS_ERR_C:
+        return None, len(errs)
+    same = sum(1 for e in errs if e * mean_err > 0) / len(errs)
+    if same < NOWCAST_SAME_SIGN_SHARE:
+        return None, len(errs)
+    return mean_err, len(errs)
+
+
 FORECAST_NIGHTS = 4
 CH1_FORECAST_DAYS = 2
 CH2_FORECAST_DAYS = 5
@@ -976,6 +1049,15 @@ def process_station(station, now):
 
     window_start, window_end = compute_window(now, nights=FORECAST_NIGHTS)
 
+    # Observations récentes (stations Datacake) : servent à la carte « en direct »
+    # ET à l'ancrage nowcast de la prévision (récupérées une seule fois).
+    live = fetch_recent_observations(station, now)
+    anchor_err, anchor_n = compute_nowcast_anchor(live, idx_by_time, temp, now)
+    now_hour = now.replace(minute=0, second=0, microsecond=0)
+    if anchor_err is not None:
+        print(f"[info] [{slug}] ancrage nowcast actif : écart obs-modèle {anchor_err:+.1f}°C sur {anchor_n} h",
+              file=sys.stderr)
+
     night_windows = []
     for n in range(FORECAST_NIGHTS):
         evening_date = window_start.date() + timedelta(days=n)
@@ -1114,6 +1196,22 @@ def process_station(station, now):
         else:
             corrected_t = raw_t
 
+        # Ancrage nowcast : heures futures uniquement, décroissance exponentielle,
+        # remplace la correction apprise seulement si elle est plus forte (même signe).
+        nowcast_off = None
+        if anchor_err is not None and raw_t is not None and t > now_hour:
+            hh = (t - now_hour).total_seconds() / 3600.0
+            if hh <= NOWCAST_MAX_HORIZON_H:
+                w = math.exp(-hh / NOWCAST_TAU_H) * (0.5 + 0.5 * (clarity if period else 0.0))
+                cand = anchor_err * w
+                cur = corrected_t - raw_t
+                new = min(cur, cand) if anchor_err < 0 else max(cur, cand)
+                if abs(new - cur) >= 0.05:
+                    corrected_t = raw_t + new
+                    applied_offset = new
+                    nowcast_off = cand
+                    apply_corr = True
+
         picto = pick_picto(row["ct"], row["cl"], row["cm"], row["ch"], row["pr"], row["rn"], row["sn"], row["hu"], row["ws"])
 
         # N'affiche "corrigé" (barré + couleur) que si l'écart est réellement
@@ -1129,6 +1227,7 @@ def process_station(station, now):
             "corrected": apply_corr and is_meaningful,
             "correction_period": period,
             "correction_offset_c": round(applied_offset, 2) if applied_offset is not None else None,
+            "nowcast_offset_c": round(nowcast_off, 2) if nowcast_off is not None else None,
             "clarity": round(clarity, 2) if period else None,
             "wind_speed": round(row["ws"], 1),
             "wind_gusts": round(row["wg"], 1),
@@ -1195,6 +1294,7 @@ def process_station(station, now):
             # c'est lui qu'il faut comparer à l'observé pour juger la fiabilité.
             night_profile_snapshot = dict(profile)
             learned = []
+            pending = []
             t = cand_start
             while t <= cand_end:
                 if t in idx_by_time:
@@ -1206,13 +1306,20 @@ def process_station(station, now):
                         obs_v = nearest_value(obs_series, t)
                         if obs_v is not None and temp[i] is not None:
                             bucket = min(hours_between(t, cand_start), MAX_BUCKET_HOURS)
-                            error = obs_v - temp[i]
-                            key = str(bucket)
-                            old_val = profile.get(key, default_offset(bucket))
-                            new_val = (1 - alpha) * old_val + alpha * error
-                            profile[key] = round(new_val, 2)
-                            learned.append({"bucket": bucket, "error_c": round(error, 2), "offset_after": profile[key]})
+                            pending.append((bucket, obs_v - temp[i]))
                 t += timedelta(hours=1)
+            alpha_eff = adaptive_alpha(
+                alpha, [e for _, e in pending],
+                [profile.get(str(b), default_offset(b)) for b, _ in pending],
+            )
+            if alpha_eff != alpha:
+                print(f"[info] [{slug}] apprentissage nuit accéléré (alpha {alpha} -> {alpha_eff})", file=sys.stderr)
+            for bucket, error in pending:
+                key = str(bucket)
+                old_val = profile.get(key, default_offset(bucket))
+                new_val = (1 - alpha_eff) * old_val + alpha_eff * error
+                profile[key] = round(new_val, 2)
+                learned.append({"bucket": bucket, "error_c": round(error, 2), "offset_after": profile[key]})
 
             print(f"[debug] [{slug}] learned={learned}", file=sys.stderr)
 
@@ -1279,6 +1386,7 @@ def process_station(station, now):
             # réellement affiché aux utilisateurs pendant cette journée.
             day_profile_snapshot = dict(day_profile)
             learned_day = []
+            pending_day = []
             # d_start n'est pas forcément aligné sur l'heure pile (il doit
             # recoller exactement à la fin de la fenêtre de nuit précédente) -
             # on démarre l'itération à la première heure pile >= d_start,
@@ -1296,13 +1404,20 @@ def process_station(station, now):
                         obs_v = nearest_value(obs_series_day, t)
                         if obs_v is not None and temp[i] is not None:
                             bucket = min(hours_between(t, d_start), DAY_MAX_BUCKET_HOURS)
-                            error = obs_v - temp[i]
-                            key = str(bucket)
-                            old_val = day_profile.get(key, 0.0)
-                            new_val = (1 - day_alpha) * old_val + day_alpha * error
-                            day_profile[key] = round(new_val, 2)
-                            learned_day.append({"bucket": bucket, "error_c": round(error, 2), "offset_after": day_profile[key]})
+                            pending_day.append((bucket, obs_v - temp[i]))
                 t += timedelta(hours=1)
+            day_alpha_eff = adaptive_alpha(
+                day_alpha, [e for _, e in pending_day],
+                [day_profile.get(str(b), 0.0) for b, _ in pending_day],
+            )
+            if day_alpha_eff != day_alpha:
+                print(f"[info] [{slug}] apprentissage jour accéléré (alpha {day_alpha} -> {day_alpha_eff})", file=sys.stderr)
+            for bucket, error in pending_day:
+                key = str(bucket)
+                old_val = day_profile.get(key, 0.0)
+                new_val = (1 - day_alpha_eff) * old_val + day_alpha_eff * error
+                day_profile[key] = round(new_val, 2)
+                learned_day.append({"bucket": bucket, "error_c": round(error, 2), "offset_after": day_profile[key]})
 
             print(f"[debug] [{slug}] learned_day={learned_day}", file=sys.stderr)
 
@@ -1346,7 +1461,6 @@ def process_station(station, now):
     save_bias_state(bias_path, bias)
 
     # --- Observations récentes "en direct" (carte, stations Datacake) ------
-    live = fetch_recent_observations(station, now)
     if live is None:
         # Échec de la requête (ou station non-Datacake) : on tente de
         # conserver les dernières valeurs déjà publiées plutôt que de faire
@@ -1382,6 +1496,12 @@ def process_station(station, now):
             "high_cloud_attenuation": HIGH_CLOUD_ATTENUATION,
             "dew_floor_margin_c": DEW_FLOOR_MARGIN_C,
             "sunset_lead_minutes": SUNSET_LEAD_MINUTES,
+        },
+        "nowcast": {
+            "active": anchor_err is not None,
+            "error_c": round(anchor_err, 2) if anchor_err is not None else None,
+            "samples": anchor_n,
+            "tau_h": NOWCAST_TAU_H,
         },
         "day_correction": {
             "offset_profile": {k: bias["day_offset_profile"][k] for k in sorted(bias["day_offset_profile"], key=int)},
