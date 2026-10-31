@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-31T11:55:06.960771+01:00",
+  "generated_at": "2026-10-31T12:01:16.557187+01:00",
   "run_time": "2026-10-29T00:00:00+01:00",
   "location": {
     "name": "Doline de Chaud Clapier",
@@ -87,10 +87,6 @@
       "temp_c": 10.6
     },
     "recent": [
-      {
-        "time": "2026-10-29T11:56:52+01:00",
-        "temp_c": 12.1
-      },
       {
         "time": "2026-10-29T12:01:52+01:00",
         "temp_c": 12.0
@@ -2769,10 +2765,10 @@
     {
       "time": "2026-10-31T18:00:00+01:00",
       "temp_raw": 3.8,
-      "temp_corrected": 1.0,
+      "temp_corrected": 1.1,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -2.75,
+      "correction_offset_c": -2.68,
       "clarity": 0.33,
       "wind_speed": 5.2,
       "wind_gusts": 15.8,
@@ -2958,10 +2954,10 @@
     {
       "time": "2026-11-01T03:00:00+01:00",
       "temp_raw": 0.8,
-      "temp_corrected": -2.2,
+      "temp_corrected": -2.3,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -3.04,
+      "correction_offset_c": -3.15,
       "clarity": 0.25,
       "wind_speed": 9.5,
       "wind_gusts": 27.7,
@@ -3045,7 +3041,7 @@
       "temp_corrected": 0.2,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -0.27,
+      "correction_offset_c": -0.3,
       "clarity": 0.03,
       "wind_speed": 19.1,
       "wind_gusts": 47.2,
@@ -3063,10 +3059,10 @@
     {
       "time": "2026-11-01T08:00:00+01:00",
       "temp_raw": 0.5,
-      "temp_corrected": -0.2,
+      "temp_corrected": -0.3,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -0.69,
+      "correction_offset_c": -0.78,
       "clarity": 0.07,
       "wind_speed": 19.8,
       "wind_gusts": 43.2,
@@ -3318,7 +3314,7 @@
       "temp_corrected": -1.1,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -0.41,
+      "correction_offset_c": -0.4,
       "clarity": 0.04,
       "wind_speed": 16.6,
       "wind_gusts": 54.4,
@@ -3399,10 +3395,10 @@
     {
       "time": "2026-11-02T00:00:00+01:00",
       "temp_raw": -1.6,
-      "temp_corrected": -4.7,
+      "temp_corrected": -4.8,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -3.13,
+      "correction_offset_c": -3.18,
       "clarity": 0.25,
       "wind_speed": 4.6,
       "wind_gusts": 31.7,
@@ -3525,10 +3521,10 @@
     {
       "time": "2026-11-02T06:00:00+01:00",
       "temp_raw": -1.5,
-      "temp_corrected": -3.8,
+      "temp_corrected": -3.9,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -2.28,
+      "correction_offset_c": -2.35,
       "clarity": 0.2,
       "wind_speed": 6.8,
       "wind_gusts": 31.7,
@@ -3864,7 +3860,7 @@
       "temp_corrected": -4.8,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -3.12,
+      "correction_offset_c": -3.08,
       "clarity": 0.25,
       "wind_speed": 5.2,
       "wind_gusts": 27.7,
@@ -4071,10 +4067,10 @@
     {
       "time": "2026-11-03T08:00:00+01:00",
       "temp_raw": -0.2,
-      "temp_corrected": -9.7,
+      "temp_corrected": -10.0,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -9.47,
+      "correction_offset_c": -9.8,
       "clarity": 1.0,
       "wind_speed": 3.3,
       "wind_gusts": 10.4,
@@ -4281,10 +4277,10 @@
     {
       "time": "2026-11-03T18:00:00+01:00",
       "temp_raw": 1.8,
-      "temp_corrected": -4.4,
+      "temp_corrected": -4.2,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -6.19,
+      "correction_offset_c": -6.04,
       "clarity": 0.75,
       "wind_speed": 9.2,
       "wind_gusts": 28.1,
@@ -4470,10 +4466,10 @@
     {
       "time": "2026-11-04T03:00:00+01:00",
       "temp_raw": 2.4,
-      "temp_corrected": -0.6,
+      "temp_corrected": -0.7,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -3.04,
+      "correction_offset_c": -3.15,
       "clarity": 0.25,
       "wind_speed": 4.0,
       "wind_gusts": 13.0,

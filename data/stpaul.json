@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-31T11:55:06.960771+01:00",
+  "generated_at": "2026-10-31T12:01:16.557187+01:00",
   "run_time": "2026-10-29T00:00:00+01:00",
   "location": {
     "name": "Saint-Paul-le-Froid",
@@ -82,18 +82,10 @@
   "live": {
     "available": true,
     "latest": {
-      "time": "2026-10-31T11:27:40+01:00",
-      "temp_c": 9.0
+      "time": "2026-10-31T11:57:40+01:00",
+      "temp_c": 10.8
     },
     "recent": [
-      {
-        "time": "2026-10-29T11:57:37+01:00",
-        "temp_c": 10.9
-      },
-      {
-        "time": "2026-10-29T11:57:58+01:00",
-        "temp_c": 11.8
-      },
       {
         "time": "2026-10-29T12:02:16+01:00",
         "temp_c": 12.0
@@ -2721,6 +2713,34 @@
       {
         "time": "2026-10-31T11:27:40+01:00",
         "temp_c": 9.0
+      },
+      {
+        "time": "2026-10-31T11:32:16+01:00",
+        "temp_c": 10.8
+      },
+      {
+        "time": "2026-10-31T11:37:16+01:00",
+        "temp_c": 11.0
+      },
+      {
+        "time": "2026-10-31T11:42:16+01:00",
+        "temp_c": 11.2
+      },
+      {
+        "time": "2026-10-31T11:47:16+01:00",
+        "temp_c": 11.3
+      },
+      {
+        "time": "2026-10-31T11:52:16+01:00",
+        "temp_c": 11.3
+      },
+      {
+        "time": "2026-10-31T11:57:16+01:00",
+        "temp_c": 11.3
+      },
+      {
+        "time": "2026-10-31T11:57:40+01:00",
+        "temp_c": 10.8
       }
     ]
   },
@@ -2728,10 +2748,10 @@
     {
       "time": "2026-10-31T18:00:00+01:00",
       "temp_raw": 5.7,
-      "temp_corrected": 5.0,
+      "temp_corrected": 5.1,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -0.66,
+      "correction_offset_c": -0.64,
       "clarity": 0.16,
       "wind_speed": 5.5,
       "wind_gusts": 16.2,
@@ -2752,7 +2772,7 @@
       "temp_corrected": 5.0,
       "corrected": true,
       "correction_period": "night",
-      "correction_offset_c": -0.38,
+      "correction_offset_c": -0.36,
       "clarity": 0.06,
       "wind_speed": 8.8,
       "wind_gusts": 15.1,
