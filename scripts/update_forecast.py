@@ -325,7 +325,7 @@ def fetch_openmeteo(lat, lon, elevation_m=None, past_days=2, forecast_days=3, mo
         "hourly": ",".join([
             "temperature_2m", "wind_speed_10m", "wind_direction_10m", "wind_gusts_10m",
             "cloud_cover", "cloud_cover_low", "cloud_cover_mid", "cloud_cover_high",
-            "precipitation", "rain", "snowfall", "relative_humidity_2m", "dew_point_2m",
+            "precipitation", "rain", "snowfall", "snow_depth", "relative_humidity_2m", "dew_point_2m",
         ]),
         "daily": "sunrise,sunset",
         "models": model,
@@ -394,7 +394,7 @@ def merge_ch1_ch2(om1, om2):
     var_names = [
         "temperature_2m", "wind_speed_10m", "wind_direction_10m", "wind_gusts_10m",
         "cloud_cover", "cloud_cover_low", "cloud_cover_mid", "cloud_cover_high",
-        "precipitation", "rain", "snowfall", "relative_humidity_2m", "dew_point_2m",
+        "precipitation", "rain", "snowfall", "snow_depth", "relative_humidity_2m", "dew_point_2m",
     ]
     merged_hourly = {"time": all_times}
     for name in var_names:
@@ -1029,6 +1029,7 @@ def process_station(station, now):
     precipitation = series("precipitation")
     rain = series("rain")
     snowfall = series("snowfall")
+    snow_depth = series("snow_depth")   # mètres (hauteur de neige au sol du modèle)
     humidity = series("relative_humidity_2m")
     dew_point = series("dew_point_2m")
 
@@ -1240,6 +1241,8 @@ def process_station(station, now):
             "temp_850hpa_c": round(row["t850"], 1) if row["t850"] is not None else None,
             "rain_mm": round(row["rn"], 1),
             "snow_cm": round(row["sn"], 1),
+            "snow_depth_cm": (round(snow_depth[idx_by_time[t]] * 100, 1)
+                              if t in idx_by_time and snow_depth[idx_by_time[t]] is not None else None),
             "picto": picto,
         })
 
@@ -1266,6 +1269,12 @@ def process_station(station, now):
     forecast_snow_24h_cm = round(next24_snow, 1) if found_fc else None
     forecast_snow_total_cm = round(total_snow_fc, 1) if found_fc else None
     forecast_snow_end = max((tt for tt in idx_by_time if tt > now_floor), default=None)
+    # Hauteur de neige au sol (modèle) à l'heure courante, en cm - None si le
+    # modèle ne la fournit pas pour ce point (la page doit alors afficher « n/a »).
+    depth_now_cm = None
+    if now_floor in idx_by_time and snow_depth[idx_by_time[now_floor]] is not None:
+        depth_now_cm = round(snow_depth[idx_by_time[now_floor]] * 100, 1)
+    print(f"[info] [{slug}] hauteur de neige au sol (modèle) = {depth_now_cm} cm", file=sys.stderr)
 
     candidate_evening = window_start.date() - timedelta(days=1)
     cand_start, cand_end = corr_window_for_evening(candidate_evening, sunset_by_date, sunrise_by_date)
@@ -1514,6 +1523,7 @@ def process_station(station, now):
             "fresh_24h_cm": fresh_snow_24h_cm,
             "forecast_24h_cm": forecast_snow_24h_cm,
             "forecast_total_cm": forecast_snow_total_cm,
+            "depth_now_cm": depth_now_cm,
             "forecast_end": forecast_snow_end.isoformat() if forecast_snow_end else None,
         },
         "verification": {
