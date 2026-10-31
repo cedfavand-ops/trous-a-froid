@@ -754,7 +754,7 @@ function fmtSnowSpans(sn){
   if (sn.forecast_end){
     end = ' (jusqu\'au ' + new Date(sn.forecast_end).toLocaleString('fr-FR', {weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'}) + ')';
   }
-  return `<span>❄️ Neige au sol : ${(sn.depth_cm === null || sn.depth_cm === undefined) ? 'n/a' : sn.depth_cm + ' cm'}</span>`
+  return `<span>❄️ Neige au sol : ${(() => { const d = (sn.depth_cm ?? sn.depth_now_cm); return (d === null || d === undefined) ? 'n/a' : d + ' cm'; })()} </span>`
     + `<span>❄️ Neige fraîche (24h passées) : ${f(sn.fresh_24h_cm)}</span>`
     + `<span>❄️ Neige prévue (24 prochaines h) : ${f(sn.forecast_24h_cm)}</span>`
     + `<span>❄️ Neige prévue (toute l'échéance) : ${f(sn.forecast_total_cm)}${end}</span>`;
