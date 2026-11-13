@@ -672,17 +672,17 @@
   ],
   "day_offset_profile": {
     "0": -4.8,
-    "1": -2.54,
-    "2": -0.67,
-    "3": 0.37,
-    "4": 0.49,
-    "5": -0.09,
-    "6": -1.04,
+    "1": -2.6,
+    "2": -0.79,
+    "3": 0.23,
+    "4": 0.38,
+    "5": -0.15,
+    "6": -1.06,
     "7": -2.11,
     "8": -3.18
   },
   "day_alpha": 0.25,
-  "last_processed_day": "2026-11-12",
+  "last_processed_day": "2026-11-13",
   "last_day_error_c": null,
   "last_day_samples": 0,
   "day_history": [
@@ -999,6 +999,10 @@
     {
       "day": "2026-11-12",
       "buckets_learned": []
+    },
+    {
+      "day": "2026-11-13",
+      "buckets_learned": []
     }
   ],
   "last_night_verif": {
@@ -1007,12 +1011,7 @@
     "observed_tn_c": 4.5,
     "diff_c": -3.5
   },
-  "last_day_verif": {
-    "day": "2026-11-12",
-    "forecast_tx_c": 6.4,
-    "observed_tx_c": 5.7,
-    "diff_c": 0.7
-  },
+  "last_day_verif": null,
   "cond_log": {
     "columns": [
       "bucket",
