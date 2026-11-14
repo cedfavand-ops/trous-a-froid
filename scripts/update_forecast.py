@@ -224,7 +224,34 @@ LEARN_CLARITY_MIN = 0.6
 # si le modèle brut est déjà plus froid. Valeur provisoire (1 nuit d'observation :
 # Chaud-Clapier 22/10/2026, Td ~0, Tn observée -3.6) à ajuster avec le journal
 # des conditions. Mettre une valeur très grande (ex: 99) pour désactiver.
-DEW_FLOOR_MARGIN_C = 4.0
+DEW_FLOOR_MARGIN_C = 6.0   # 4.0 jusqu'au 14/11/2026 : trop serré, il bridait les nuits très radiatives
+
+# Réglages de nuit validés en « walk-forward » sur 26 nuits x 16 stations
+# (profil figé avant chaque nuit, apprentissage nuit après nuit), 14/11/2026 :
+# erreur moyenne sur la Tn 2.41 -> 2.23 °C, nuits radiatives 2.95 -> 2.50 °C,
+# Pramécou 5.48 -> 4.08 °C. Chaque réglage améliore seul le résultat.
+# 1) Plancher de clarté liée aux nuages (nuit uniquement) : la nébulosité du
+#    modèle est un indicateur imparfait ; même sous nuages prévus, 25 % de la
+#    correction reste appliquée (erreur observée sous nuages ~30 % de celle d'une
+#    nuit claire). N'affecte pas l'apprentissage (qui exige toujours clarté >= 0.6).
+CLOUD_CLARITY_FLOOR = 0.25
+# 2) Apprentissage asymétrique du profil de nuit : s'adapte vite quand la nuit
+#    est plus froide que le profil (alpha 0.5), lentement quand elle l'est moins (0.15).
+#    Les nuits très radiatives sont les plus utiles à prévoir et sont rares.
+ALPHA_COLDER = 0.5
+ALPHA_WARMER = 0.15
+# 3) Amplitude selon la sécheresse de l'air (écart T - Td du modèle) : air sec =
+#    refroidissement plus profond. Facteur = 1 + K * (T-Td - REF)/10, borné.
+DRY_SCALE_K = 0.5
+DRY_SCALE_REF_C = 8.0
+DRY_SCALE_MIN = 0.6
+DRY_SCALE_MAX = 1.8
+
+
+def dry_scale(raw_t, dew_point_c):
+    if raw_t is None or dew_point_c is None:
+        return 1.0
+    return min(DRY_SCALE_MAX, max(DRY_SCALE_MIN, 1.0 + DRY_SCALE_K * ((raw_t - dew_point_c) - DRY_SCALE_REF_C) / 10.0))
 
 
 def dew_floor(raw_t, dew_point_c):
@@ -232,79 +259,6 @@ def dew_floor(raw_t, dew_point_c):
     if raw_t is None or dew_point_c is None:
         return None
     return min(raw_t, dew_point_c - DEW_FLOOR_MARGIN_C)
-
-# --- Ancrage sur les observations récentes (« nowcast ») -----------------------
-# Quand le modèle est très en décalage avec ce que la station mesure en ce moment
-# (ex. Tignes fin octobre 2026 : -17°C mesurés pour ~0°C modélisés), le profil
-# appris (lent) ne suffit pas. On calcule l'écart obs-modèle des dernières heures
-# et on le propage sur les heures à venir avec une décroissance exponentielle.
-# Il ne s'applique que si l'écart est net (>= NOWCAST_MIN_ABS_ERR_C), de même
-# signe sur la quasi-totalité des heures récentes, et ne remplace la correction
-# apprise que si elle est plus forte dans le même sens.
-NOWCAST_WINDOW_H = 6            # heures récentes utilisées pour mesurer l'écart
-NOWCAST_MIN_SAMPLES = 4         # nombre minimal d'heures avec obs + modèle
-NOWCAST_MIN_ABS_ERR_C = 4.0     # écart moyen minimal pour activer l'ancrage
-NOWCAST_SAME_SIGN_SHARE = 0.8   # part minimale d'heures de même signe
-NOWCAST_TAU_H = 30.0            # constante de décroissance (heures)
-NOWCAST_MAX_HORIZON_H = 48      # au-delà, plus d'ancrage
-
-# --- Apprentissage adaptatif ----------------------------------------------------
-# Si, sur une nuit/journée, l'écart entre l'erreur observée et le décalage déjà
-# appris dépasse ADAPT_GAP_C de façon cohérente, on apprend plus vite (changement
-# de régime) au lieu de l'EWMA lent habituel.
-ADAPT_GAP_C = 5.0
-ADAPT_SAME_SIGN_SHARE = 0.8
-ADAPT_ALPHA = 0.6
-
-
-def adaptive_alpha(base_alpha, errors, offsets):
-    """errors : erreurs obs-modèle des heures apprises ; offsets : décalages
-    actuellement appris pour les mêmes cases. Retourne le alpha à utiliser."""
-    if len(errors) < 4:
-        return base_alpha
-    gaps = [e - o for e, o in zip(errors, offsets)]
-    mean_gap = sum(gaps) / len(gaps)
-    if abs(mean_gap) < ADAPT_GAP_C:
-        return base_alpha
-    same = sum(1 for g in gaps if g * mean_gap > 0) / len(gaps)
-    return max(base_alpha, ADAPT_ALPHA) if same >= ADAPT_SAME_SIGN_SHARE else base_alpha
-
-
-def compute_nowcast_anchor(live, idx_by_time, temp, now):
-    """Écart moyen obs-modèle sur les NOWCAST_WINDOW_H dernières heures
-    (stations Datacake uniquement : `live` = résultat de fetch_recent_observations).
-    Retourne (écart_c, nb_heures) ou (None, 0) si non applicable."""
-    if not live or not live.get("recent"):
-        return None, 0
-    series = []
-    for r in live["recent"]:
-        try:
-            series.append((datetime.fromisoformat(r["time"]).astimezone(TZ), r["temp_c"]))
-        except Exception:
-            continue
-    if not series:
-        return None, 0
-    now_h = now.replace(minute=0, second=0, microsecond=0)
-    errs = []
-    for k in range(NOWCAST_WINDOW_H):
-        t = now_h - timedelta(hours=k)
-        if t not in idx_by_time:
-            continue
-        m = temp[idx_by_time[t]]
-        o = nearest_value(series, t)
-        if m is not None and o is not None:
-            errs.append(o - m)
-    if len(errs) < NOWCAST_MIN_SAMPLES:
-        return None, len(errs)
-    mean_err = sum(errs) / len(errs)
-    if abs(mean_err) < NOWCAST_MIN_ABS_ERR_C:
-        return None, len(errs)
-    same = sum(1 for e in errs if e * mean_err > 0) / len(errs)
-    if same < NOWCAST_SAME_SIGN_SHARE:
-        return None, len(errs)
-    return mean_err, len(errs)
-
-
 FORECAST_NIGHTS = 4
 CH1_FORECAST_DAYS = 2
 CH2_FORECAST_DAYS = 5
@@ -325,7 +279,7 @@ def fetch_openmeteo(lat, lon, elevation_m=None, past_days=2, forecast_days=3, mo
         "hourly": ",".join([
             "temperature_2m", "wind_speed_10m", "wind_direction_10m", "wind_gusts_10m",
             "cloud_cover", "cloud_cover_low", "cloud_cover_mid", "cloud_cover_high",
-            "precipitation", "rain", "snowfall", "snow_depth", "relative_humidity_2m", "dew_point_2m",
+            "precipitation", "rain", "snowfall", "relative_humidity_2m", "dew_point_2m",
         ]),
         "daily": "sunrise,sunset",
         "models": model,
@@ -367,6 +321,38 @@ def fetch_850hpa_temp(lat, lon, forecast_days, past_days=2):
         return None
 
 
+def fetch_snow_depth_by_time(station):
+    """Hauteur de neige au sol (m) d'ICON-CH1 (passé + prévision), complétée par
+    ICON-CH2 au-delà. Requête séparée et tolérante : si la variable n'est pas
+    disponible ou si l'appel échoue, on renvoie {} et l'affichage s'en passe
+    (jamais d'échec du passage complet à cause de cette donnée)."""
+    out = {}
+    for model, past, days in (("meteoswiss_icon_ch1", 2, CH1_FORECAST_DAYS),
+                              ("meteoswiss_icon_ch2", 0, CH2_FORECAST_DAYS)):
+        params = {
+            "latitude": station["lat"],
+            "longitude": station["lon"],
+            "hourly": "snow_depth",
+            "models": model,
+            "timezone": "Europe/Berlin",
+            "forecast_days": days,
+            "past_days": past,
+        }
+        if station.get("elevation_m") is not None:
+            params["elevation"] = station["elevation_m"]
+        try:
+            data = http_get_json("https://api.open-meteo.com/v1/forecast?" + urllib.parse.urlencode(params))
+            hh = data.get("hourly", {})
+            for t_str, v in zip(hh.get("time", []), hh.get("snow_depth", [])):
+                if v is None:
+                    continue
+                t = parse_iso_local(t_str)
+                out.setdefault(t, v)   # CH1 prioritaire, CH2 complète
+        except Exception as e:
+            print(f"[warn] [{station['slug']}] hauteur de neige ({model}) indisponible : {e}", file=sys.stderr)
+    return out
+
+
 def index_850hpa_by_time(om850):
     """Retourne {datetime_local: temperature_850hPa}, ou {} si la requête a
     échoué ou renvoyé une forme inattendue - l'affichage doit simplement se
@@ -394,7 +380,7 @@ def merge_ch1_ch2(om1, om2):
     var_names = [
         "temperature_2m", "wind_speed_10m", "wind_direction_10m", "wind_gusts_10m",
         "cloud_cover", "cloud_cover_low", "cloud_cover_mid", "cloud_cover_high",
-        "precipitation", "rain", "snowfall", "snow_depth", "relative_humidity_2m", "dew_point_2m",
+        "precipitation", "rain", "snowfall", "relative_humidity_2m", "dew_point_2m",
     ]
     merged_hourly = {"time": all_times}
     for name in var_names:
@@ -433,7 +419,7 @@ def effective_cloud(cloud_low, cloud_mid, cloud_high):
     return min(100, low_mid + HIGH_CLOUD_ATTENUATION * (cloud_high or 0))
 
 
-def clarity_factor(eff_cloud, wind_speed):
+def clarity_factor(eff_cloud, wind_speed, cloud_floor=0.0):
     def ramp(value, full_at, zero_at):
         if value <= full_at:
             return 1.0
@@ -441,7 +427,7 @@ def clarity_factor(eff_cloud, wind_speed):
             return 0.0
         return 1.0 - (value - full_at) / (zero_at - full_at)
 
-    cloud_c = ramp(eff_cloud, CLEAR_CLOUD_THRESHOLD, CLOUD_ZERO_THRESHOLD)
+    cloud_c = max(ramp(eff_cloud, CLEAR_CLOUD_THRESHOLD, CLOUD_ZERO_THRESHOLD), cloud_floor)
     wind_c = ramp(wind_speed, CALM_WIND_THRESHOLD, WIND_ZERO_THRESHOLD)
     return cloud_c * wind_c
 
@@ -886,10 +872,12 @@ def corrected_series_over_window(
             if temp[i] is not None:
                 eff_cloud = effective_cloud(cloud_low[i], cloud_mid[i], cloud_high[i])
                 ws_ = wind_speed[i] or 0
-                clarity_ = clarity_factor(eff_cloud, ws_)
+                night_ = dew_point is not None   # fenêtre de nuit : réglages de nuit
+                clarity_ = clarity_factor(eff_cloud, ws_, cloud_floor=CLOUD_CLARITY_FLOOR if night_ else 0.0)
                 bucket = min(hours_between(t, w_start), max_bucket)
                 offset = profile_snapshot.get(str(bucket), default_fn(bucket) if default_fn else 0.0)
-                v_corr = temp[i] + offset * clarity_
+                scale_ = dry_scale(temp[i], dew_point[i]) if night_ else 1.0
+                v_corr = temp[i] + offset * clarity_ * scale_
                 if dew_point is not None:   # plancher « point de rosée » (nuit uniquement)
                     fl = dew_floor(temp[i], dew_point[i])
                     if fl is not None and v_corr < fl:
@@ -1029,7 +1017,6 @@ def process_station(station, now):
     precipitation = series("precipitation")
     rain = series("rain")
     snowfall = series("snowfall")
-    snow_depth = series("snow_depth")   # mètres (hauteur de neige au sol du modèle)
     humidity = series("relative_humidity_2m")
     dew_point = series("dew_point_2m")
 
@@ -1041,6 +1028,7 @@ def process_station(station, now):
     # FORECAST_NIGHTS + quelques jours plus loin que la station elle-même).
     om850 = fetch_850hpa_temp(station["lat"], station["lon"], forecast_days=CH2_FORECAST_DAYS + 2)
     temp850_by_time = index_850hpa_by_time(om850)
+    snow_depth_by_time = fetch_snow_depth_by_time(station)
 
     daily_dates = [datetime.fromisoformat(d).date() for d in om["daily"]["time"]]
     sunrise_by_date, sunset_by_date = {}, {}
@@ -1049,15 +1037,6 @@ def process_station(station, now):
         sunset_by_date[d] = parse_iso_local(om["daily"]["sunset"][i])
 
     window_start, window_end = compute_window(now, nights=FORECAST_NIGHTS)
-
-    # Observations récentes (stations Datacake) : servent à la carte « en direct »
-    # ET à l'ancrage nowcast de la prévision (récupérées une seule fois).
-    live = fetch_recent_observations(station, now)
-    anchor_err, anchor_n = compute_nowcast_anchor(live, idx_by_time, temp, now)
-    now_hour = now.replace(minute=0, second=0, microsecond=0)
-    if anchor_err is not None:
-        print(f"[info] [{slug}] ancrage nowcast actif : écart obs-modèle {anchor_err:+.1f}°C sur {anchor_n} h",
-              file=sys.stderr)
 
     night_windows = []
     for n in range(FORECAST_NIGHTS):
@@ -1138,7 +1117,9 @@ def process_station(station, now):
             max_bucket = None
             get_offset = None
 
-        clarity_raw = clarity_factor(eff_cloud, ws) if period else 0.0
+        clarity_raw = clarity_factor(
+            eff_cloud, ws, cloud_floor=CLOUD_CLARITY_FLOOR if period == "night" else 0.0
+        ) if period else 0.0
 
         rows.append({
             "t": t, "raw_t": raw_t, "ws": ws, "wg": wg, "wd": wd, "ct": ct,
@@ -1186,6 +1167,8 @@ def process_station(station, now):
         if apply_corr:
             bucket = min(hours_between(t, row["w_start"]), row["max_bucket"])
             applied_offset = row["get_offset"](bucket) * clarity
+            if period == "night":
+                applied_offset *= dry_scale(raw_t, row["dp"])
             corrected_t = raw_t + applied_offset
             if period == "night":
                 fl = dew_floor(raw_t, row["dp"])
@@ -1196,22 +1179,6 @@ def process_station(station, now):
                 current_offset_c = applied_offset
         else:
             corrected_t = raw_t
-
-        # Ancrage nowcast : heures futures uniquement, décroissance exponentielle,
-        # remplace la correction apprise seulement si elle est plus forte (même signe).
-        nowcast_off = None
-        if anchor_err is not None and raw_t is not None and t > now_hour:
-            hh = (t - now_hour).total_seconds() / 3600.0
-            if hh <= NOWCAST_MAX_HORIZON_H:
-                w = math.exp(-hh / NOWCAST_TAU_H) * (0.5 + 0.5 * (clarity if period else 0.0))
-                cand = anchor_err * w
-                cur = corrected_t - raw_t
-                new = min(cur, cand) if anchor_err < 0 else max(cur, cand)
-                if abs(new - cur) >= 0.05:
-                    corrected_t = raw_t + new
-                    applied_offset = new
-                    nowcast_off = cand
-                    apply_corr = True
 
         picto = pick_picto(row["ct"], row["cl"], row["cm"], row["ch"], row["pr"], row["rn"], row["sn"], row["hu"], row["ws"])
 
@@ -1228,7 +1195,6 @@ def process_station(station, now):
             "corrected": apply_corr and is_meaningful,
             "correction_period": period,
             "correction_offset_c": round(applied_offset, 2) if applied_offset is not None else None,
-            "nowcast_offset_c": round(nowcast_off, 2) if nowcast_off is not None else None,
             "clarity": round(clarity, 2) if period else None,
             "wind_speed": round(row["ws"], 1),
             "wind_gusts": round(row["wg"], 1),
@@ -1241,8 +1207,7 @@ def process_station(station, now):
             "temp_850hpa_c": round(row["t850"], 1) if row["t850"] is not None else None,
             "rain_mm": round(row["rn"], 1),
             "snow_cm": round(row["sn"], 1),
-            "snow_depth_cm": (round(snow_depth[idx_by_time[t]] * 100, 1)
-                              if t in idx_by_time and snow_depth[idx_by_time[t]] is not None else None),
+            "snow_depth_cm": round(snow_depth_by_time[t] * 100) if t in snow_depth_by_time else None,
             "picto": picto,
         })
 
@@ -1268,13 +1233,13 @@ def process_station(station, now):
     fresh_snow_24h_cm = round(past_snow, 1) if found_past else None
     forecast_snow_24h_cm = round(next24_snow, 1) if found_fc else None
     forecast_snow_total_cm = round(total_snow_fc, 1) if found_fc else None
+    # Hauteur de neige au sol actuelle (ICON-CH1), en cm : valeur de l'heure en cours,
+    # à défaut la plus récente heure passée disponible.
+    snow_depth_now_cm = None
+    past_keys = [tt for tt in snow_depth_by_time if tt <= now_floor]
+    if past_keys:
+        snow_depth_now_cm = round(snow_depth_by_time[max(past_keys)] * 100)
     forecast_snow_end = max((tt for tt in idx_by_time if tt > now_floor), default=None)
-    # Hauteur de neige au sol (modèle) à l'heure courante, en cm - None si le
-    # modèle ne la fournit pas pour ce point (la page doit alors afficher « n/a »).
-    depth_now_cm = None
-    if now_floor in idx_by_time and snow_depth[idx_by_time[now_floor]] is not None:
-        depth_now_cm = round(snow_depth[idx_by_time[now_floor]] * 100, 1)
-    print(f"[info] [{slug}] hauteur de neige au sol (modèle) = {depth_now_cm} cm", file=sys.stderr)
 
     candidate_evening = window_start.date() - timedelta(days=1)
     cand_start, cand_end = corr_window_for_evening(candidate_evening, sunset_by_date, sunrise_by_date)
@@ -1303,7 +1268,6 @@ def process_station(station, now):
             # c'est lui qu'il faut comparer à l'observé pour juger la fiabilité.
             night_profile_snapshot = dict(profile)
             learned = []
-            pending = []
             t = cand_start
             while t <= cand_end:
                 if t in idx_by_time:
@@ -1315,20 +1279,14 @@ def process_station(station, now):
                         obs_v = nearest_value(obs_series, t)
                         if obs_v is not None and temp[i] is not None:
                             bucket = min(hours_between(t, cand_start), MAX_BUCKET_HOURS)
-                            pending.append((bucket, obs_v - temp[i]))
+                            error = obs_v - temp[i]
+                            key = str(bucket)
+                            old_val = profile.get(key, default_offset(bucket))
+                            a_ = ALPHA_COLDER if error < old_val else ALPHA_WARMER
+                            new_val = (1 - a_) * old_val + a_ * error
+                            profile[key] = round(new_val, 2)
+                            learned.append({"bucket": bucket, "error_c": round(error, 2), "offset_after": profile[key]})
                 t += timedelta(hours=1)
-            alpha_eff = adaptive_alpha(
-                alpha, [e for _, e in pending],
-                [profile.get(str(b), default_offset(b)) for b, _ in pending],
-            )
-            if alpha_eff != alpha:
-                print(f"[info] [{slug}] apprentissage nuit accéléré (alpha {alpha} -> {alpha_eff})", file=sys.stderr)
-            for bucket, error in pending:
-                key = str(bucket)
-                old_val = profile.get(key, default_offset(bucket))
-                new_val = (1 - alpha_eff) * old_val + alpha_eff * error
-                profile[key] = round(new_val, 2)
-                learned.append({"bucket": bucket, "error_c": round(error, 2), "offset_after": profile[key]})
 
             print(f"[debug] [{slug}] learned={learned}", file=sys.stderr)
 
@@ -1395,7 +1353,6 @@ def process_station(station, now):
             # réellement affiché aux utilisateurs pendant cette journée.
             day_profile_snapshot = dict(day_profile)
             learned_day = []
-            pending_day = []
             # d_start n'est pas forcément aligné sur l'heure pile (il doit
             # recoller exactement à la fin de la fenêtre de nuit précédente) -
             # on démarre l'itération à la première heure pile >= d_start,
@@ -1413,20 +1370,13 @@ def process_station(station, now):
                         obs_v = nearest_value(obs_series_day, t)
                         if obs_v is not None and temp[i] is not None:
                             bucket = min(hours_between(t, d_start), DAY_MAX_BUCKET_HOURS)
-                            pending_day.append((bucket, obs_v - temp[i]))
+                            error = obs_v - temp[i]
+                            key = str(bucket)
+                            old_val = day_profile.get(key, 0.0)
+                            new_val = (1 - day_alpha) * old_val + day_alpha * error
+                            day_profile[key] = round(new_val, 2)
+                            learned_day.append({"bucket": bucket, "error_c": round(error, 2), "offset_after": day_profile[key]})
                 t += timedelta(hours=1)
-            day_alpha_eff = adaptive_alpha(
-                day_alpha, [e for _, e in pending_day],
-                [day_profile.get(str(b), 0.0) for b, _ in pending_day],
-            )
-            if day_alpha_eff != day_alpha:
-                print(f"[info] [{slug}] apprentissage jour accéléré (alpha {day_alpha} -> {day_alpha_eff})", file=sys.stderr)
-            for bucket, error in pending_day:
-                key = str(bucket)
-                old_val = day_profile.get(key, 0.0)
-                new_val = (1 - day_alpha_eff) * old_val + day_alpha_eff * error
-                day_profile[key] = round(new_val, 2)
-                learned_day.append({"bucket": bucket, "error_c": round(error, 2), "offset_after": day_profile[key]})
 
             print(f"[debug] [{slug}] learned_day={learned_day}", file=sys.stderr)
 
@@ -1470,6 +1420,7 @@ def process_station(station, now):
     save_bias_state(bias_path, bias)
 
     # --- Observations récentes "en direct" (carte, stations Datacake) ------
+    live = fetch_recent_observations(station, now)
     if live is None:
         # Échec de la requête (ou station non-Datacake) : on tente de
         # conserver les dernières valeurs déjà publiées plutôt que de faire
@@ -1506,12 +1457,6 @@ def process_station(station, now):
             "dew_floor_margin_c": DEW_FLOOR_MARGIN_C,
             "sunset_lead_minutes": SUNSET_LEAD_MINUTES,
         },
-        "nowcast": {
-            "active": anchor_err is not None,
-            "error_c": round(anchor_err, 2) if anchor_err is not None else None,
-            "samples": anchor_n,
-            "tau_h": NOWCAST_TAU_H,
-        },
         "day_correction": {
             "offset_profile": {k: bias["day_offset_profile"][k] for k in sorted(bias["day_offset_profile"], key=int)},
             "alpha": day_alpha,
@@ -1523,8 +1468,8 @@ def process_station(station, now):
             "fresh_24h_cm": fresh_snow_24h_cm,
             "forecast_24h_cm": forecast_snow_24h_cm,
             "forecast_total_cm": forecast_snow_total_cm,
-            "depth_now_cm": depth_now_cm,
             "forecast_end": forecast_snow_end.isoformat() if forecast_snow_end else None,
+            "depth_cm": snow_depth_now_cm,
         },
         "verification": {
             "night": bias.get("last_night_verif"),
